@@ -1,7 +1,8 @@
 <script>
-	import './layout.css';
+  import './layout.css';
+  import '../lib/styles/tokens.css';
 
-	const { children } = $props();
+  const { children } = $props();
 </script>
 
 {@render children()}
