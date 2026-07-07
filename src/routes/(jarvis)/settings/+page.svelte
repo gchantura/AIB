@@ -1,5 +1,5 @@
 <script>
-  import { Settings, Cpu, Shield, Eye } from 'lucide-svelte';
+  import { Settings, Cpu, Shield, Eye, ChevronRight } from 'lucide-svelte';
 
   const providers = [
     { id: 'ollama', name: 'Ollama', description: 'Local models via Ollama', url: 'http://localhost:11434', status: 'unconfigured', privacy: 'local' },
