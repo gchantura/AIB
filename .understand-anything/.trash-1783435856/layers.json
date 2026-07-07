@@ -1,0 +1,162 @@
+[
+  {
+    "id": "layer:infrastructure",
+    "name": "Infrastructure",
+    "description": "Build configuration, package management, IDE tooling, and static assets. This layer bootstraps the project — it defines how the app is built, deployed, and developed, but contains no domain logic.",
+    "nodeIds": [
+      "file:package.json",
+      "file:package-lock.json",
+      "file:vite.config.js",
+      "file:svelte.config.js",
+      "file:jsconfig.json",
+      "file:.npmrc",
+      "file:.gitignore",
+      "file:.mcp.json",
+      "vscode-extensions",
+      "vscode-mcp",
+      "vscode-settings",
+      "codex-config",
+      "cursor-mcp",
+      "app-html",
+      "favicon-svg"
+    ]
+  },
+  {
+    "id": "layer:foundation",
+    "name": "Foundation/Core",
+    "description": "Core types, global state stores, design tokens, and Supabase client instances. This layer is the contract between infrastructure and domain logic — it defines the shared language (types), runtime state container ($state stores), visual vocabulary (CSS custom properties), and data transport (Supabase clients) that every other layer depends on.",
+    "nodeIds": [
+      "jarvis-core-types-ts",
+      "jarvis-core-store-ts",
+      "tokens-css",
+      "supabase-server",
+      "supabase-browser",
+      "lib-index"
+    ]
+  },
+  {
+    "id": "layer:llm-provider",
+    "name": "LLM Provider Router",
+    "description": "Model-agnostic LLM adapter layer. Contains provider-specific implementations (Ollama, OpenAI-compatible, Anthropic) and a central router that dispatches requests without hardcoding any single model. Configuration is driven entirely by environment variables.",
+    "nodeIds": [
+      "jarvis-llm-types-ts",
+      "jarvis-llm-config-ts",
+      "jarvis-llm-errors-ts",
+      "jarvis-llm-router-ts",
+      "jarvis-llm-ollama-ts",
+      "jarvis-llm-openai-ts",
+      "jarvis-llm-anthropic-ts"
+    ]
+  },
+  {
+    "id": "layer:jv-engine",
+    "name": "JARVIS Engine",
+    "description": "Core JARVIS business logic. This is the central domain layer containing memory persistence, conversation intelligence, tool registry, skill system, safety policy enforcement, automation scheduler, self-evaluation analytics, and briefing composition engine. All layers above depend on Foundation; all layers below depend on this layer.",
+    "nodeIds": [
+      "jarvis-memory-api-ts",
+      "jarvis-memory-relevance-ts",
+      "jarvis-memory-types-ts",
+      "jarvis-intelligence-runtime-ts",
+      "jarvis-safety-runtime-ts",
+      "jarvis-skills-runtime-ts",
+      "jarvis-tools-runtime-ts",
+      "jarvis-automation-runtime-ts",
+      "jarvis-evaluation-runtime-ts",
+      "jarvis-evaluation-upgrades-ts",
+      "jarvis-briefing-runtime-ts"
+    ]
+  },
+  {
+    "id": "layer:api-server",
+    "name": "API/Server Endpoints",
+    "description": "SvelteKit server-side API routes that expose JARVIS Engine capabilities over HTTP. Each endpoint wraps a JARVIS runtime module with request parsing, error handling, and response serialization. This layer is the network boundary between client UI and server logic.",
+    "nodeIds": [
+      "endpoint-chat",
+      "endpoint-memory",
+      "endpoint-memory-id",
+      "endpoint-conversations",
+      "endpoint-workspace",
+      "endpoint-models",
+      "endpoint-tools",
+      "endpoint-skills",
+      "endpoint-safety",
+      "endpoint-notifications",
+      "endpoint-evaluation",
+      "endpoint-upgrades",
+      "endpoint-automations-run",
+      "endpoint-briefing",
+      "endpoint-coding",
+      "endpoint-research",
+      "endpoint-repository",
+      "hooks-server"
+    ]
+  },
+  {
+    "id": "layer:ui-frontend",
+    "name": "UI/Frontend",
+    "description": "SvelteKit client-side pages and layouts. Each page is a Svelte component that consumes API endpoints and JARVIS runtime modules to render interactive views for the user's workspace.",
+    "nodeIds": [
+      "root-layout",
+      "layout-css",
+      "jarvis-layout",
+      "page-root",
+      "page-dashboard",
+      "page-chat",
+      "page-memory",
+      "page-tools",
+      "page-skills",
+      "page-automations",
+      "page-evaluation",
+      "page-safety",
+      "page-settings",
+      "page-briefing",
+      "page-calendar",
+      "page-research",
+      "page-coding",
+      "page-learning",
+      "page-repository",
+      "page-docs"
+    ]
+  },
+  {
+    "id": "layer:agent-skill",
+    "name": "Agent/Skill System",
+    "description": "Claude Code agent definitions, skill specifications, hook scripts, and session protocol files. This layer configures the AI coding assistant that operates this repository — it is external to the running application but governs how Claude interacts with it during development.",
+    "nodeIds": [
+      "document:AGENTS.md",
+      "document:CLAUDE.md",
+      "document:README.md",
+      "document:GEMINI.md",
+      "ai-researcher-skill",
+      "app-factory-engineer-skill",
+      "automation-engineer-skill",
+      "coding-agent-engineer-skill",
+      "documentation-engineer-skill",
+      "graphify-navigator-skill",
+      "memory-engineer-skill",
+      "model-provider-engineer-skill",
+      "safety-guardian-skill",
+      "senior-ai-engineer-coach-skill",
+      "skill-generator-skill",
+      "svelte-architect-skill",
+      "svelte-ui-engineer-skill",
+      "tool-factory-engineer-skill",
+      "validation-engineer-skill",
+      "hooks-post-edit-checklist",
+      "hooks-pre-command-guard",
+      "hooks-pre-search-reminder",
+      "hooks-secret-guard",
+      "hooks-session-end-protocol",
+      "settings-local-json"
+    ]
+  },
+  {
+    "id": "layer:data-storage",
+    "name": "Data/Storage",
+    "description": "Database schema migrations and local workspace state. Supabase provides the persistent SQL layer; workspace.json holds runtime configuration on disk.",
+    "nodeIds": [
+      "file:supabase/migrations/20260707114040_create_memory_tables.sql",
+      "jarvis-workspace-json"
+    ]
+  }
+]

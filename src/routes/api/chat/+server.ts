@@ -6,9 +6,40 @@ import { LLMError } from '$lib/jarvis/llm/errors.js';
 import type { ChatMessage, TaskType } from '$lib/jarvis/llm/types.js';
 import { env } from '$env/dynamic/private';
 import { appendConversation, ensureConversation, extractMemories, recordModelRun } from '$lib/jarvis/intelligence/runtime.js';
+import { snapshot } from '$lib/jarvis/core/store.js';
+import { retrieveRelevant } from '$lib/jarvis/memory/relevance.js';
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 
 function buildConfig() {
   return getLLMConfig(env as Record<string, string | undefined>);
+}
+
+async function buildProjectContext(prompt: string) {
+  const [data, memories, readme] = await Promise.all([
+    snapshot(),
+    retrieveRelevant(prompt, 6),
+    readFile(join(process.cwd(), 'README.md'), 'utf8').catch(() => '')
+  ]);
+  const memoryText = memories.length ? memories.map((memory) => `- [${memory.category}] ${memory.content}`).join('\n') : '- No directly relevant saved memories.';
+  return `You are J.A.R.V.I.S., the AI operating system embedded in the current Super J.A.R.V.I.S. repository (package: aib). Never claim you do not know which project the user means when they say "this project". They mean this workspace unless they explicitly name another project.
+
+PROJECT IDENTITY
+This is a local-first SvelteKit 2 / Svelte 5 personal AI operating system. It includes model-agnostic chat, atomic local persistence, memory, tasks, notes, projects, calendar events, research, coding assistance, tool and skill generation, approval-gated file/app generation, rollback, automations, notifications, repository intelligence, evaluation, and governed upgrade plans. Local user data is stored in .jarvis/workspace.json. Ollama is the preferred local model provider.
+
+LIVE WORKSPACE STATE
+- Tasks: ${data.tasks.length}; projects: ${data.projects.length}; notes: ${data.notes.length}; memories: ${data.memories.length}
+- Tools: ${data.generatedTools.length + 7}; skills generated: ${data.generatedSkills.length}; automations: ${data.automations.length}
+- Conversations: ${data.conversations.length}; open improvement proposals: ${data.improvementProposals.filter((item) => item.status === 'proposed').length}
+
+RELEVANT LOCAL MEMORY
+${memoryText}
+
+README EXCERPT
+${readme.slice(0, 1800)}
+
+BEHAVIOR
+Answer concretely about this repository. Distinguish implemented capabilities from future work. Do not invent files, successful actions, memories, or provider state. When the user asks what the project is, explain the project directly rather than asking for context.`;
 }
 
 export const POST: RequestHandler = async ({ request }) => {
@@ -28,12 +59,13 @@ export const POST: RequestHandler = async ({ request }) => {
   const config = buildConfig();
   const router = getRouter(config);
   const lastUser = [...messages].reverse().find((message) => message.role === 'user');
+  const augmentedMessages: ChatMessage[] = [{ role: 'system', content: await buildProjectContext(lastUser?.content ?? '') }, ...messages.filter((message) => message.role !== 'system')];
   const conversationId = await ensureConversation(body.conversationId, messages);
   if (lastUser) { await appendConversation(conversationId, [lastUser]); await extractMemories(lastUser.content, conversationId); }
 
   if (!stream) {
     try {
-      const response = await router.chat({ model: model || config.defaultLocalChatModel, messages }, task);
+      const response = await router.chat({ model: model || config.defaultLocalChatModel, messages: augmentedMessages }, task);
       await appendConversation(conversationId, [{ role: 'assistant', content: response.content, model: response.model }]);
       await recordModelRun('chat', lastUser?.content ?? '', { output: response.content, model: response.model });
       return json({ content: response.content, model: response.model, conversationId });
@@ -51,7 +83,7 @@ export const POST: RequestHandler = async ({ request }) => {
         controller.enqueue(encode(`data: ${JSON.stringify({ conversationId })}\n\n`));
         let accumulated = '';
         const gen = router.chatStream(
-          { model: model || config.defaultLocalChatModel, messages },
+          { model: model || config.defaultLocalChatModel, messages: augmentedMessages },
           task,
         );
         for await (const chunk of gen) {

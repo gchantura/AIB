@@ -21,6 +21,7 @@
     Code2,
     Bell,
     BarChart3,
+    BookOpenText,
     Menu,
     X
   } from 'lucide-svelte';
@@ -44,6 +45,7 @@
     { href: '/coding', label: 'Coding', icon: Code2 },
     { href: '/safety', label: 'Safety', icon: ShieldCheck },
     { href: '/evaluation', label: 'Evaluation', icon: BarChart3 },
+    { href: '/docs', label: 'Docs', icon: BookOpenText },
     { href: '/learning', label: 'Learning', icon: GraduationCap },
   ];
 

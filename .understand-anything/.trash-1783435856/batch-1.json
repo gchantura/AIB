@@ -1,0 +1,118 @@
+{
+  "nodes": [
+    {
+      "id": "node-migration-memory-tables",
+      "type": "table",
+      "name": "Supabase Migration: Create Memory Tables",
+      "summary": "Phase 5 migration that creates three Supabase tables (memory_entries, memory_projects, memory_conversations) with RLS policies and GIN-indexed tags for the J.A.R.V.I.S. persistent memory system. Includes bootstrap seed data for codebase knowledge, framework decisions, and initialized skills.",
+      "tags": ["sql", "migration", "supabase", "memory", "RLS", "database"],
+      "filePath": "supabase/migrations/20260707114040_create_memory_tables.sql",
+      "language": "sql",
+      "complexity": "moderate",
+      "estimatedLineCount": 174
+    },
+    {
+      "id": "node-table-memory_entries",
+      "type": "table",
+      "name": "memory_entries",
+      "summary": "Central memory store with 14 category types (user-profile, project, task, research, learning, decision, codebase, conversation, daily-log, automation, contact, tool, skill, note). Contains content, summary, source provenance, inference flags, confidence scores, tags array, and temporal metadata. Uses GIN index on tags for full-text search.",
+      "tags": ["table", "memory", "central-store", "RLS"],
+      "filePath": "supabase/migrations/20260707114040_create_memory_tables.sql",
+      "language": "sql",
+      "complexity": "moderate",
+      "estimatedLineCount": 25
+    },
+    {
+      "id": "node-table-memory_projects",
+      "type": "table",
+      "name": "memory_projects",
+      "summary": "Project-level context entries storing name, description, repo_url, status (active/paused/archived), and tags. All projects have timestamps for creation and last update.",
+      "tags": ["table", "projects", "context", "RLS"],
+      "filePath": "supabase/migrations/20260707114040_create_memory_tables.sql",
+      "language": "sql",
+      "complexity": "simple",
+      "estimatedLineCount": 15
+    },
+    {
+      "id": "node-table-memory_conversations",
+      "type": "table",
+      "name": "memory_conversations",
+      "summary": "Compressed conversation history store with summary text, message count, tracked model used, and creation timestamp. Used for context continuity across sessions.",
+      "tags": ["table", "conversations", "history", "RLS"],
+      "filePath": "supabase/migrations/20260707114040_create_memory_tables.sql",
+      "language": "sql",
+      "complexity": "simple",
+      "estimatedLineCount": 12
+    },
+    {
+      "id": "node-memory-system-docs",
+      "type": "document",
+      "name": "MEMORY_SYSTEM.md",
+      "summary": "Documentation for the J.A.R.V.I.S. memory system architecture, categories, and retrieval strategy.",
+      "tags": ["docs", "memory", "architecture"],
+      "filePath": "docs/MEMORY_SYSTEM.md",
+      "language": "markdown",
+      "complexity": "moderate",
+      "estimatedLineCount": 0
+    },
+    {
+      "id": "node-supabase-lib",
+      "type": "package",
+      "name": "@supabase/supabase-js",
+      "summary": "Supabase client library for PostgreSQL database access, used as the persistent storage backend for memory_entries.",
+      "tags": ["dependency", "database", "supabase"],
+      "filePath": "package.json",
+      "language": "json",
+      "complexity": "simple",
+      "estimatedLineCount": 0
+    },
+    {
+      "id": "node-memory-core-phase5",
+      "type": "document",
+      "name": "Memory Core (Phase 5)",
+      "summary": "Phase 5 status: Local persistence, CRUD operations, provenance tracking, and relevance retrieval are complete.",
+      "tags": ["phase", "memory", "roadmap"],
+      "filePath": "CLAUDE.md",
+      "language": "markdown",
+      "complexity": "simple",
+      "estimatedLineCount": 0
+    }
+  ],
+  "edges": [
+    {
+      "source": "node-migration-memory-tables",
+      "target": "node-table-memory_entries",
+      "type": "creates"
+    },
+    {
+      "source": "node-migration-memory-tables",
+      "target": "node-table-memory_projects",
+      "type": "creates"
+    },
+    {
+      "source": "node-migration-memory-tables",
+      "target": "node-table-memory_conversations",
+      "type": "creates"
+    },
+    {
+      "source": "node-supabase-lib",
+      "target": "node-migration-memory-tables",
+      "type": "requires"
+    },
+    {
+      "source": "node-memory-core-phase5",
+      "target": "node-migration-memory-tables",
+      "type": "documents"
+    },
+    {
+      "source": "node-memory-system-docs",
+      "target": "node-table-memory_entries",
+      "type": "documents"
+    },
+    {
+      "source": "node-table-memory_entries",
+      "target": "node-table-memory_projects",
+      "type": "references"
+    }
+  ]
+}

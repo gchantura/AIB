@@ -6,7 +6,7 @@
   let messages = $state([
     {
       role: 'assistant',
-      content: "Hello. I'm J.A.R.V.I.S. — your local AI operating system. I'm ready to help you build tools, research topics, manage tasks, and improve myself over time.\n\nTo chat, start Ollama locally or configure a provider in Settings.",
+      content: "Hello. I'm J.A.R.V.I.S. — the AI operating system for this workspace. I know this repository's architecture, capabilities, local memory, tools, safety boundaries, and current roadmap. Ask me about the project or give me work to do.",
       ts: new Date(),
       error: false,
     },

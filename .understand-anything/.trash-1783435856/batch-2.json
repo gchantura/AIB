@@ -1,0 +1,203 @@
+{
+  "nodes": [
+    {
+      "id": "node-gitignore",
+      "type": "config",
+      "name": ".gitignore",
+      "summary": "Git ignore rules excluding build outputs (.output, .vercel, .netlify, .wrangler, .svelte-kit, /build, /dist), secrets (.env files except examples), OS artifacts, and Vite timestamp files.",
+      "tags": ["config", "git", "ignore", "secrets"],
+      "filePath": ".gitignore",
+      "language": "dotenv",
+      "complexity": "simple",
+      "estimatedLineCount": 5
+    },
+    {
+      "id": "node-mcp-json",
+      "type": "config",
+      "name": ".mcp.json",
+      "summary": "MCP server configuration for Svelte MCP (stdio transport via npx @sveltejs/mcp), providing list-sections, get-documentation, svelte-autofixer, and playground-link tools.",
+      "tags": ["config", "MCP", "Svelte", "IDE"],
+      "filePath": ".mcp.json",
+      "language": "json",
+      "complexity": "simple",
+      "estimatedLineCount": 5
+    },
+    {
+      "id": "node-npmrc",
+      "type": "config",
+      "name": ".npmrc",
+      "summary": "NPM runtime config enforcing engine-strict to ensure Node version matches package.json engines field.",
+      "tags": ["config", "npm", "engine"],
+      "filePath": ".npmrc",
+      "language": "dotenv",
+      "complexity": "simple",
+      "estimatedLineCount": 5
+    },
+    {
+      "id": "node-agents-md",
+      "type": "document",
+      "name": "AGENTS.md",
+      "summary": "Project configuration and Svelte MCP tool usage guide for Claude Code. Documents available tools: list-sections (discover docs), get-documentation (fetch sections), svelte-autofixer (analyze code), playground-link (generate shareable links).",
+      "tags": ["docs", "MCP", "agents", "Svelte"],
+      "filePath": "AGENTS.md",
+      "language": "markdown",
+      "complexity": "simple",
+      "estimatedLineCount": 18
+    },
+    {
+      "id": "node-claude-md",
+      "type": "document",
+      "name": "CLAUDE.md",
+      "summary": "Master operating manual for Super J.A.R.V.I.S. Covers: project mission, phase history (0-10), hook system (PreToolUse), safety policy (levels 0-3), core philosophy (10 rules), graph-first/skill-first/local-first/model-agnostic policies, Svelte/SvelteKit conventions, file structure, design tokens, validation commands, documentation protocol, tool generation protocol, and permission levels.",
+      "tags": ["docs", "operating-manual", "policy", "architecture"],
+      "filePath": "CLAUDE.md",
+      "language": "markdown",
+      "complexity": "complex",
+      "estimatedLineCount": 256
+    },
+    {
+      "id": "node-gemini-md",
+      "type": "document",
+      "name": "GEMINI.md",
+      "summary": "Gemini CLI configuration mirror of AGENTS.md. Documents Svelte MCP tools: list-sections, get-documentation, svelte-autofixer, playground-link.",
+      "tags": ["docs", "MCP", "Gemini"],
+      "filePath": "GEMINI.md",
+      "language": "markdown",
+      "complexity": "simple",
+      "estimatedLineCount": 18
+    },
+    {
+      "id": "node-readme-md",
+      "type": "document",
+      "name": "README.md",
+      "summary": "Public project overview for Super J.A.R.V.I.S. Describes features: model-agnostic chat, persistent memory, tasks/notes/projects/calendar, research dossiers, skills, tools, automations, repository intelligence, learning, audit trail. Includes run instructions (npm install + dev), verification commands, safety model summary (levels 0-3), and original scaffold notes.",
+      "tags": ["docs", "README", "overview"],
+      "filePath": "README.md",
+      "language": "markdown",
+      "complexity": "simple",
+      "estimatedLineCount": 45
+    },
+    {
+      "id": "node-jsconfig-json",
+      "type": "config",
+      "name": "jsconfig.json",
+      "summary": "TypeScript/JavaScript compiler config extending .svelte-kit/tsconfig.json. Sets forceConsistentCasingInFileNames, resolveJsonModule, skipLibCheck, sourceMap, NodeNext module resolution, and node types.",
+      "tags": ["config", "typescript", "compiler"],
+      "filePath": "jsconfig.json",
+      "language": "json",
+      "complexity": "simple",
+      "estimatedLineCount": 5
+    },
+    {
+      "id": "node-package-lock-json",
+      "type": "config",
+      "name": "package-lock.json",
+      "summary": "NPM lock file (lockfileVersion 3) pinning all transitive dependencies. Key deps: @supabase/supabase-js@2.110.0, svelte@5.56.1, @sveltejs/kit@2.69.1, vite@8.0.16, tailwindcss@4.3.2. 1075+ lines of resolved packages with integrity hashes.",
+      "tags": ["config", "lockfile", "dependencies"],
+      "filePath": "package-lock.json",
+      "language": "json",
+      "complexity": "complex",
+      "estimatedLineCount": 1075
+    },
+    {
+      "id": "node-package-json",
+      "type": "config",
+      "name": "package.json",
+      "summary": "Package manifest for 'aib' (v0.0.1). Dual-purpose: SvelteKit app + npm library (exports './' with types+svelte). 6 scripts (dev, build, preview, prepare, prepack, check, ai:validate). Dependencies: @supabase/supabase-js. Dev deps: svelte 5, SvelteKit 2, Tailwind CSS 4, lucide-svelte, svelte-check, vite 8.",
+      "tags": ["config", "package", "dependencies", "scripts"],
+      "filePath": "package.json",
+      "language": "json",
+      "complexity": "simple",
+      "estimatedLineCount": 16
+    },
+    {
+      "id": "node-svelte-config-js",
+      "type": "config",
+      "name": "svelte.config.js",
+      "summary": "Svelte configuration: vitePreprocess() for Svelte 5 compiler, runes mode forced on all non-node_modules files via filename check, adapter-node adapter for Node.js deployment.",
+      "tags": ["config", "svelte", "runes", "adapter"],
+      "filePath": "svelte.config.js",
+      "language": "javascript",
+      "complexity": "simple",
+      "estimatedLineCount": 5
+    },
+    {
+      "id": "node-vite-config-js",
+      "type": "config",
+      "name": "vite.config.js",
+      "summary": "Vite build configuration with two plugins: @tailwindcss/vite for Tailwind CSS 4 processing and @sveltejs/kit/vite for SvelteKit integration.",
+      "tags": ["config", "vite", "plugins", "tailwind", "sveltekit"],
+      "filePath": "vite.config.js",
+      "language": "javascript",
+      "complexity": "simple",
+      "estimatedLineCount": 5
+    }
+  ],
+  "edges": [
+    {
+      "source": "node-claude-md",
+      "target": "node-agents-md",
+      "type": "references"
+    },
+    {
+      "source": "node-claude-md",
+      "target": "node-gemini-md",
+      "type": "documents"
+    },
+    {
+      "source": "node-readme-md",
+      "target": "node-claude-md",
+      "type": "references"
+    },
+    {
+      "source": "node-jsconfig-json",
+      "target": "node-svelte-config-js",
+      "type": "extends"
+    },
+    {
+      "source": "node-package-json",
+      "target": "node-vite-config-js",
+      "type": "imports"
+    },
+    {
+      "source": "node-package-json",
+      "target": "node-svelte-config-js",
+      "type": "imports"
+    },
+    {
+      "source": "node-package-lock-json",
+      "target": "node-package-json",
+      "type": "locks"
+    },
+    {
+      "source": "node-mcp-json",
+      "target": "node-agents-md",
+      "type": "documents"
+    },
+    {
+      "source": "node-mcp-json",
+      "target": "node-gemini-md",
+      "type": "documents"
+    },
+    {
+      "source": "node-vite-config-js",
+      "target": "node-npmrc",
+      "type": "requires"
+    },
+    {
+      "source": "node-gitignore",
+      "target": "node-package-lock-json",
+      "type": "ignores"
+    },
+    {
+      "source": "node-claude-md",
+      "target": "node-readme-md",
+      "type": "references"
+    },
+    {
+      "source": "node-svelte-config-js",
+      "target": "node-vite-config-js",
+      "type": "imports"
+    }
+  ]
+}
