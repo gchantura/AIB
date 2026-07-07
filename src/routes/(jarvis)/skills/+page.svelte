@@ -49,7 +49,7 @@
           <p class="skill-purpose">{skill.purpose}</p>
         </div>
         <div class="skill-path">.claude/skills/{skill.id}/</div>
-        <ArrowRight size={14} class="skill-arrow" />
+        <ArrowRight size={14} />
       </div>
     {/each}
   </div>
@@ -176,5 +176,5 @@
     .skill-path { display: block; }
   }
 
-  .skill-arrow { color: var(--text-tertiary); flex-shrink: 0; }
+  .skill-arrow { display: none; }
 </style>

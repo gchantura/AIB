@@ -1,8 +1,8 @@
 <script>
+  import { onMount } from 'svelte';
   import {
     Activity,
     Bot,
-    Cpu,
     Database,
     Wrench,
     BookOpen,
@@ -14,19 +14,44 @@
     MessageSquare
   } from 'lucide-svelte';
 
-  const modelStatus = {
-    provider: 'Not configured',
-    model: '—',
-    status: 'offline',
-    latency: null,
-  };
+  /** @type {{ id: string; name: string; online: boolean; latencyMs?: number; models?: string[] }[]} */
+  let providerHealth = $state([]);
+  let healthLoading = $state(true);
+  let memoryCount = $state(0);
 
-  const quickStats = [
+  const modelStatus = $derived((() => {
+    const first = providerHealth.find(p => p.online);
+    if (!first) return { provider: 'No provider online', model: '—', status: 'offline', latency: null };
+    return {
+      provider: first.name,
+      model: first.models?.[0] ?? '—',
+      status: 'online',
+      latency: first.latencyMs ?? null,
+    };
+  })());
+
+  onMount(async () => {
+    const [healthRes, memRes] = await Promise.allSettled([
+      fetch('/api/models'),
+      fetch('/api/memory?limit=1'),
+    ]);
+    if (healthRes.status === 'fulfilled' && healthRes.value.ok) {
+      const data = await healthRes.value.json();
+      providerHealth = data.providers ?? [];
+    }
+    if (memRes.status === 'fulfilled' && memRes.value.ok) {
+      const data = await memRes.value.json();
+      memoryCount = data.total ?? 0;
+    }
+    healthLoading = false;
+  });
+
+  const quickStats = $derived([
     { label: 'Tools', value: '0', icon: Wrench, href: '/tools' },
     { label: 'Skills', value: '15', icon: BookOpen, href: '/skills' },
-    { label: 'Memories', value: '0', icon: Database, href: '/memory' },
+    { label: 'Memories', value: String(memoryCount), icon: Database, href: '/memory' },
     { label: 'Tasks', value: '0', icon: CheckSquare, href: '/calendar' },
-  ];
+  ]);
 
   const recentActivity = [
     { text: 'J.A.R.V.I.S. operating layer initialized', time: 'Just now', type: 'system' },
@@ -36,7 +61,7 @@
   ];
 
   const nextSteps = [
-    { label: 'Configure a model provider', href: '/settings', description: 'Connect Ollama or an API key to start chatting' },
+    { label: 'Configure a model provider', href: '/settings', description: 'Start Ollama locally or add an API key in Settings' },
     { label: 'Explore your skills', href: '/skills', description: '15 skills are ready for use' },
     { label: 'Start a conversation', href: '/chat', description: 'Chat with J.A.R.V.I.S.' },
     { label: 'Build a tool', href: '/tools', description: 'Create your first local tool' },
@@ -66,15 +91,31 @@
       </div>
       <div class="model-details">
         <span class="model-label">AI Core</span>
-        <span class="model-value">{modelStatus.provider} · {modelStatus.model}</span>
+        <span class="model-value">
+          {#if healthLoading}
+            Checking providers...
+          {:else}
+            {modelStatus.provider} · {modelStatus.model}
+          {/if}
+        </span>
       </div>
     </div>
     <div class="model-status">
-      <span class="status-badge offline">Offline — Configure in Settings</span>
-      <a href="/settings" class="text-link">
-        Configure
-        <ArrowRight size={13} />
-      </a>
+      {#if modelStatus.status === 'online'}
+        <span class="status-badge online">
+          Online{modelStatus.latency ? ` · ${modelStatus.latency}ms` : ''}
+        </span>
+        <a href="/chat" class="text-link">
+          Chat
+          <ArrowRight size={13} />
+        </a>
+      {:else}
+        <span class="status-badge offline">Offline — Configure in Settings</span>
+        <a href="/settings" class="text-link">
+          Configure
+          <ArrowRight size={13} />
+        </a>
+      {/if}
     </div>
   </div>
 
@@ -286,6 +327,11 @@
     border-radius: var(--radius-full);
     border: 1px solid var(--surface-border);
     color: var(--text-tertiary);
+  }
+
+  .status-badge.online {
+    border-color: var(--color-success-500);
+    color: var(--color-success-700);
   }
 
   .text-link {

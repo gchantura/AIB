@@ -223,10 +223,6 @@
     flex-shrink: 0;
   }
 
-  .dark .logo-mark {
-    background: var(--color-neutral-800);
-  }
-
   .logo-text {
     display: flex;
     flex-direction: column;

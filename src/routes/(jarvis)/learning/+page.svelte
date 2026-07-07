@@ -27,7 +27,7 @@
         <ul class="area-items">
           {#each area.items as item}
             <li class="area-item">
-              <CheckCircle size={14} class="check-icon unchecked" />
+              <CheckCircle size={14} style="color: var(--text-disabled); flex-shrink: 0;" />
               <span>{item}</span>
             </li>
           {/each}

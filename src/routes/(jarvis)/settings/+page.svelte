@@ -1,5 +1,5 @@
 <script>
-  import { Settings, Cpu, Shield, Eye, EyeOff, ChevronRight } from 'lucide-svelte';
+  import { Settings, Cpu, Shield, Eye } from 'lucide-svelte';
 
   const providers = [
     { id: 'ollama', name: 'Ollama', description: 'Local models via Ollama', url: 'http://localhost:11434', status: 'unconfigured', privacy: 'local' },
@@ -90,6 +90,7 @@
                 onclick={() => privacyMode = !privacyMode}
                 role="switch"
                 aria-checked={privacyMode}
+                aria-label="Toggle privacy mode"
               >
                 <span class="toggle-knob"></span>
               </button>
@@ -106,6 +107,7 @@
                 role="switch"
                 aria-checked={allowCloud}
                 disabled={privacyMode}
+                aria-label="Toggle allow cloud models"
               >
                 <span class="toggle-knob"></span>
               </button>
