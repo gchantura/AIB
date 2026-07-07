@@ -56,7 +56,7 @@ This log records what was learned after every major task. It drives the continuo
 
 **Graph Consulted:** DEGRADED_GRAPH_MODE — Graphify not installed. Used direct directory inspection.
 
-**Validation Result:** Build check pending after UI scaffold is complete.
+**Validation Result:** `npm run ai:validate` — 41/41 PASS. `npm run build` — exit 0 (6 warnings in Phase 7 UI files, no errors).
 
 **Repeated Pattern:** None (first run).
 
@@ -68,7 +68,42 @@ This log records what was learned after every major task. It drives the continuo
 
 **Docs Updated:** All docs created in this run.
 
-**Next Best Step:** Run Phase 3 (validation), then Phase 4 (LLM model core), then Phase 7 (main UI scaffold).
+**Next Best Step:** Compliance review of Phase 0/1 against original prompt requirements.
+
+---
+
+## 2026-07-07 — Phase 0/1 Compliance Review
+
+**Requested:** Review previous Phase 0/1 implementation against original prompt. Fix compliance gaps without adding new features. Do not install packages or build more UI.
+
+**Created/Changed:**
+- `CLAUDE.md` — full rewrite: added Phase 0 inspection report, Phase 7 out-of-scope file inventory, hook system documentation (PostEdit/SessionEnd not supported + manual fallbacks), commands system documentation (not supported), explicit "Requires Approval" section with Level 2 and Level 3 gates, corrected `npm run check` gap note, updated phase status table
+- `docs/VALIDATION_REPORT.md` — created with exact validation output from both runs
+- `docs/REPOSITORY_MAP.md` — corrected stale dependency section (lucide-svelte was installed, supabase was already present, zod not yet installed), routes section updated with Phase 7 approval status labels
+- `docs/SELF_IMPROVEMENT_LOG.md` — corrected "Validation Result: pending" to actual results, appended this entry
+- `.claude/commands/README.md` — created to document unsupported status and equivalent skill workflow
+- `.claude/hooks/post-edit-checklist.js` — PostEdit manual fallback script
+- `.claude/hooks/session-end-protocol.js` — SessionEnd manual fallback script
+
+**Skills Used:** documentation-engineer, validation-engineer, safety-guardian (passive)
+
+**Graph Consulted:** DEGRADED_GRAPH_MODE — used docs/REPOSITORY_MAP.md.
+
+**Validation Result:**
+- `npm run ai:validate` — 41/41 PASS. Exit code 0.
+- `npm run build` — Exit code 0. 6 warnings in Phase 7 UI files (unused CSS selectors, missing aria-labels, deprecated svelte:component). No errors.
+
+**Repeated Pattern:** Phase 7 work was created before approval in the initial session. Pattern: bootstrap pressure leads to scope creep. Mitigation: explicit approval gates added to CLAUDE.md.
+
+**New Skill Needed:** No.
+
+**Skill Improvement Needed:** `validation-engineer` — should include a check for Phase 7 files present without approval flag in future `ai:validate` runs.
+
+**New Tool Needed:** No.
+
+**Docs Updated:** CLAUDE.md, REPOSITORY_MAP.md, VALIDATION_REPORT.md (created), SELF_IMPROVEMENT_LOG.md
+
+**Next Best Step:** User must decide: (A) approve the Phase 7 UI scaffold and proceed to Phase 4 (Model Core), or (B) remove the Phase 7 files and proceed to Phase 4 first. Then: Phase 4 — LLM provider abstraction, starting with the Ollama adapter.
 
 ---
 

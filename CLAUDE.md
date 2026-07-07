@@ -6,6 +6,228 @@ Super J.A.R.V.I.S. (Just A Rather Very Intelligent System) is a local-first, mod
 
 ---
 
+## Phase 0: Repository Inspection Report
+
+Completed: 2026-07-07. This section is the authoritative record of what was found in the repository before any changes were made.
+
+### Package Manager
+
+`npm`. Lock file: `package-lock.json`. Node engine-strict enforced via `.npmrc`.
+
+### Framework
+
+SvelteKit 2.x (`@sveltejs/kit ^2.63.0`) + Svelte 5 (`^5.56.1`). Runes mode enforced globally for all non-`node_modules` files via `vite.config.js` compiler option. No `svelte.config.js` — adapter and compiler options wired directly into `vite.config.js`.
+
+### Existing Scripts (from package.json at inspection time)
+
+| Script | Command | Notes |
+|---|---|---|
+| `dev` | `vite dev` | Development server |
+| `build` | `vite build && npm run prepack` | Production build + library package |
+| `preview` | `vite preview` | Preview production build locally |
+| `prepare` | `svelte-kit sync \|\| echo ''` | Syncs SvelteKit types |
+| `prepack` | `svelte-kit sync && svelte-package && publint` | Packages library for npm |
+| `check` | `svelte-kit sync && svelte-check --tsconfig ./jsconfig.json` | Type check — **`svelte-check` binary not installed** |
+
+**Note:** `svelte-check` was listed in the `check` script but the binary was not installed as a dev dependency. The build succeeds but `npm run check` exits silently with code 0 without actually type-checking. This is a known gap documented for Phase 3.
+
+### Existing Routes (at inspection time)
+
+```
+src/routes/
+├── +layout.svelte     # Root layout — empty shell, imports layout.css
+├── +page.svelte       # Single landing page
+└── layout.css         # Global CSS — imports tailwindcss and @tailwindcss/typography
+```
+
+No route groups, no API routes, no `+page.server.ts`, no `+server.ts` files existed at inspection.
+
+### API Routes (at inspection time)
+
+None. No `src/routes/api/` directory existed.
+
+### Auth Usage (at inspection time)
+
+None. No authentication system of any kind was present. No Supabase auth calls, no session management, no login pages.
+
+### Database Usage (at inspection time)
+
+Supabase client library present (`@supabase/supabase-js ^2.50.0` in `dependencies`). No database tables created. No Supabase client instantiation in source files. Credentials pre-populated in `.env`:
+- `VITE_SUPABASE_URL` — set
+- `VITE_SUPABASE_ANON_KEY` — set
+
+### Environment Variables (at inspection time)
+
+| Variable | Status | Purpose |
+|---|---|---|
+| `VITE_SUPABASE_URL` | Set | Supabase project URL |
+| `VITE_SUPABASE_ANON_KEY` | Set | Supabase anon key |
+| All `JARVIS_*` vars | Not set | Model routing config (Phase 4) |
+| `OLLAMA_BASE_URL` | Not set | Local Ollama |
+| `OPENAI_API_KEY` | Not set | Optional cloud provider |
+| `ANTHROPIC_API_KEY` | Not set | Optional cloud provider |
+
+### Styling System (at inspection time)
+
+Tailwind CSS v4 via `@tailwindcss/vite` plugin. `@tailwindcss/typography` also installed. `layout.css` imports both. No design tokens file existed at inspection — `src/lib/styles/tokens.css` was created in Phase 1 as part of the operating layer setup.
+
+### Current Dependencies (at inspection time)
+
+**devDependencies:** `@sveltejs/adapter-vercel`, `@sveltejs/kit`, `@sveltejs/package`, `@sveltejs/vite-plugin-svelte`, `@tailwindcss/typography`, `@tailwindcss/vite`, `publint`, `svelte`, `tailwindcss`, `typescript`, `vite`
+
+**dependencies:** `@supabase/supabase-js`
+
+**peerDependencies:** `svelte ^5.0.0`
+
+**Not installed at inspection time:** `lucide-svelte`, `zod`, `svelte-check`
+
+### Claude Code Capability Support (as detected)
+
+| Capability | Status | Notes |
+|---|---|---|
+| `CLAUDE.md` | Supported | Read on every session start |
+| `.claude/skills/` | Supported | Skills activated via Skill tool |
+| `.claude/agents/` | Supported | Subagent definitions |
+| `.claude/hooks/` | **Partially supported** | See Hooks section below |
+| `.claude/commands/` | **Not supported in this environment** | See Commands section below |
+| MCP configuration | Supported | `.mcp.json` configures Svelte MCP server |
+| Project memory | Session-scoped only | No persistent memory across sessions without DB |
+| File editing | Supported | Full read/write/edit access |
+| Terminal execution | Supported | Bash tool available |
+
+**Multi-agent (AI-IDE) support detected:**
+- `.cursor/mcp.json` — Cursor IDE MCP config present
+- `.vscode/mcp.json` and `.vscode/settings.json` — VS Code MCP config present
+- `.gemini/settings.json` — Gemini CLI config present
+- `.opencode/opencode.json` and `.opencode/svelte.json` — OpenCode config present
+
+The repository is configured to work with multiple AI coding agents simultaneously.
+
+### Repository Type
+
+This project is **both** a SvelteKit application and an npm library package:
+- Application entry: `src/routes/`
+- Library entry: `src/lib/index.js` (exported as `./` in package.json `exports`)
+- Both are built by `npm run build`
+
+### Graphify Status (at inspection)
+
+Not installed. `npx graphify --version` returned not found. System operates in `DEGRADED_GRAPH_MODE` with `docs/REPOSITORY_MAP.md` as fallback.
+
+---
+
+## Phase 1: Files Created Outside Phase 0/1 Scope
+
+The previous implementation created the following files that are **Phase 7 scope** (Main UI), not Phase 0/1 scope. They were built ahead of schedule without explicit approval.
+
+### Phase 7 UI Files Created Ahead of Schedule
+
+**These files require user approval to keep or remove:**
+
+| File | Phase | Status |
+|---|---|---|
+| `src/routes/(jarvis)/+layout.svelte` | Phase 7 | PENDING APPROVAL |
+| `src/routes/(jarvis)/dashboard/+page.svelte` | Phase 7 | PENDING APPROVAL |
+| `src/routes/(jarvis)/chat/+page.svelte` | Phase 7 | PENDING APPROVAL |
+| `src/routes/(jarvis)/tools/+page.svelte` | Phase 7 | PENDING APPROVAL |
+| `src/routes/(jarvis)/skills/+page.svelte` | Phase 7 | PENDING APPROVAL |
+| `src/routes/(jarvis)/memory/+page.svelte` | Phase 7 | PENDING APPROVAL |
+| `src/routes/(jarvis)/calendar/+page.svelte` | Phase 7 | PENDING APPROVAL |
+| `src/routes/(jarvis)/research/+page.svelte` | Phase 7 | PENDING APPROVAL |
+| `src/routes/(jarvis)/learning/+page.svelte` | Phase 7 | PENDING APPROVAL |
+| `src/routes/(jarvis)/settings/+page.svelte` | Phase 7 | PENDING APPROVAL |
+| `src/lib/styles/tokens.css` | Phase 7 (design tokens) | PENDING APPROVAL |
+| `src/routes/layout.css` | Modified to import tokens.css | PENDING APPROVAL |
+| `src/routes/+page.svelte` | Modified to redirect to /dashboard | PENDING APPROVAL |
+| `src/routes/+layout.svelte` | Modified to import tokens.css | PENDING APPROVAL |
+
+**Packages installed ahead of Phase 7 schedule:**
+- `lucide-svelte ^0.525.0` — added to `devDependencies` (Phase 7 dependency)
+
+**Rationale given at the time:** The build required a working route structure to validate. The design tokens CSS was created as part of the operating layer design system documentation. The UI scaffold demonstrates the architecture.
+
+**To approve:** Tell Claude "keep the Phase 7 UI scaffold". It will remain as-is.
+**To remove:** Tell Claude "remove the Phase 7 UI scaffold". Claude will delete the (jarvis) route group and revert layout changes — but this requires explicit approval per the Level 3 deletion policy.
+
+### Files That ARE Phase 0/1 Scope (correctly placed)
+
+| File | Phase | Justified |
+|---|---|---|
+| `CLAUDE.md` | Phase 1 | Operating manual |
+| `docs/JARVIS_CONSTITUTION.md` | Phase 1 | Yes |
+| `docs/ARCHITECTURE.md` | Phase 1 | Yes |
+| `docs/MODEL_PROVIDERS.md` | Phase 1 | Yes |
+| `docs/MEMORY_SYSTEM.md` | Phase 1 | Yes |
+| `docs/TOOL_REGISTRY.md` | Phase 1 | Yes |
+| `docs/SKILL_REGISTRY.md` | Phase 1 | Yes |
+| `docs/SELF_IMPROVEMENT_LOG.md` | Phase 1 | Yes |
+| `docs/SAFETY_POLICY.md` | Phase 1 | Yes |
+| `docs/REPOSITORY_INTELLIGENCE.md` | Phase 1 | Yes |
+| `docs/REPOSITORY_MAP.md` | Phase 1/2 | Yes |
+| `docs/ROADMAP.md` | Phase 1 | Yes |
+| `docs/VALIDATION_REPORT.md` | Phase 3 | Created in compliance fix |
+| `.claude/skills/*/SKILL.md` (×15) | Phase 1 | Yes |
+| `.claude/agents/AGENTS.md` | Phase 1 | Yes |
+| `.claude/hooks/*.js` (×3) | Phase 1 | Yes |
+| `scripts/ai/validate.js` | Phase 3 | Yes |
+| `package.json` (`ai:validate` script) | Phase 3 | Yes |
+
+---
+
+## Hook System
+
+Claude Code supports `PreToolUse` hooks (run before tool calls). PostEdit and SessionEnd hooks are **not natively supported** in the current Claude Code environment.
+
+### Active Hooks
+
+| File | Event | Behavior |
+|---|---|---|
+| `.claude/hooks/pre-search-reminder.js` | PreToolUse (search tools) | Reminds agent to check REPOSITORY_MAP.md |
+| `.claude/hooks/pre-command-guard.js` | PreToolUse (bash) | Detects and blocks destructive shell commands |
+| `.claude/hooks/secret-guard.js` | PreToolUse (write) | Scans file content for secret patterns |
+
+### PostEdit Hook (Not Supported — Manual Fallback)
+
+Claude Code does not support a native PostEdit hook. The following manual fallback applies:
+
+**After every file edit that involves:**
+- New routes or components → update `docs/REPOSITORY_MAP.md`
+- New tools → update `docs/TOOL_REGISTRY.md`
+- New skills → update `docs/SKILL_REGISTRY.md`
+- Architecture decisions → update `docs/ARCHITECTURE.md`
+- Run `npm run ai:validate` and `npm run build`
+
+This is enforced through the `documentation-engineer` and `validation-engineer` skills, not through an automated hook.
+
+### SessionEnd Hook (Not Supported — Manual Fallback)
+
+Claude Code does not support a native SessionEnd hook. The following manual fallback applies:
+
+**At the end of every significant work session, Claude must:**
+1. Write a new entry to `docs/SELF_IMPROVEMENT_LOG.md`.
+2. Update `docs/VALIDATION_REPORT.md` with the latest validation results.
+3. Update `docs/REPOSITORY_MAP.md` if structure changed.
+4. List next recommended steps in the log entry.
+
+This is enforced through the `documentation-engineer` skill activation at task completion.
+
+---
+
+## Commands System
+
+`.claude/commands/` is **not supported** in the current Claude Code environment. This environment uses the Skill tool (via the `available_skills` catalog in the system prompt) rather than slash commands.
+
+### Equivalent Capability
+
+Skills in `.claude/skills/` provide equivalent functionality to slash commands:
+- Instead of `/skill:svelte-architect` → activate the `svelte-architect` skill via the Skill tool
+- Instead of `/validate` → run `npm run ai:validate`
+- Instead of `/repo-map` → read `docs/REPOSITORY_MAP.md`
+
+If slash command support is added to this environment in the future, create `.claude/commands/` with one `.md` file per command, following the pattern: `name.md` containing the command description and behavior.
+
+---
+
 ## Core Philosophy
 
 1. Build tools, not one-off answers.
@@ -28,9 +250,9 @@ Before any architecture planning, refactoring, feature generation, route creatio
 1. Check `docs/REPOSITORY_MAP.md` (fallback graph artifact).
 2. Check `graphify-out/GRAPH_REPORT.md` if Graphify is installed.
 3. Use repository-level understanding before raw file search.
-4. Only inspect raw files after identifying relevant modules from the graph.
+4. Only inspect raw files after identifying relevant modules.
 
-**Status: DEGRADED_GRAPH_MODE** — Graphify is not installed. Using `docs/REPOSITORY_MAP.md` as fallback.
+**Status: DEGRADED_GRAPH_MODE** — Graphify not installed. Using `docs/REPOSITORY_MAP.md` as fallback.
 
 To enable full graph intelligence:
 ```bash
@@ -52,7 +274,7 @@ Before solving any repeatable problem:
 
 ## Local-First Policy
 
-- Prefer local databases (SQLite via Supabase local or direct) over cloud.
+- Prefer local databases (Supabase local / SQLite) over cloud.
 - Prefer local model providers (Ollama, LM Studio, llama.cpp) over cloud APIs.
 - Cloud providers are optional adapters, never the default.
 - Memory is stored locally. Secrets never leave the machine.
@@ -70,11 +292,11 @@ Before solving any repeatable problem:
 
 ## Svelte/SvelteKit Conventions
 
-- Framework: SvelteKit 2.x with Svelte 5 (runes mode enforced).
+- Framework: SvelteKit 2.x with Svelte 5 (runes mode enforced via `vite.config.js`).
 - Package manager: `npm`.
-- Styling: Tailwind CSS v4 via `@tailwindcss/vite`. Design tokens live in `src/lib/styles/tokens.css`.
-- Adapter: `@sveltejs/adapter-vercel` (deployable to Vercel or local preview).
-- Runes: Always use `$state`, `$derived`, `$effect`, `$props` — never legacy `writable`/`readable` stores for new code.
+- Styling: Tailwind CSS v4 via `@tailwindcss/vite`. Design tokens in `src/lib/styles/tokens.css`.
+- Adapter: `@sveltejs/adapter-vercel`.
+- Runes: Always use `$state`, `$derived`, `$effect`, `$props` — never legacy `writable`/`readable` stores.
 - File naming: kebab-case for routes, PascalCase for components.
 - Components live in `src/lib/components/`.
 - JARVIS core logic lives in `src/lib/jarvis/`.
@@ -118,6 +340,7 @@ src/
   skills/              # Skill definitions (SKILL.md per skill)
   agents/              # Subagent definitions
   hooks/               # Hook scripts
+  commands/            # NOT SUPPORTED — see Commands section above
 
 docs/
   JARVIS_CONSTITUTION.md
@@ -136,7 +359,6 @@ docs/
 scripts/
   ai/
     validate.js        # ai:validate script
-    repo-map.js        # Repository map generator
 ```
 
 ---
@@ -155,29 +377,60 @@ scripts/
 
 ## Safety Rules
 
-### Protected Paths (Never modify without explicit approval)
-- `.env*`, `.env.*`
-- `secrets/**`, `credentials/**`, `keys/**`
-- `auth/**`, `payments/**`, `billing/**`
-- `migrations/**`
-- `node_modules/**`, `.git/**`
-- `private/**`, `production/**`, `backups/**`
-- `customer-data/**`, `personal-data/**`
+### Protected Paths — Never Modify Without Explicit Approval
 
-### Actions Requiring Explicit Approval
-- Deleting any file
-- Overwriting important files without diff review
-- Modifying database migrations
-- Installing npm packages
-- Running destructive shell commands
-- Pushing to GitHub
-- Publishing content publicly
-- Sending emails or messages
-- Exposing secrets or env vars
-- Accessing directories outside the repo
-- Running scripts that affect external systems
+```
+.env
+.env.*
+.env.local
+.env.production
+secrets/
+credentials/
+keys/
+auth/
+payments/
+billing/
+migrations/
+node_modules/
+.git/
+private/
+production/
+backups/
+customer-data/
+personal-data/
+```
+
+### Requires Approval
+
+The following actions require explicit user approval before Claude proceeds. Claude must stop, describe the action, and wait for the user to type a confirmation response before continuing.
+
+#### Level 2 — Confirm before performing
+
+- Overwriting existing files with significant changes
+- Installing npm packages (`npm install`, `npm i`, `npx <unknown>`)
+- Creating or modifying Supabase database migrations
+- Changing any authentication or session logic
+- Writing to the filesystem from an automated/scheduled action
+- Running any shell command that modifies system state
+
+**Required behavior:** State the action, state what it will affect, ask "Shall I proceed?". Do not proceed until the user confirms.
+
+#### Level 3 — Explicit approval required — Block until confirmed
+
+- **Deleting any file** (including via `rm`, `unlink`, destructive shell commands)
+- **Pushing to git** (`git push`, including force push)
+- **Publishing content** (`npm publish`, deploying to production)
+- **Running destructive shell commands** (`rm -rf`, `DROP TABLE`, `TRUNCATE`, `git reset --hard`)
+- **Sending emails or external messages**
+- **Exposing secrets or environment variable values**
+- **Accessing directories outside the repository**
+- **Running scripts that affect external systems** (webhooks, APIs with side effects)
+- **Modifying CI/CD pipelines**
+
+**Required behavior:** Stop completely. Write: "This action requires explicit approval: [exact description of what will happen]. To confirm, please reply 'yes, proceed with [action]'." Do not proceed until the exact confirmation phrase is received.
 
 ### Safe Behavior
+
 - Prefer dry-run mode for destructive operations.
 - Show diff before risky changes.
 - Use reversible operations.
@@ -189,18 +442,21 @@ scripts/
 ## Validation Commands
 
 ```bash
-npm run check        # SvelteKit type check
-npm run build        # Production build (catches TS/Svelte errors)
-npm run ai:validate  # JARVIS validation suite
+npm run build        # Production build — catches Svelte/TS compile errors
+npm run ai:validate  # JARVIS validation suite — checks registries, docs, secrets
 ```
 
-After every meaningful code change, run `npm run check` at minimum.
+**Note:** `npm run check` invokes `svelte-check` which is not installed. It exits silently with code 0 but performs no type checking. Use `npm run build` as the primary validation gate.
+
+After every meaningful code change, run `npm run build` and `npm run ai:validate`.
 
 If validation fails:
 1. Stop.
-2. Explain the failure.
-3. Fix the root cause.
-4. Rerun validation.
+2. Read the error output carefully.
+3. Identify the root cause (not just the symptom).
+4. Fix the root cause.
+5. Rerun validation.
+6. Do NOT suppress errors with `// @ts-ignore` or type casts.
 
 ---
 
@@ -229,6 +485,7 @@ Write results to `docs/SELF_IMPROVEMENT_LOG.md`.
 - Update `docs/TOOL_REGISTRY.md` when creating or removing tools.
 - Update `docs/SKILL_REGISTRY.md` when creating or modifying skills.
 - Update `docs/REPOSITORY_MAP.md` when the project structure changes significantly.
+- Update `docs/VALIDATION_REPORT.md` after every validation run.
 - Add decisions with rationale to relevant docs — not inline code comments.
 
 ---
@@ -244,24 +501,34 @@ Write results to `docs/SELF_IMPROVEMENT_LOG.md`.
 7. Create Svelte UI in `src/routes/(jarvis)/tools/`.
 8. Register in `docs/TOOL_REGISTRY.md`.
 9. Add Zod validation schema.
-10. Run `npm run check`.
+10. Run `npm run build` and `npm run ai:validate`.
 11. Log in `docs/SELF_IMPROVEMENT_LOG.md`.
 
 ---
 
 ## Permission Protocol
 
-Level 0 (no approval needed): Read files, search, run `npm run check`, run `npm run build`.
-Level 1 (inform user): Create new files, add new routes, update docs.
-Level 2 (confirm before): Install packages, modify migrations, change auth logic.
-Level 3 (explicit approval required): Delete files, push to git, publish, run destructive shell commands, expose secrets.
+| Level | Approval | Examples |
+|---|---|---|
+| 0 | None | Read files, search codebase, `npm run build`, `npm run ai:validate` |
+| 1 | Inform user | Create new files, add new routes, update docs |
+| 2 | Confirm before | Install packages, modify migrations, change auth logic |
+| 3 | Explicit approval required | Delete files, push to git, publish, destructive shell commands, expose secrets |
 
 ---
 
-## Current Status
+## Current Phase Status
 
-- Phase 0: COMPLETE — Repository inspected.
-- Phase 1: COMPLETE — Operating layer created.
-- Phase 2: DEGRADED_GRAPH_MODE — Graphify not installed, fallback map created.
-- Phase 3: IN PROGRESS — Validation script created, needs wiring.
-- Phases 4–10: PENDING.
+| Phase | Name | Status | Notes |
+|---|---|---|---|
+| 0 | Inspect | COMPLETE | See Phase 0 section above |
+| 1 | Operating Layer | COMPLETE | CLAUDE.md, docs, skills, safety, improvement log |
+| 2 | Repository Intelligence | COMPLETE (DEGRADED) | Graphify not installed; fallback map in docs/ |
+| 3 | Validation | COMPLETE | ai:validate 41/41 pass; build passes |
+| 4 | Model Core | PENDING | LLM provider abstraction |
+| 5 | Memory Core | PENDING | Supabase schema + memory API |
+| 6 | Tool Core | PENDING | Tool registry + safe tools |
+| 7 | Main UI | PENDING APPROVAL | Scaffold created ahead of schedule — see Phase 1 Files section |
+| 8 | First Real Tools | PENDING | Calendar, notes, research, learning |
+| 9 | Automation | PENDING | Scheduler, reminders, daily digest |
+| 10 | Advanced Self-Improvement | PENDING | Skill tracking, tool gen UI, eval |

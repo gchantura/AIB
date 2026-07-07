@@ -1,7 +1,7 @@
 # Repository Map
 
 **Status:** Manually maintained fallback (DEGRADED_GRAPH_MODE — Graphify not installed)
-**Last updated:** 2026-07-07
+**Last updated:** 2026-07-07 (compliance fix — dependencies corrected, Phase 7 files noted)
 
 ---
 
@@ -74,27 +74,24 @@ src/lib/
 
 ```
 src/routes/
-├── (jarvis)/            # Main J.A.R.V.I.S. UI (Phase 7+)
-│   ├── +layout.svelte   # Shell with sidebar nav
-│   ├── dashboard/       # Daily summary, model status, tasks
-│   ├── chat/            # Chat console with model selector
-│   ├── tools/           # Tool list and tool pages
-│   ├── skills/          # Skill list
-│   ├── memory/          # Memory explorer
-│   ├── calendar/        # Calendar and reminders
-│   ├── research/        # AI research dashboard
-│   ├── learning/        # Learning roadmap
-│   └── settings/        # Provider settings, privacy, theme
-├── api/                 # SvelteKit API endpoints (Phase 4+)
-│   ├── chat/            # Streaming chat
-│   ├── memory/          # Memory REST
-│   ├── tools/           # Tool execution
-│   ├── research/        # Research
-│   └── models/          # Model listing
-├── +layout.svelte       # Root layout (imports layout.css)
-├── +page.svelte         # Landing page (redirects to dashboard)
-└── layout.css           # Global Tailwind import
+├── (jarvis)/            # [PHASE 7 — PENDING APPROVAL] Main J.A.R.V.I.S. UI
+│   ├── +layout.svelte   # Shell with sidebar nav — created ahead of schedule
+│   ├── dashboard/       # +page.svelte — created ahead of schedule
+│   ├── chat/            # +page.svelte — created ahead of schedule
+│   ├── tools/           # +page.svelte — created ahead of schedule
+│   ├── skills/          # +page.svelte — created ahead of schedule
+│   ├── memory/          # +page.svelte — created ahead of schedule
+│   ├── calendar/        # +page.svelte — created ahead of schedule
+│   ├── research/        # +page.svelte — created ahead of schedule
+│   ├── learning/        # +page.svelte — created ahead of schedule
+│   └── settings/        # +page.svelte — created ahead of schedule
+├── api/                 # [NOT YET CREATED] SvelteKit API endpoints (Phase 4+)
+├── +layout.svelte       # Root layout — modified to import tokens.css
+├── +page.svelte         # Landing page — modified to redirect to /dashboard
+└── layout.css           # Global CSS — modified to import tokens.css
 ```
+
+**Phase 7 approval status:** All `(jarvis)/` route files require user approval. See `CLAUDE.md` Phase 1 Files section.
 
 ---
 
@@ -129,10 +126,14 @@ src/routes/
 - `typescript ^6.0.3`
 - `publint ^0.3.21` — Package publishing checks
 
+### Installed Ahead of Schedule (Phase 7 deps, added during bootstrap)
+- `lucide-svelte ^0.525.0` — Icons (added to devDependencies — pending Phase 7 approval)
+
 ### To Install (Phase 4+)
-- `lucide-svelte` — Icons (needs `npm install`)
-- `zod` — Schema validation
-- `@supabase/supabase-js` — Supabase client
+- `zod` — Schema validation (not yet installed)
+
+### Already Present
+- `@supabase/supabase-js ^2.50.0` — Supabase client (was already a dependency at inspection)
 
 ---
 
