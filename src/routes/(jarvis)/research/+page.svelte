@@ -1,44 +1,14 @@
 <script>
-  import { Search, Rss, Plus, ExternalLink, Clock } from 'lucide-svelte';
+  import { onMount } from 'svelte'; import { resolve } from '$app/paths'; import { Search, Plus, Trash2, ExternalLink, WandSparkles } from 'lucide-svelte';
+  let items=$state([]),title=$state(''),query=$state(''),summary=$state(''),sourceUrl=$state(''),sourceExcerpt=$state(''),error=$state(''),running=$state(false);
+  onMount(load); async function load(){const r=await fetch('/api/workspace?kind=research');const d=await r.json();items=d.items??[];error=d.error??''}
+  async function create(){if(!title.trim()||!query.trim())return;const body={title,query,summary,sources:sourceUrl?[{title:'Source',url:sourceUrl}]:[],status:summary?'complete':'draft'};const r=await fetch('/api/workspace?kind=research',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});const d=await r.json();if(!r.ok){error=d.error;return}title=query=summary=sourceUrl='';await load()}
+  async function remove(id){await fetch(`/api/workspace?kind=research&id=${id}`,{method:'DELETE'});await load()}
+  async function generate(){if(!query.trim())return;running=true;error='';const sources=sourceUrl?[{title:'Provided source',url:sourceUrl,excerpt:sourceExcerpt}]:[];const r=await fetch('/api/intelligence/research',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({title:title||query,query,sources})});const d=await r.json();if(!r.ok){error=`${d.error}. Start a local model provider or save the dossier manually.`}else{title=query=summary=sourceUrl=sourceExcerpt='';await load()}running=false}
 </script>
-
-<div class="page">
-  <div class="page-header">
-    <div>
-      <h1 class="page-title">Research</h1>
-      <p class="page-sub">AI news, model releases, papers, tools, and frameworks</p>
-    </div>
-    <button class="btn-outline" disabled>
-      <Plus size={14} />
-      New Research
-    </button>
-  </div>
-
-  <div class="empty-state">
-    <Rss size={40} />
-    <h3>No research digests yet</h3>
-    <p>The research dashboard will be available in Phase 8.</p>
-    <p class="hint">Connect a model provider and web search to enable automatic AI news digests.</p>
-  </div>
+<svelte:head><title>Research · J.A.R.V.I.S.</title></svelte:head>
+<div class="page"><header><Search size={20}/><div><h1>Research Library</h1><p>Capture questions, findings, and attributable sources.</p></div></header>
+  <section class="form"><input bind:value={title} placeholder="Research title"/><input bind:value={query} placeholder="Question or query"/><textarea bind:value={summary} placeholder="Manual summary or findings"></textarea><input bind:value={sourceUrl} type="url" placeholder="Source URL (optional)"/><textarea bind:value={sourceExcerpt} placeholder="Paste source excerpt for evidence-bound AI research"></textarea><button onclick={create}><Plus size={15}/>Save manually</button><button onclick={generate} disabled={running||!query.trim()}><WandSparkles size={15}/>{running?'Researching…':'Research with model'}</button></section>
+  {#if error}<p class="error">{error}</p>{/if}<section class="grid">{#each items as item(item.id)}<article><div class="top"><span>{item.status}</span><button onclick={()=>remove(item.id)} aria-label="Delete"><Trash2 size={14}/></button></div><h2>{item.title}</h2><strong>{item.query}</strong><p>{item.summary||'Draft—findings not added yet.'}</p>{#each item.sources??[] as source(source.url)}<a href={resolve(source.url)} target="_blank" rel="noreferrer">{source.title}<ExternalLink size={12}/></a>{/each}</article>{/each}{#if items.length===0}<p class="empty">No research dossiers yet.</p>{/if}</section>
 </div>
-
-<style>
-  .page { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-6); }
-  .page-header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-4); flex-wrap: wrap; }
-  .page-title { font-size: var(--text-2xl); font-weight: var(--font-semibold); color: var(--text-primary); margin: 0; }
-  .page-sub { font-size: var(--text-sm); color: var(--text-secondary); margin: var(--space-1) 0 0; }
-  .btn-outline {
-    display: inline-flex; align-items: center; gap: var(--space-2);
-    padding: var(--space-2) var(--space-4); border: 1px solid var(--surface-border);
-    border-radius: var(--radius-md); background: transparent;
-    font-size: var(--text-sm); font-weight: var(--font-medium); color: var(--text-secondary); cursor: pointer;
-  }
-  .btn-outline:disabled { opacity: 0.5; cursor: not-allowed; }
-  .empty-state {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: var(--space-3); padding: var(--space-16) 0; color: var(--text-tertiary); text-align: center;
-  }
-  .empty-state h3 { font-size: var(--text-base); font-weight: var(--font-medium); color: var(--text-secondary); margin: 0; }
-  .empty-state p { font-size: var(--text-sm); margin: 0; }
-  .empty-state .hint { font-size: var(--text-xs); color: var(--text-tertiary); max-width: 320px; }
-</style>
+<style>.page{padding:var(--space-6);max-width:1100px;display:grid;gap:var(--space-5)}header{display:flex;gap:.8rem;align-items:center}h1{margin:0;font-size:var(--text-2xl);color:var(--text-primary)}header p,.empty{margin:.25rem 0;color:var(--text-secondary);font-size:var(--text-sm)}.form{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}.form input,.form textarea{border:1px solid var(--surface-border);border-radius:var(--radius-md);background:var(--surface-card);color:var(--text-primary);padding:.7rem}.form textarea{grid-column:1/-1;min-height:90px}.form button{display:flex;align-items:center;justify-content:center;gap:.4rem;border:0;border-radius:var(--radius-md);background:var(--color-neutral-900);color:white}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.8rem}article{border:1px solid var(--surface-border);background:var(--surface-card);border-radius:var(--radius-lg);padding:1rem}article .top{display:flex;justify-content:space-between;font-size:var(--text-xs);color:var(--text-tertiary)}article button{border:0;background:none;color:var(--text-secondary);cursor:pointer}article h2{font-size:var(--text-base);color:var(--text-primary);margin:.6rem 0}article strong,article p{font-size:var(--text-xs);color:var(--text-secondary)}article a{display:flex;align-items:center;gap:.25rem;font-size:var(--text-xs);color:var(--text-primary)}.error{color:var(--color-error-500)}@media(max-width:640px){.page{padding:var(--space-4)}.form{grid-template-columns:1fr}.form textarea{grid-column:auto}.form button{padding:.7rem}}</style>

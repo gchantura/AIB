@@ -1,5 +1,15 @@
 # Safety Policy
 
+## Runtime enforcement
+
+- Level 0: read-only operations may execute immediately.
+- Level 1: local workspace records may be created and are audited.
+- Level 2: the system creates a pending approval containing the exact tool ID and input. Only an approved, matching, unused record permits execution.
+- Level 3: disabled until stronger authentication and operating-system isolation are implemented.
+- Approved records are consumed before execution and cannot be replayed.
+- File operations resolve paths against the repository root and reject boundary escapes.
+- Controlled writes record previous file state before mutation. The Safety screen can restore or remove affected files.
+
 ## Purpose
 
 This policy defines the rules that govern all automated and semi-automated actions within J.A.R.V.I.S. Safety is non-negotiable. When in doubt, ask.

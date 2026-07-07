@@ -1,121 +1,15 @@
 <script>
-  import { Wrench, Plus, ArrowRight, Shield, CheckCircle, Clock, AlertCircle } from 'lucide-svelte';
-
-  const tools = [
-    { id: 'list-directory', name: 'List Directory', description: 'List files and folders in a directory.', category: 'file-operations', safetyLevel: 0, status: 'planned' },
-    { id: 'read-file', name: 'Read File', description: 'Read the contents of a file.', category: 'file-operations', safetyLevel: 0, status: 'planned' },
-    { id: 'create-task', name: 'Create Task', description: 'Create a new task in the task list.', category: 'productivity', safetyLevel: 1, status: 'planned' },
-    { id: 'create-note', name: 'Create Note', description: 'Save a note to persistent memory.', category: 'productivity', safetyLevel: 1, status: 'planned' },
-    { id: 'search-memory', name: 'Search Memory', description: 'Search across all memory categories.', category: 'database', safetyLevel: 0, status: 'planned' },
-    { id: 'save-memory', name: 'Save Memory', description: 'Save a new entry to persistent memory.', category: 'database', safetyLevel: 1, status: 'planned' },
-  ];
-
-  const safetyLabels = { 0: 'Safe', 1: 'Inform', 2: 'Confirm', 3: 'Approval' };
+  import { onMount } from 'svelte'; import { Wrench, Play, Plus, Shield } from 'lucide-svelte';
+  let tools=$state([]),selected=$state('summarize-project'),input=$state('{}'),output=$state(''),running=$state(false),error=$state('');
+  let showCreate=$state(false),id=$state(''),name=$state(''),description=$state(''),safetyLevel=$state(1);
+  onMount(load);async function load(){const r=await fetch('/api/tools');const d=await r.json();tools=d.tools??[];error=d.error??''}
+  async function run(){running=true;error='';output='';try{const parsed=JSON.parse(input||'{}');const r=await fetch('/api/tools',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:selected,input:parsed})});const d=await r.json();if(!r.ok)throw new Error(d.error);output=JSON.stringify(d.output,null,2)}catch(e){error=e instanceof Error?e.message:String(e)}finally{running=false}}
+  async function create(){const r=await fetch('/api/tools',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({operation:'register',tool:{id,name,description,category:'generated',safetyLevel:Number(safetyLevel)}})});const d=await r.json();if(!r.ok){error=d.error;return}id=name=description='';showCreate=false;await load()}
 </script>
-
-<div class="page">
-  <div class="page-header">
-    <div>
-      <h1 class="page-title">Tools</h1>
-      <p class="page-sub">{tools.length} tools registered · {tools.filter(t => t.status === 'passing').length} active</p>
-    </div>
-    <button class="btn-outline" disabled>
-      <Plus size={14} />
-      New Tool
-    </button>
-  </div>
-
-  <div class="tools-grid">
-    {#each tools as tool}
-      <div class="tool-card">
-        <div class="tool-header">
-          <div class="tool-icon">
-            <Wrench size={15} />
-          </div>
-          <div class="tool-meta">
-            <span class="tool-category">{tool.category}</span>
-            <span class="safety-badge level-{tool.safetyLevel}">
-              <Shield size={10} />
-              {safetyLabels[tool.safetyLevel]}
-            </span>
-          </div>
-        </div>
-        <h3 class="tool-name">{tool.name}</h3>
-        <p class="tool-desc">{tool.description}</p>
-        <div class="tool-footer">
-          <span class="status-chip {tool.status}">
-            {#if tool.status === 'passing'}
-              <CheckCircle size={11} />
-            {:else if tool.status === 'failing'}
-              <AlertCircle size={11} />
-            {:else}
-              <Clock size={11} />
-            {/if}
-            {tool.status}
-          </span>
-          <ArrowRight size={13} />
-        </div>
-      </div>
-    {/each}
-
-    <div class="tool-card add-card">
-      <div class="add-inner">
-        <Plus size={20} />
-        <span>Create a Tool</span>
-        <p>Turn any repeatable task into a registered J.A.R.V.I.S. tool</p>
-      </div>
-    </div>
-  </div>
+<svelte:head><title>Tools · J.A.R.V.I.S.</title></svelte:head>
+<div class="page"><header><div><h1>Tool Registry</h1><p>Boundary-checked capabilities with explicit safety levels and audit trails.</p></div><button onclick={()=>showCreate=!showCreate}><Plus size={15}/>Generate manifest</button></header>
+  {#if showCreate}<section class="create"><input bind:value={id} placeholder="tool-id"/><input bind:value={name} placeholder="Tool name"/><input bind:value={description} placeholder="What it does"/><select bind:value={safetyLevel}><option value={0}>Level 0 · Read-only</option><option value={1}>Level 1 · Local create</option><option value={2}>Level 2 · Confirmation</option><option value={3}>Level 3 · Explicit approval</option></select><button onclick={create} disabled={!id||!name}>Register</button></section>{/if}
+  <div class="layout"><section class="registry">{#each tools as tool(tool.id)}<button class:active={selected===tool.id} onclick={()=>selected=tool.id}><Wrench size={15}/><div><strong>{tool.name}</strong><span>{tool.description}</span></div><small><Shield size={11}/>L{tool.safetyLevel}</small></button>{/each}</section>
+  <section class="runner"><h2>Tool runner</h2><label>Selected tool<select bind:value={selected}>{#each tools as tool(tool.id)}<option value={tool.id}>{tool.name}</option>{/each}</select></label><label>JSON input<textarea bind:value={input} spellcheck="false"></textarea></label><button class="run" onclick={run} disabled={running}><Play size={14}/>{running?'Running…':'Run safely'}</button>{#if error}<pre class="error">{error}</pre>{/if}{#if output}<pre>{output}</pre>{/if}</section></div>
 </div>
-
-<style>
-  .page { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-6); }
-  .page-header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-4); flex-wrap: wrap; }
-  .page-title { font-size: var(--text-2xl); font-weight: var(--font-semibold); color: var(--text-primary); margin: 0; }
-  .page-sub { font-size: var(--text-sm); color: var(--text-secondary); margin: var(--space-1) 0 0; }
-  .btn-outline {
-    display: inline-flex; align-items: center; gap: var(--space-2);
-    padding: var(--space-2) var(--space-4); border: 1px solid var(--surface-border);
-    border-radius: var(--radius-md); background: transparent;
-    font-size: var(--text-sm); font-weight: var(--font-medium); color: var(--text-secondary); cursor: pointer;
-    transition: background var(--transition-fast), color var(--transition-fast);
-  }
-  .btn-outline:hover:not(:disabled) { background: var(--surface-border-subtle); color: var(--text-primary); }
-  .btn-outline:disabled { opacity: 0.5; cursor: not-allowed; }
-  .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--space-4); }
-  .tool-card {
-    background: var(--surface-card); border: 1px solid var(--surface-border);
-    border-radius: var(--radius-lg); padding: var(--space-5);
-    display: flex; flex-direction: column; gap: var(--space-3);
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-  }
-  .tool-card:hover { border-color: var(--color-neutral-300); box-shadow: var(--shadow-xs); }
-  .tool-header { display: flex; align-items: center; justify-content: space-between; }
-  .tool-icon {
-    width: 32px; height: 32px; border-radius: var(--radius-md);
-    border: 1px solid var(--surface-border); background: var(--surface-border-subtle);
-    display: flex; align-items: center; justify-content: center; color: var(--text-secondary);
-  }
-  .tool-meta { display: flex; align-items: center; gap: var(--space-2); }
-  .tool-category { font-size: var(--text-xs); color: var(--text-tertiary); }
-  .safety-badge {
-    display: inline-flex; align-items: center; gap: 3px; font-size: 10px;
-    padding: 2px var(--space-2); border-radius: var(--radius-full);
-    border: 1px solid var(--surface-border); color: var(--text-tertiary);
-  }
-  .tool-name { font-size: var(--text-sm); font-weight: var(--font-semibold); color: var(--text-primary); margin: 0; }
-  .tool-desc { font-size: var(--text-xs); color: var(--text-secondary); margin: 0; flex: 1; line-height: var(--leading-relaxed); }
-  .tool-footer { display: flex; align-items: center; justify-content: space-between; color: var(--text-tertiary); }
-  .status-chip { display: inline-flex; align-items: center; gap: 4px; font-size: var(--text-xs); color: var(--text-tertiary); }
-  .status-chip.passing { color: var(--color-success-500); }
-  .status-chip.failing { color: var(--color-error-500); }
-  .add-card { border-style: dashed; cursor: pointer; }
-  .add-card:hover { border-style: dashed; border-color: var(--color-neutral-400); }
-  .add-inner {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center; gap: var(--space-2); padding: var(--space-6) 0;
-    color: var(--text-tertiary); flex: 1;
-  }
-  .add-inner span { font-size: var(--text-sm); font-weight: var(--font-medium); color: var(--text-secondary); }
-  .add-inner p { font-size: var(--text-xs); margin: 0; max-width: 200px; }
-</style>
+<style>.page{padding:var(--space-6);display:grid;gap:var(--space-5)}header{display:flex;justify-content:space-between;gap:1rem;align-items:center}h1{margin:0;color:var(--text-primary);font-size:var(--text-2xl)}header p{color:var(--text-secondary);font-size:var(--text-sm);margin:.3rem 0}button,.create input,.create select,select,textarea{border:1px solid var(--surface-border);background:var(--surface-card);color:var(--text-primary);border-radius:var(--radius-md)}header button,.run,.create button{display:flex;align-items:center;gap:.4rem;padding:.65rem .9rem;cursor:pointer}.create{display:flex;gap:.5rem;flex-wrap:wrap}.create input,.create select{padding:.65rem;flex:1;min-width:150px}.layout{display:grid;grid-template-columns:minmax(280px,1fr) minmax(300px,1fr);gap:1rem}.registry,.runner{border:1px solid var(--surface-border);background:var(--surface-card);border-radius:var(--radius-lg);padding:.6rem}.registry{display:flex;flex-direction:column;gap:.3rem}.registry button{display:flex;text-align:left;align-items:center;gap:.7rem;padding:.75rem;cursor:pointer}.registry button.active{border-color:var(--text-tertiary)}.registry div{display:grid;gap:.15rem;flex:1}.registry span,.registry small{font-size:var(--text-xs);color:var(--text-tertiary)}.registry small{display:flex;align-items:center;gap:.2rem}.runner{display:grid;align-content:start;gap:.8rem;padding:1rem}.runner h2{margin:0;font-size:var(--text-base)}label{display:grid;gap:.35rem;font-size:var(--text-xs);color:var(--text-secondary)}select,textarea{padding:.65rem}textarea{min-height:120px;font-family:var(--font-mono)}.run{justify-content:center;background:var(--color-neutral-900);color:white}pre{white-space:pre-wrap;word-break:break-word;padding:.8rem;background:var(--surface-bg);border-radius:var(--radius-md);max-height:340px;overflow:auto;font-size:var(--text-xs)}.error{color:var(--color-error-500)}@media(max-width:800px){.page{padding:var(--space-4)}.layout{grid-template-columns:1fr}header{align-items:flex-start;flex-direction:column}}</style>

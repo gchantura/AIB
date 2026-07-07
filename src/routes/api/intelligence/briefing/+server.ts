@@ -1,0 +1,2 @@
+import{json}from'@sveltejs/kit';import type{RequestHandler}from'./$types.js';import{generateBriefing}from'$lib/jarvis/briefing/runtime.js';import{retrieveRelevant}from'$lib/jarvis/memory/relevance.js';
+export const GET:RequestHandler=async({url})=>{const query=url.searchParams.get('q')??'current goals projects tasks and preferences';return json({briefing:await generateBriefing(),relevantMemories:await retrieveRelevant(query,6)})};

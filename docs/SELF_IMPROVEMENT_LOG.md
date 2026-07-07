@@ -1,5 +1,54 @@
 # Self-Improvement Log
 
+## 2026-07-07 — Evaluation and capability governance
+
+- Added persisted execution metrics for tools and model-powered capabilities.
+- Added per-capability run counts, success rates, failures, average tool duration, and recent failure evidence.
+- Added deterministic improvement-proposal generation based on repeated failures and bounded memory scale signals.
+- Deduplicated open proposals by target and required explicit approve/dismiss decisions.
+- Added the Evaluation interface; proposal approval records direction only and cannot silently mutate the system.
+- Verified success/failure metric capture, repeated-failure proposal generation, and proposal approval against the production server, then restored pre-test local data.
+
+## 2026-07-07 — Proactive operations
+
+- Added a restart-safe Node scheduler initialized through the SvelteKit server hook.
+- Added persisted next-run timestamps and idempotent due-job processing for daily, hourly, interval, and future-date schedules.
+- Added task, note, and notification automation actions with success/failure notifications.
+- Added local notification read/clear controls and a proactive Briefing screen.
+- Added deterministic daily planning from tasks and calendar events.
+- Added offline relevance-ranked memory retrieval using synonym expansion, lexical overlap, and recency.
+- Verified one due execution, zero duplicate execution on the next tick, notification creation, briefing generation, and relevant-memory retrieval.
+
+## 2026-07-07 — Persistent intelligence
+
+- Added durable chat conversations, restoration of the latest session, and local model-run history.
+- Added deterministic memory extraction for explicit preferences, goals, and “remember that” statements with conversation provenance.
+- Added evidence-bound model research using user-provided URLs and excerpts; prompts forbid invented citations.
+- Added a repository coding assistant limited to explicitly selected files and eight-file/30KB-per-file context budgets.
+- Recorded failed model runs as well as successful ones so offline failures remain diagnosable.
+- Verified offline failure handling, conversation persistence, memory extraction, and repository path-escape denial against the production server.
+
+## 2026-07-07 — Safe autonomy and app factory
+
+- Added a visible human approval queue for Level 2 actions.
+- Bound approvals to the exact tool and serialized input, made them single-use, and logged every decision.
+- Added pre-mutation rollback journals and a working rollback action.
+- Added approval-gated repository file creation and a Svelte 5 local application factory confined to `generated-apps/`.
+- Verified that unapproved execution is denied, approved execution succeeds, approval reuse is denied, and rollback removes generated artifacts.
+
+## 2026-07-07 — Functional local-first runtime
+
+- Replaced mandatory Supabase memory with an atomic local store so the system works offline by default.
+- Added persistent tasks, notes, projects, events, research, learning, automations, memories, generated tools, generated skills, and audit history.
+- Added a runtime tool registry with repository-boundary enforcement and fail-closed safety levels.
+- Added on-disk skill discovery and skill generation.
+- Added automation execution and live repository intelligence.
+- Replaced placeholder workspace, tools, skills, research, and calendar interfaces with functional screens.
+- Switched production deployment from Vercel to the local Node adapter.
+- Restored the real Svelte validation gate and removed all diagnostics.
+
+Validation: production API smoke test, `npm run check`, `npm run build`, and `npm run ai:validate`.
+
 ## Purpose
 
 This log records what was learned after every major task. It drives the continuous improvement of skills, tools, documentation, and the system itself.
@@ -103,7 +152,7 @@ This log records what was learned after every major task. It drives the continuo
 
 **Docs Updated:** CLAUDE.md, REPOSITORY_MAP.md, VALIDATION_REPORT.md (created), SELF_IMPROVEMENT_LOG.md
 
-**Next Best Step:** User must decide: (A) approve the Phase 7 UI scaffold and proceed to Phase 4 (Model Core), or (B) remove the Phase 7 files and proceed to Phase 4 first. Then: Phase 4 — LLM provider abstraction, starting with the Ollama adapter.
+**Historical next step (resolved):** The former Phase 7 approval fork is closed. The UI was retained and evolved into the working product; Phase 4 model abstraction and the Ollama adapter are implemented.
 
 ---
 

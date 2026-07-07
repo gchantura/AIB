@@ -1,4 +1,35 @@
-# Svelte library
+# Super J.A.R.V.I.S.
+
+A local-first personal AI workspace built with SvelteKit 2 and Svelte 5. The application combines model-agnostic chat, persistent memory, tasks, notes, projects, calendar events, research dossiers, skills, tools, automations, repository intelligence, learning, and an audit trail.
+
+Chat conversations persist across restarts. Explicit statements such as “remember that…”, “I prefer…”, and “my goal is…” are extracted into traceable local memory. Research can synthesize user-provided source excerpts without inventing citations, while Coding analyzes only explicitly selected repository files.
+
+The Node runtime includes a restart-safe scheduler for `daily`, `hourly`, `every N minutes`, and future ISO schedules. Automations can create tasks, notes, or local notifications. The Briefing screen combines the next 24 hours with relevance-ranked local memory; no model or network connection is required.
+
+## Run locally
+
+```sh
+npm install
+npm run dev
+```
+
+Ollama is detected at `http://localhost:11434` by default. Cloud providers remain disabled unless explicitly configured. Workspace data is stored locally in `.jarvis/workspace.json` and is excluded from Git.
+
+## Verification
+
+```sh
+npm run check
+npm run build
+npm run ai:validate
+```
+
+## Safety model
+
+Tools have safety levels 0–3. Level 0/1 tools run locally; Level 2 tools require an exact-input, one-time approval from the Safety screen. Controlled file and app generation create rollback records before changing the repository. Level 3 tools remain disabled. Repository file tools reject paths outside the workspace.
+
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), [docs/SAFETY_POLICY.md](docs/SAFETY_POLICY.md), and [docs/TOOL_REGISTRY.md](docs/TOOL_REGISTRY.md).
+
+## Original scaffold notes
 
 Everything you need to build a Svelte library, powered by [`sv`](https://npmjs.com/package/sv).
 

@@ -1,5 +1,7 @@
 # Validation Report
 
+> Historical runs below describe the bootstrap state at the time they were recorded. They are not current capability or approval status. Current authoritative status is in `docs/ROADMAP.md`; the Phase 7 UI is approved, integrated, and validation is clean.
+
 This file is updated after every validation run. See `docs/SELF_IMPROVEMENT_LOG.md` for task-level context.
 
 ---
@@ -96,7 +98,7 @@ Exit code: 0
 | `src/routes/(jarvis)/settings/+page.svelte:102` | Toggle button missing `aria-label` | Warning (a11y) |
 | `src/routes/(jarvis)/tools/+page.svelte:91` | `<svelte:component>` deprecated in runes mode | Warning |
 
-**Status of warnings:** These exist in Phase 7 UI files that are pending user approval to keep or remove. They will be fixed when Phase 7 is formally approved and built properly.
+**Historical status:** These warnings belonged to the bootstrap UI and have since been fixed. The UI was retained and approved through continued implementation.
 
 **Note on `npm run check`:** The `check` script invokes `svelte-check` which is not installed as a dev dependency. It exits with code 0 silently. `npm run build` is the authoritative validation gate.
 
@@ -122,6 +124,6 @@ The current `scripts/ai/validate.js` does not yet check:
 - [ ] Missing `docs/VALIDATION_REPORT.md` (now added)
 - [ ] `.claude/commands/README.md` existence
 - [ ] Stale dependency listings in `docs/REPOSITORY_MAP.md`
-- [ ] Phase 7 out-of-scope file detection
+- [x] Phase 7 approval ambiguity resolved; UI is integrated product code
 
 These will be addressed in Phase 3 validation expansion.

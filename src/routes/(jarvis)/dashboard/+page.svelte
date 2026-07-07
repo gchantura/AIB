@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import { resolve } from '$app/paths';
   import {
     Activity,
     Bot,
@@ -76,7 +77,7 @@
       <p class="page-sub">Good to have you back. Here's your system overview.</p>
     </div>
     <div class="header-right">
-      <a href="/chat" class="btn-primary">
+      <a href={resolve('/chat')} class="btn-primary">
         <MessageSquare size={15} />
         New Chat
       </a>
@@ -105,13 +106,13 @@
         <span class="status-badge online">
           Online{modelStatus.latency ? ` · ${modelStatus.latency}ms` : ''}
         </span>
-        <a href="/chat" class="text-link">
+        <a href={resolve('/chat')} class="text-link">
           Chat
           <ArrowRight size={13} />
         </a>
       {:else}
         <span class="status-badge offline">Offline — Configure in Settings</span>
-        <a href="/settings" class="text-link">
+        <a href={resolve('/settings')} class="text-link">
           Configure
           <ArrowRight size={13} />
         </a>
@@ -121,8 +122,8 @@
 
   <!-- Quick stats -->
   <div class="stats-grid">
-    {#each quickStats as stat}
-      <a href={stat.href} class="stat-card">
+    {#each quickStats as stat (stat.label)}
+      <a href={resolve(stat.href)} class="stat-card">
         <div class="stat-icon">
           <stat.icon size={18} />
         </div>
@@ -144,11 +145,11 @@
       </div>
       <div class="card-body">
         <ul class="step-list">
-          {#each nextSteps as step, i}
+          {#each nextSteps as step, i (step.label)}
             <li class="step-item">
               <span class="step-num">{i + 1}</span>
               <div class="step-content">
-                <a href={step.href} class="step-label">{step.label}</a>
+                <a href={resolve(step.href)} class="step-label">{step.label}</a>
                 <p class="step-desc">{step.description}</p>
               </div>
               <ArrowRight size={14} class="step-arrow" />
@@ -166,7 +167,7 @@
       </div>
       <div class="card-body">
         <ul class="activity-list">
-          {#each recentActivity as item}
+          {#each recentActivity as item (item.text)}
             <li class="activity-item">
               <div class="activity-dot {item.type}"></div>
               <div class="activity-content">
@@ -204,7 +205,7 @@
           { num: 8, label: 'First Tools', done: false },
           { num: 9, label: 'Automation', done: false },
           { num: 10, label: 'Self-Improvement', done: false },
-        ] as phase}
+        ] as phase (phase.num)}
           <div class="phase-item" class:done={phase.done}>
             <span class="phase-num">{phase.num}</span>
             <span class="phase-label">{phase.label}</span>
@@ -555,8 +556,6 @@
   }
 
   /* Phase grid */
-  .phase-card {}
-
   .phase-badge {
     font-size: var(--text-xs);
     color: var(--text-tertiary);

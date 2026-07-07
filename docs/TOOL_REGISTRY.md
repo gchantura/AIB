@@ -57,25 +57,26 @@ interface ToolManifest {
 
 ## Registered Tools
 
-### Phase 1 (Bootstrap — Not yet implemented as runtime tools)
+### Runtime tools
 
 | ID | Name | Category | Safety | Status |
 |---|---|---|---|---|
-| `list-directory` | List Directory | file-operations | 0 | PLANNED |
-| `read-file` | Read File | file-operations | 0 | PLANNED |
-| `write-file` | Write File (with approval) | file-operations | 2 | PLANNED |
+| `list-directory` | List Directory | file-operations | 0 | IMPLEMENTED |
+| `read-file` | Read File | file-operations | 0 | IMPLEMENTED |
+| `write-file` | Write File (with approval) | file-operations | 2 | IMPLEMENTED |
 | `safe-command-runner` | Safe Command Runner | system | 2 | PLANNED |
-| `summarize-project` | Summarize Project | coding | 0 | PLANNED |
-| `create-task` | Create Task | productivity | 1 | PLANNED |
+| `summarize-project` | Summarize Project | coding | 0 | IMPLEMENTED |
+| `create-task` | Create Task | productivity | 1 | IMPLEMENTED |
 | `create-calendar-event` | Create Calendar Event | calendar | 2 | PLANNED |
 | `create-reminder` | Create Reminder | productivity | 1 | PLANNED |
-| `create-note` | Create Note | productivity | 1 | PLANNED |
+| `create-note` | Create Note | productivity | 1 | IMPLEMENTED |
 | `search-memory` | Search Memory | database | 0 | PLANNED |
 | `save-memory` | Save Memory | database | 1 | PLANNED |
-| `register-tool` | Register Tool | meta | 1 | PLANNED |
+| `register-tool` | Register Tool | meta | 1 | IMPLEMENTED |
 | `validate-tool` | Validate Tool | meta | 0 | PLANNED |
-| `create-skill` | Create Skill | meta | 1 | PLANNED |
+| `create-skill` | Create Skill | meta | 1 | IMPLEMENTED |
 | `improve-skill` | Improve Skill | meta | 1 | PLANNED |
+| `create-app` | Create Local Svelte App | meta | 2 | IMPLEMENTED |
 
 ### Dangerous Tools (Level 3 — require explicit approval)
 

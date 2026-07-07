@@ -1,0 +1,2 @@
+import{json}from'@sveltejs/kit';import type{RequestHandler}from'./$types.js';import{listUpgradePlans,prepareUpgrade,verifyUpgrade}from'$lib/jarvis/evaluation/upgrades.js';
+export const GET:RequestHandler=async()=>json({plans:await listUpgradePlans()});export const POST:RequestHandler=async({request})=>{try{const body=await request.json();return json({plan:body.operation==='prepare'?await prepareUpgrade(body.proposalId):await verifyUpgrade(body.id)})}catch(error){return json({error:error instanceof Error?error.message:String(error)},{status:400})}};

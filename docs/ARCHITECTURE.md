@@ -106,8 +106,8 @@ scripts/ai/              # Validation + utility scripts
 ### Decision 1: SvelteKit as the sole UI framework
 Rationale: Already in place. SvelteKit provides SSR, form actions, and API routes in one coherent system. No need to introduce a separate backend framework.
 
-### Decision 2: Supabase as the local persistence layer
-Rationale: Pre-configured in the environment. Provides PostgreSQL with RLS, real-time, and edge functions. All tables have RLS enabled. The memory system uses Supabase tables.
+### Decision 2: Atomic local JSON as the default persistence layer
+Rationale: Local-first must work without accounts, network access, or environment variables. The server serializes mutations and atomically replaces `.jarvis/workspace.json`. Supabase remains an optional future synchronization adapter, not a runtime requirement.
 
 ### Decision 3: Provider abstraction before first model call
 Rationale: Hardcoding Anthropic, OpenAI, or Ollama creates lock-in. The router pattern allows switching providers per task without changing application code.
@@ -128,8 +128,9 @@ Rationale: Minimalistic design requirement. Neutral tones, clean whitespace, no 
 | Styling | Tailwind CSS v4 |
 | Icons | lucide-svelte |
 | Package Manager | npm |
-| Database | Supabase (PostgreSQL) |
-| Adapter | @sveltejs/adapter-vercel |
+| Database | Atomic local JSON (`.jarvis/workspace.json`) |
+| Optional sync | Supabase adapter scaffold |
+| Adapter | @sveltejs/adapter-node |
 | Validation | Zod |
 | Build | Vite 8 |
 | Runtime | Node.js (server) / Browser (client) |
@@ -138,8 +139,19 @@ Rationale: Minimalistic design requirement. Neutral tones, clean whitespace, no 
 
 ## Current State
 
-- UI: Minimal skeleton (layout + home page only).
-- LLM Core: Not yet implemented (Phase 4).
-- Memory: Not yet implemented (Phase 5).
-- Tools: Not yet implemented (Phase 6).
-- Main UI: Not yet implemented (Phase 7).
+- UI: Functional workspace for chat, memory, tasks, notes, projects, calendar, research, tools, skills, automations, learning, settings, and repository intelligence.
+- LLM core: Local-first task router with Ollama and OpenAI-compatible adapters plus opt-in cloud providers.
+- Memory: Persistent local CRUD and search, independent of cloud configuration.
+- Tools: Runtime registry, boundary-checked read tools, local creation tools, and execution audit.
+- Skills: Discovers `SKILL.md` files and can generate validated skill scaffolds.
+- Automation: Declarative local `task:` and `note:` actions with enable/disable and manual execution.
+- Repository intelligence: Live file, route, dependency, extension, and command inventory.
+- Safety: Level 2 actions use exact-input, one-time approvals and pre-mutation rollback journals. Level 3 remains fail-closed. All decisions and mutations generate audit events.
+- App factory: Generates isolated Svelte 5/Vite applications under `generated-apps/` only after approval.
+- Conversations: Complete sessions and model-run outcomes persist locally; explicit preference and goal phrases produce source-linked memories.
+- Research intelligence: Model-assisted briefs are constrained to user-supplied source excerpts and must expose uncertainty when evidence is absent.
+- Coding intelligence: Repository-aware prompts read at most eight explicitly selected, boundary-checked files and never mutate them.
+- Proactive runtime: A Node-side scheduler wakes every 30 seconds, executes persisted due jobs once, advances `nextRunAt`, and emits local notifications.
+- Daily planning: Deterministic briefings combine open/due tasks, next-24-hour events, and actionable recommendations without requiring a model.
+- Memory retrieval: Offline relevance ranking blends expanded keyword overlap with recency and returns scored, source-preserving memories.
+- Evaluation: Tool and model outcomes feed per-capability reliability metrics. Repeated evidence can generate deduplicated improvement proposals; humans approve or dismiss direction before any upgrade work begins.

@@ -1,5 +1,6 @@
 <script>
   import { page } from '$app/stores';
+  import { resolve } from '$app/paths';
   import {
     LayoutDashboard,
     MessageSquare,
@@ -14,6 +15,12 @@
     ChevronRight,
     Bot,
     Activity,
+    Workflow,
+    GitBranch,
+    ShieldCheck,
+    Code2,
+    Bell,
+    BarChart3,
     Menu,
     X
   } from 'lucide-svelte';
@@ -25,12 +32,18 @@
 
   const navItems = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { href: '/briefing', label: 'Briefing', icon: Bell },
     { href: '/chat', label: 'Chat', icon: MessageSquare },
     { href: '/tools', label: 'Tools', icon: Wrench },
     { href: '/skills', label: 'Skills', icon: BookOpen },
     { href: '/memory', label: 'Memory', icon: Database },
     { href: '/calendar', label: 'Calendar', icon: Calendar },
     { href: '/research', label: 'Research', icon: Search },
+    { href: '/automations', label: 'Automations', icon: Workflow },
+    { href: '/repository', label: 'Repository', icon: GitBranch },
+    { href: '/coding', label: 'Coding', icon: Code2 },
+    { href: '/safety', label: 'Safety', icon: ShieldCheck },
+    { href: '/evaluation', label: 'Evaluation', icon: BarChart3 },
     { href: '/learning', label: 'Learning', icon: GraduationCap },
   ];
 
@@ -84,9 +97,9 @@
 
     <!-- Nav items -->
     <nav class="sidebar-nav">
-      {#each navItems as item}
+      {#each navItems as item (item.href)}
         <a
-          href={item.href}
+          href={resolve(item.href)}
           class="nav-item"
           class:active={isActive(item.href)}
           onclick={() => mobileOpen = false}
@@ -105,7 +118,7 @@
     <!-- Bottom: settings -->
     <div class="sidebar-footer">
       <a
-        href="/settings"
+        href={resolve('/settings')}
         class="nav-item"
         class:active={isActive('/settings')}
         onclick={() => mobileOpen = false}

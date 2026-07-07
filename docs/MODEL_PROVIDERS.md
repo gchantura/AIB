@@ -41,23 +41,23 @@ interface ProviderCapabilities {
 
 | Provider | Status | Port | Notes |
 |---|---|---|---|
-| Ollama | PLANNED | 11434 | Primary local provider |
-| LM Studio | PLANNED | 1234 | OpenAI-compatible API |
-| llama.cpp server | PLANNED | 8080 | Raw llama.cpp HTTP |
-| vLLM | PLANNED | 8000 | High-throughput local |
+| Ollama | IMPLEMENTED | 11434 | Primary local provider; chat, streaming, models and health |
+| LM Studio | IMPLEMENTED | 1234 | OpenAI-compatible adapter |
+| llama.cpp server | COMPATIBLE | configurable | Usable through the OpenAI-compatible adapter |
+| vLLM | COMPATIBLE | configurable | Usable through the OpenAI-compatible adapter |
 
 ### Cloud (Optional, Opt-In)
 
 | Provider | Status | Requires |
 |---|---|---|
-| OpenAI | PLANNED | `OPENAI_API_KEY` |
-| Anthropic | PLANNED | `ANTHROPIC_API_KEY` |
-| Google Gemini | PLANNED | `GOOGLE_API_KEY` |
-| OpenRouter | PLANNED | `OPENROUTER_API_KEY` |
+| OpenAI | IMPLEMENTED, OPT-IN | `OPENAI_API_KEY` and cloud models enabled |
+| Anthropic | IMPLEMENTED, OPT-IN | `ANTHROPIC_API_KEY` and cloud models enabled |
+| Google Gemini | FUTURE | `GOOGLE_API_KEY` |
+| OpenRouter | COMPATIBLE/FUTURE CONFIG | OpenAI-compatible endpoint configuration |
 
 ---
 
-## Model Router Logic (Planned)
+## Model Router Logic
 
 ```
 Task type → Provider selection order
@@ -98,15 +98,10 @@ JARVIS_PREFERRED_PROVIDER_ORDER=ollama,lm-studio,openai,anthropic
 
 ---
 
-## Implementation Plan (Phase 4)
+## Implemented Phase 4 Components
 
-1. Create `src/lib/jarvis/llm/types.ts` — all interfaces.
-2. Create `src/lib/jarvis/llm/config.ts` — read env vars.
-3. Create `src/lib/jarvis/llm/errors.ts` — typed errors.
-4. Create `src/lib/jarvis/llm/providers/ollama.ts` — first local provider.
-5. Create `src/lib/jarvis/llm/providers/openai-compatible.ts` — shared base for LM Studio, vLLM, llama.cpp.
-6. Create `src/lib/jarvis/llm/capabilities.ts` — model metadata registry.
-7. Create `src/lib/jarvis/llm/router.ts` — task-based routing.
-8. Create `src/lib/jarvis/llm/prompts.ts` — prompt templates.
-9. Create `src/routes/api/models/+server.ts` — model listing API.
-10. Add model status panel to dashboard.
+- `src/lib/jarvis/llm/types.ts`, `config.ts`, and `errors.ts`
+- Ollama, OpenAI-compatible, and Anthropic provider adapters
+- Local-first task router with privacy enforcement
+- `/api/models` health/model inventory and dashboard status
+- Streaming `/api/chat`, persistent conversations, research and coding endpoints

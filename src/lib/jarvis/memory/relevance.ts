@@ -1,0 +1,5 @@
+import { snapshot } from '../core/store.js';
+
+const synonyms:Record<string,string[]>= { task:['todo','work','action'], project:['codebase','repository','app'], learn:['learning','study','goal'], prefer:['preference','like'], research:['investigate','source','evidence'] };
+function terms(text:string){const base=text.toLowerCase().match(/[a-z0-9]{2,}/g)??[];return new Set(base.flatMap((term)=>[term,...(synonyms[term]??[])]));}
+export async function retrieveRelevant(query:string,limit=8){const queryTerms=terms(query);const now=Date.now();return (await snapshot()).memories.map((memory)=>{const haystack=terms(`${memory.content} ${memory.summary??''} ${memory.tags.join(' ')}`);let overlap=0;for(const term of queryTerms)if(haystack.has(term))overlap++;const ageDays=Math.max(0,(now-new Date(memory.updated_at).getTime())/86400000);const recency=1/(1+ageDays/30);return{...memory,relevance:Number((overlap/Math.max(1,queryTerms.size)*.8+recency*.2).toFixed(4))}}).filter((memory)=>memory.relevance>.05).sort((a,b)=>b.relevance-a.relevance).slice(0,Math.min(limit,25));}

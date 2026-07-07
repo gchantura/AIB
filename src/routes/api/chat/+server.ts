@@ -5,13 +5,14 @@ import { getRouter } from '$lib/jarvis/llm/router.js';
 import { LLMError } from '$lib/jarvis/llm/errors.js';
 import type { ChatMessage, TaskType } from '$lib/jarvis/llm/types.js';
 import { env } from '$env/dynamic/private';
+import { appendConversation, ensureConversation, extractMemories, recordModelRun } from '$lib/jarvis/intelligence/runtime.js';
 
 function buildConfig() {
   return getLLMConfig(env as Record<string, string | undefined>);
 }
 
 export const POST: RequestHandler = async ({ request }) => {
-  let body: { messages?: ChatMessage[]; model?: string; task?: TaskType; stream?: boolean };
+  let body: { messages?: ChatMessage[]; model?: string; task?: TaskType; stream?: boolean; conversationId?: string };
   try {
     body = await request.json();
   } catch {
@@ -26,14 +27,20 @@ export const POST: RequestHandler = async ({ request }) => {
 
   const config = buildConfig();
   const router = getRouter(config);
+  const lastUser = [...messages].reverse().find((message) => message.role === 'user');
+  const conversationId = await ensureConversation(body.conversationId, messages);
+  if (lastUser) { await appendConversation(conversationId, [lastUser]); await extractMemories(lastUser.content, conversationId); }
 
   if (!stream) {
     try {
       const response = await router.chat({ model: model || config.defaultLocalChatModel, messages }, task);
-      return json({ content: response.content, model: response.model });
+      await appendConversation(conversationId, [{ role: 'assistant', content: response.content, model: response.model }]);
+      await recordModelRun('chat', lastUser?.content ?? '', { output: response.content, model: response.model });
+      return json({ content: response.content, model: response.model, conversationId });
     } catch (e) {
       const msg = e instanceof LLMError ? e.message : 'No provider available';
-      return json({ error: msg }, { status: 503 });
+      await recordModelRun('chat', lastUser?.content ?? '', { error: msg });
+      return json({ error: msg, conversationId }, { status: 503 });
     }
   }
 
@@ -41,16 +48,22 @@ export const POST: RequestHandler = async ({ request }) => {
     async start(controller) {
       const encode = (data: string) => new TextEncoder().encode(data);
       try {
+        controller.enqueue(encode(`data: ${JSON.stringify({ conversationId })}\n\n`));
+        let accumulated = '';
         const gen = router.chatStream(
           { model: model || config.defaultLocalChatModel, messages },
           task,
         );
         for await (const chunk of gen) {
+          accumulated += chunk;
           controller.enqueue(encode(`data: ${JSON.stringify({ content: chunk })}\n\n`));
         }
+        await appendConversation(conversationId, [{ role: 'assistant', content: accumulated, model: model || config.defaultLocalChatModel }]);
+        await recordModelRun('chat', lastUser?.content ?? '', { output: accumulated, model: model || config.defaultLocalChatModel });
         controller.enqueue(encode('data: [DONE]\n\n'));
       } catch (e) {
         const msg = e instanceof LLMError ? e.message : 'Provider error';
+        await recordModelRun('chat', lastUser?.content ?? '', { error: msg });
         controller.enqueue(encode(`data: ${JSON.stringify({ error: msg })}\n\n`));
       } finally {
         controller.close();

@@ -1,0 +1,2 @@
+import { json } from '@sveltejs/kit'; import type { RequestHandler } from './$types.js'; import { runAutomation, schedulerTick } from '$lib/jarvis/automation/runtime.js';
+export const POST:RequestHandler=async({request})=>{try{const body=await request.json();return json(body.tick?{runs:await schedulerTick()}:{result:await runAutomation(body.id)})}catch(error){return json({error:error instanceof Error?error.message:String(error)},{status:400})}};

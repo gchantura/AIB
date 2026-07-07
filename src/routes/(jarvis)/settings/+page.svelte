@@ -32,7 +32,7 @@
   <div class="settings-layout">
     <!-- Left nav -->
     <nav class="settings-nav">
-      {#each sections as section}
+      {#each sections as section (section.id)}
         <button
           class="settings-nav-item"
           class:active={activeSection === section.id}
@@ -52,7 +52,7 @@
           <p class="section-desc">Configure AI model providers. Local providers are always preferred.</p>
 
           <div class="providers-list">
-            {#each providers as provider}
+            {#each providers as provider (provider.id)}
               <div class="provider-row">
                 <div class="provider-info">
                   <div class="provider-name-row">
@@ -119,7 +119,7 @@
         <div class="section">
           <h2 class="section-title">Appearance</h2>
           <p class="section-desc">Theme and display preferences. Follows system preference by default.</p>
-          <div class="coming-soon">Appearance settings coming in Phase 7 completion.</div>
+          <div class="coming-soon">Appearance customization is not implemented yet.</div>
         </div>
       {/if}
     </div>
@@ -128,7 +128,6 @@
 
 <style>
   .page { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-6); }
-  .page-header {}
   .page-title { font-size: var(--text-2xl); font-weight: var(--font-semibold); color: var(--text-primary); margin: 0; }
   .page-sub { font-size: var(--text-sm); color: var(--text-secondary); margin: var(--space-1) 0 0; }
 

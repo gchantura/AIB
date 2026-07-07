@@ -1,0 +1,3 @@
+import { json } from '@sveltejs/kit'; import type { RequestHandler } from './$types.js'; import { deleteConversation, getConversation, listConversations } from '$lib/jarvis/intelligence/runtime.js';
+export const GET:RequestHandler=async({url})=>{const id=url.searchParams.get('id');return json(id?{conversation:await getConversation(id)}:{conversations:await listConversations()})};
+export const DELETE:RequestHandler=async({url})=>{try{const id=url.searchParams.get('id');if(!id)throw new Error('id required');await deleteConversation(id);return new Response(null,{status:204})}catch(error){return json({error:error instanceof Error?error.message:String(error)},{status:400})}};

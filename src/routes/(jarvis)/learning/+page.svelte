@@ -18,14 +18,14 @@
   </div>
 
   <div class="skill-areas">
-    {#each skillMap as area}
+    {#each skillMap as area (area.area)}
       <div class="area-card">
         <div class="area-header">
           <h3 class="area-title">{area.area}</h3>
           <span class="area-progress">{area.done}/{area.items.length}</span>
         </div>
         <ul class="area-items">
-          {#each area.items as item}
+          {#each area.items as item (item)}
             <li class="area-item">
               <CheckCircle size={14} style="color: var(--text-disabled); flex-shrink: 0;" />
               <span>{item}</span>
@@ -75,8 +75,6 @@
     display: flex; align-items: center; gap: var(--space-2);
     font-size: var(--text-xs); color: var(--text-secondary);
   }
-
-  .check-icon { color: var(--text-disabled); flex-shrink: 0; }
 
   .coming-soon {
     display: flex; align-items: center; gap: var(--space-3);

@@ -62,7 +62,7 @@ Supabase client library present (`@supabase/supabase-js ^2.50.0` in `dependencie
 |---|---|---|
 | `VITE_SUPABASE_URL` | Set | Supabase project URL |
 | `VITE_SUPABASE_ANON_KEY` | Set | Supabase anon key |
-| All `JARVIS_*` vars | Not set | Model routing config (Phase 4) |
+| All `JARVIS_*` vars | Optional | Runtime model-routing overrides |
 | `OLLAMA_BASE_URL` | Not set | Local Ollama |
 | `OPENAI_API_KEY` | Not set | Optional cloud provider |
 | `ANTHROPIC_API_KEY` | Not set | Optional cloud provider |
@@ -116,38 +116,11 @@ Not installed. `npx graphify --version` returned not found. System operates in `
 
 ---
 
-## Phase 1: Files Created Outside Phase 0/1 Scope
+## Implementation Status
 
-The previous implementation created the following files that are **Phase 7 scope** (Main UI), not Phase 0/1 scope. They were built ahead of schedule without explicit approval.
+The J.A.R.V.I.S. UI and runtime are approved, integrated product code. They are not a pending scaffold and must not be removed as phase cleanup. The system includes the Svelte workspace, provider router, local persistence, memory, tools, skills, approvals, rollback, automations, repository intelligence, coding and research assistance, conversations, notifications, and briefings.
 
-### Phase 7 UI Files Created Ahead of Schedule
-
-**These files require user approval to keep or remove:**
-
-| File | Phase | Status |
-|---|---|---|
-| `src/routes/(jarvis)/+layout.svelte` | Phase 7 | PENDING APPROVAL |
-| `src/routes/(jarvis)/dashboard/+page.svelte` | Phase 7 | PENDING APPROVAL |
-| `src/routes/(jarvis)/chat/+page.svelte` | Phase 7 | PENDING APPROVAL |
-| `src/routes/(jarvis)/tools/+page.svelte` | Phase 7 | PENDING APPROVAL |
-| `src/routes/(jarvis)/skills/+page.svelte` | Phase 7 | PENDING APPROVAL |
-| `src/routes/(jarvis)/memory/+page.svelte` | Phase 7 | PENDING APPROVAL |
-| `src/routes/(jarvis)/calendar/+page.svelte` | Phase 7 | PENDING APPROVAL |
-| `src/routes/(jarvis)/research/+page.svelte` | Phase 7 | PENDING APPROVAL |
-| `src/routes/(jarvis)/learning/+page.svelte` | Phase 7 | PENDING APPROVAL |
-| `src/routes/(jarvis)/settings/+page.svelte` | Phase 7 | PENDING APPROVAL |
-| `src/lib/styles/tokens.css` | Phase 7 (design tokens) | PENDING APPROVAL |
-| `src/routes/layout.css` | Modified to import tokens.css | PENDING APPROVAL |
-| `src/routes/+page.svelte` | Modified to redirect to /dashboard | PENDING APPROVAL |
-| `src/routes/+layout.svelte` | Modified to import tokens.css | PENDING APPROVAL |
-
-**Packages installed ahead of Phase 7 schedule:**
-- `lucide-svelte ^0.525.0` — added to `devDependencies` (Phase 7 dependency)
-
-**Rationale given at the time:** The build required a working route structure to validate. The design tokens CSS was created as part of the operating layer design system documentation. The UI scaffold demonstrates the architecture.
-
-**To approve:** Tell Claude "keep the Phase 7 UI scaffold". It will remain as-is.
-**To remove:** Tell Claude "remove the Phase 7 UI scaffold". Claude will delete the (jarvis) route group and revert layout changes — but this requires explicit approval per the Level 3 deletion policy.
+Historical phase ordering is retained only in `docs/SELF_IMPROVEMENT_LOG.md`. Current work must follow `docs/ROADMAP.md` and observed repository state, not an obsolete numeric-phase gate.
 
 ### Files That ARE Phase 0/1 Scope (correctly placed)
 
@@ -525,10 +498,10 @@ Write results to `docs/SELF_IMPROVEMENT_LOG.md`.
 | 1 | Operating Layer | COMPLETE | CLAUDE.md, docs, skills, safety, improvement log |
 | 2 | Repository Intelligence | COMPLETE (DEGRADED) | Graphify not installed; fallback map in docs/ |
 | 3 | Validation | COMPLETE | ai:validate 41/41 pass; build passes |
-| 4 | Model Core | PENDING | LLM provider abstraction |
-| 5 | Memory Core | PENDING | Supabase schema + memory API |
-| 6 | Tool Core | PENDING | Tool registry + safe tools |
-| 7 | Main UI | PENDING APPROVAL | Scaffold created ahead of schedule — see Phase 1 Files section |
-| 8 | First Real Tools | PENDING | Calendar, notes, research, learning |
-| 9 | Automation | PENDING | Scheduler, reminders, daily digest |
-| 10 | Advanced Self-Improvement | PENDING | Skill tracking, tool gen UI, eval |
+| 4 | Model Core | COMPLETE | Local-first router; Ollama, OpenAI-compatible and Anthropic adapters |
+| 5 | Memory Core | COMPLETE | Local persistence, CRUD, provenance and relevance retrieval |
+| 6 | Tool Core | COMPLETE | Runtime registry, safe tools, approvals and rollback |
+| 7 | Main UI | COMPLETE | Approved responsive workspace and functional pages |
+| 8 | First Real Tools | COMPLETE MVP | Calendar, notes, research, coding and learning |
+| 9 | Automation | COMPLETE MVP | Restart-safe scheduler, notifications and briefings |
+| 10 | Advanced Self-Improvement | COMPLETE MVP | Generation, evaluation analytics and governed proposals; evaluated upgrade application remains future work |

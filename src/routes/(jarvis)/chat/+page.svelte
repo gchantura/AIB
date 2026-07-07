@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
-  import { MessageSquare, Send, Bot, User, ChevronDown, Settings, AlertCircle } from 'lucide-svelte';
+  import { resolve } from '$app/paths';
+  import { MessageSquare, Send, Bot, User, ChevronDown, Settings, AlertCircle, Plus } from 'lucide-svelte';
 
   let messages = $state([
     {
@@ -18,6 +19,7 @@
   let selectedModel = $state('');
   let dropdownOpen = $state(false);
   let messagesEl = $state(null);
+  let conversationId = $state('');
 
   const activeProvider = $derived(providers.find(p => p.id === selectedProviderId));
   const displayLabel = $derived(
@@ -29,8 +31,16 @@
   );
 
   onMount(async () => {
-    await loadProviders();
+    await Promise.all([loadProviders(), loadLatestConversation()]);
   });
+
+  async function loadLatestConversation() {
+    const res = await fetch('/api/conversations'); if (!res.ok) return; const data = await res.json(); const latest = data.conversations?.[0]; if (!latest) return;
+    const detail = await fetch(`/api/conversations?id=${latest.id}`).then((response) => response.json()); if (!detail.conversation) return;
+    conversationId = detail.conversation.id; messages = detail.conversation.messages.map((message) => ({ ...message, ts: new Date(message.at), error: false }));
+  }
+
+  function newConversation() { conversationId = ''; messages = [{ role: 'assistant', content: 'New conversation started. Durable preferences and goals you explicitly ask me to remember will be saved locally.', ts: new Date(), error: false }]; }
 
   async function loadProviders() {
     try {
@@ -49,6 +59,7 @@
   function scrollToBottom() {
     if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
   }
+  function messagesArea(node) { messagesEl = node; return () => { if (messagesEl === node) messagesEl = null; }; }
 
   async function sendMessage() {
     const text = input.trim();
@@ -73,6 +84,7 @@
           messages: messages.filter((_, i) => i < placeholderIdx).map(m => ({ role: m.role, content: m.content })),
           model: selectedModel || undefined,
           stream: true,
+          conversationId: conversationId || undefined,
         }),
       });
       if (!res.ok || !res.body) {
@@ -94,6 +106,7 @@
           if (raw === '[DONE]') break;
           try {
             const chunk = JSON.parse(raw);
+            if (chunk.conversationId) conversationId = chunk.conversationId;
             if (chunk.error) { messages = messages.map((m, i) => i === placeholderIdx ? { ...m, content: chunk.error, error: true } : m); break; }
             if (chunk.content) { accumulated += chunk.content; messages = messages.map((m, i) => i === placeholderIdx ? { ...m, content: accumulated } : m); scrollToBottom(); }
           } catch { /* partial */ }
@@ -128,6 +141,7 @@
       <h1 class="chat-title">Chat</h1>
     </div>
     <div class="topbar-right">
+      <button class="icon-btn" onclick={newConversation} title="New conversation" aria-label="New conversation"><Plus size={16} /></button>
       <div class="model-selector-wrap">
         <button class="model-selector" onclick={() => dropdownOpen = !dropdownOpen} aria-label="Select model" aria-expanded={dropdownOpen}>
           <Bot size={14} />
@@ -140,7 +154,7 @@
             {#if providers.length === 0}
               <div class="dropdown-empty"><AlertCircle size={14} />No providers detected</div>
             {:else}
-              {#each providers as provider}
+              {#each providers as provider (provider.id)}
                 <div class="dropdown-group">
                   <div class="dropdown-provider">
                     <span class="provider-dot" class:online={provider.online}></span>
@@ -148,7 +162,7 @@
                     {#if provider.latencyMs}<span class="latency">{provider.latencyMs}ms</span>{/if}
                   </div>
                   {#if provider.online && provider.models?.length}
-                    {#each provider.models as model}
+                    {#each provider.models as model (model)}
                       <button class="dropdown-model" class:selected={selectedProviderId === provider.id && selectedModel === model} onclick={() => selectModel(provider.id, model)}>{model}</button>
                     {/each}
                   {:else if !provider.online}
@@ -158,17 +172,17 @@
               {/each}
             {/if}
             <div class="dropdown-footer">
-              <a href="/settings" onclick={() => dropdownOpen = false}>Manage providers</a>
+              <a href={resolve('/settings')} onclick={() => dropdownOpen = false}>Manage providers</a>
             </div>
           </div>
         {/if}
       </div>
-      <a href="/settings" class="icon-btn" title="Settings"><Settings size={16} /></a>
+      <a href={resolve('/settings')} class="icon-btn" title="Settings"><Settings size={16} /></a>
     </div>
   </div>
 
-  <div class="messages-area" bind:this={messagesEl}>
-    {#each messages as msg}
+  <div class="messages-area" {@attach messagesArea}>
+    {#each messages as msg, i (msg.id ?? i)}
       <div class="message {msg.role}" class:error-msg={msg.error}>
         <div class="message-avatar">
           {#if msg.role === 'assistant'}<Bot size={15} />{:else}<User size={15} />{/if}
