@@ -25,7 +25,7 @@ npm run ai:validate
 
 ## Safety model
 
-Tools have safety levels 0–3. Level 0/1 tools run locally; Level 2 tools require an exact-input, one-time approval from the Safety screen. Controlled file and app generation create rollback records before changing the repository. Level 3 tools remain disabled. Repository file tools reject paths outside the workspace.
+Tools use capability-based risk controls. Read-only and ordinary local creation run directly; repository-changing, destructive, privileged, or external actions require an exact-input, one-time approval from the Safety screen. Controlled writes create rollback records when possible. Repository file tools reject paths outside the workspace.
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), [docs/SAFETY_POLICY.md](docs/SAFETY_POLICY.md), and [docs/TOOL_REGISTRY.md](docs/TOOL_REGISTRY.md).
 

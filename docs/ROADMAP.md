@@ -39,8 +39,8 @@ Super J.A.R.V.I.S. is an operational local-first MVP, not a UI scaffold. The ear
 - Authenticated multi-user mode and encrypted secrets storage.
 - OS-native notifications and calendar connectors.
 - Optional local knowledge graph and richer repository dependency analysis.
-- Level 3 execution only after process isolation, authentication and stronger rollback guarantees.
+- Add privileged connectors incrementally with connector-specific authentication, exact-input approval and rollback/compensation guarantees.
 
 ## Non-goals until safety prerequisites exist
 
-Unrestricted shell execution, unattended destructive changes, silent cloud uploads, external publishing, email sending, and approval bypass remain disabled.
+Unattended destructive changes, silent cloud uploads, and approval bypass remain forbidden. External publishing, email, and privileged execution may be added as explicit, registered capabilities with per-action approval.

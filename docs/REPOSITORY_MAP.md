@@ -54,5 +54,5 @@ SvelteKit 2 + Svelte 5 runs as a local Node application through `@sveltejs/adapt
 
 - Graphify is not installed; `/repository` provides live inventory rather than a full dependency graph.
 - Gemini does not yet have a native adapter.
-- Level 3 execution remains disabled.
+- Critical connectors such as email and publishing are not bundled yet; when added, they must use exact-input approval and audit.
 - OS-native notifications and external calendar synchronization are future connectors.

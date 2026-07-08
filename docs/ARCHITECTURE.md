@@ -146,7 +146,7 @@ Rationale: Minimalistic design requirement. Neutral tones, clean whitespace, no 
 - Skills: Discovers `SKILL.md` files and can generate validated skill scaffolds.
 - Automation: Declarative local `task:` and `note:` actions with enable/disable and manual execution.
 - Repository intelligence: Live file, route, dependency, extension, and command inventory.
-- Safety: Level 2 actions use exact-input, one-time approvals and pre-mutation rollback journals. Level 3 remains fail-closed. All decisions and mutations generate audit events.
+- Safety: Repository-changing and critical actions use exact-input, one-time approvals and pre-mutation rollback journals where possible. Capability availability is separate from risk level; critical actions are not blanket-disabled. All decisions and mutations generate audit events.
 - App factory: Generates isolated Svelte 5/Vite applications under `generated-apps/` only after approval.
 - Conversations: Complete sessions and model-run outcomes persist locally; explicit preference and goal phrases produce source-linked memories.
 - Research intelligence: Model-assisted briefs are constrained to user-supplied source excerpts and must expose uncertainty when evidence is absent.

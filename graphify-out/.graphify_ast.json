@@ -1,0 +1,2120 @@
+{
+  "nodes": [
+    {
+      "id": "src_lib_jarvis_automation_runtime_nextrun",
+      "label": "nextRun",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/automation/runtime.ts",
+      "source_location": "L4",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_automation_runtime_notify",
+      "label": "notify",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/automation/runtime.ts",
+      "source_location": "L14",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_automation_runtime_runautomation",
+      "label": "runAutomation",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/automation/runtime.ts",
+      "source_location": "L18",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_automation_runtime_schedulertick",
+      "label": "schedulerTick",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/automation/runtime.ts",
+      "source_location": "L29",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_automation_runtime_startscheduler",
+      "label": "startScheduler",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/automation/runtime.ts",
+      "source_location": "L36",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_automation_runtime_checkcalendarreminders",
+      "label": "checkCalendarReminders",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/automation/runtime.ts",
+      "source_location": "L43",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_briefing_runtime_generatebriefing",
+      "label": "generateBriefing",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/briefing/runtime.ts",
+      "source_location": "L2",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_store_transaction",
+      "label": "transaction",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/store.ts",
+      "source_location": "L27",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_store_snapshot",
+      "label": "snapshot",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/store.ts",
+      "source_location": "L33",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_store_record",
+      "label": "record",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/store.ts",
+      "source_location": "L35",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_store_listentities",
+      "label": "listEntities",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/store.ts",
+      "source_location": "L40",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_store_createentity",
+      "label": "createEntity",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/store.ts",
+      "source_location": "L42",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_store_updateentity",
+      "label": "updateEntity",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/store.ts",
+      "source_location": "L52",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_store_deleteentity",
+      "label": "deleteEntity",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/store.ts",
+      "source_location": "L63",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_entitykind",
+      "label": "EntityKind",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_baseentity",
+      "label": "BaseEntity",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L3",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_task",
+      "label": "Task",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L4",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_note",
+      "label": "Note",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_project",
+      "label": "Project",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_calendarevent",
+      "label": "CalendarEvent",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L7",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_researchitem",
+      "label": "ResearchItem",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_automation",
+      "label": "Automation",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L9",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_learningitem",
+      "label": "LearningItem",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L10",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_auditevent",
+      "label": "AuditEvent",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L11",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_toolmanifest",
+      "label": "ToolManifest",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L12",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_skillmanifest",
+      "label": "SkillManifest",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_localmemory",
+      "label": "LocalMemory",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L14",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_approval",
+      "label": "Approval",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L15",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_rollbackrecord",
+      "label": "RollbackRecord",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L16",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_conversation",
+      "label": "Conversation",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L17",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_modelrun",
+      "label": "ModelRun",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L18",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_notification",
+      "label": "Notification",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L19",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_briefing",
+      "label": "Briefing",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L20",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_executionmetric",
+      "label": "ExecutionMetric",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L21",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_improvementproposal",
+      "label": "ImprovementProposal",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L22",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_upgradeplan",
+      "label": "UpgradePlan",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L23",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_core_types_jarvisdata",
+      "label": "JarvisData",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L25",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_evaluation_runtime_recordexecution",
+      "label": "recordExecution",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/evaluation/runtime.ts",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_evaluation_runtime_evaluationsnapshot",
+      "label": "evaluationSnapshot",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/evaluation/runtime.ts",
+      "source_location": "L14",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_evaluation_runtime_generateproposals",
+      "label": "generateProposals",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/evaluation/runtime.ts",
+      "source_location": "L19",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_evaluation_runtime_decideproposal",
+      "label": "decideProposal",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/evaluation/runtime.ts",
+      "source_location": "L31",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_evaluation_upgrades_listupgradeplans",
+      "label": "listUpgradePlans",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/evaluation/upgrades.ts",
+      "source_location": "L4",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_evaluation_upgrades_prepareupgrade",
+      "label": "prepareUpgrade",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/evaluation/upgrades.ts",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_evaluation_upgrades_verifyupgrade",
+      "label": "verifyUpgrade",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/evaluation/upgrades.ts",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_intelligence_runtime_listconversations",
+      "label": "listConversations",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/intelligence/runtime.ts",
+      "source_location": "L7",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_intelligence_runtime_getconversation",
+      "label": "getConversation",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/intelligence/runtime.ts",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_intelligence_runtime_ensureconversation",
+      "label": "ensureConversation",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/intelligence/runtime.ts",
+      "source_location": "L9",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_intelligence_runtime_appendconversation",
+      "label": "appendConversation",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/intelligence/runtime.ts",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_intelligence_runtime_deleteconversation",
+      "label": "deleteConversation",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/intelligence/runtime.ts",
+      "source_location": "L16",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_intelligence_runtime_extractmemories",
+      "label": "extractMemories",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/intelligence/runtime.ts",
+      "source_location": "L17",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_intelligence_runtime_recordmodelrun",
+      "label": "recordModelRun",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/intelligence/runtime.ts",
+      "source_location": "L23",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_llm_config_getllmconfig",
+      "label": "getLLMConfig",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/llm/config.ts",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_llm_errors_llmerror",
+      "label": "LLMError",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/llm/errors.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_llm_errors_isllmerror",
+      "label": "isLLMError",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/llm/errors.ts",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_llm_errors_offline",
+      "label": "offline",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/llm/errors.ts",
+      "source_location": "L17",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_llm_errors_authfailed",
+      "label": "authFailed",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/llm/errors.ts",
+      "source_location": "L21",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_llm_errors_ratelimited",
+      "label": "rateLimited",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/llm/errors.ts",
+      "source_location": "L25",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_llm_providers_anthropic_anthropicprovider",
+      "label": "AnthropicProvider",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/llm/providers/anthropic.ts",
+      "source_location": "L4",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_llm_providers_ollama_ollamaprovider",
+      "label": "OllamaProvider",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/llm/providers/ollama.ts",
+      "source_location": "L4",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_llm_providers_openai_compatible_openaicompatibleprovider",
+      "label": "OpenAICompatibleProvider",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/llm/providers/openai-compatible.ts",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_llm_router_llmrouter",
+      "label": "LLMRouter",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_llm_router_getrouter",
+      "label": "getRouter",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L138",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_llm_router_resetrouter",
+      "label": "resetRouter",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L145",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_llm_types_chatmessage",
+      "label": "ChatMessage",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/llm/types.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_llm_types_chatrequest",
+      "label": "ChatRequest",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/llm/types.ts",
+      "source_location": "L6",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_llm_types_chatresponse",
+      "label": "ChatResponse",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/llm/types.ts",
+      "source_location": "L15",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_llm_types_modelinfo",
+      "label": "ModelInfo",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/llm/types.ts",
+      "source_location": "L22",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_llm_types_providercapabilities",
+      "label": "ProviderCapabilities",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/llm/types.ts",
+      "source_location": "L29",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_llm_types_llmprovider",
+      "label": "LLMProvider",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/llm/types.ts",
+      "source_location": "L40",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_llm_types_providerhealth",
+      "label": "ProviderHealth",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/llm/types.ts",
+      "source_location": "L52",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_llm_types_llmconfig",
+      "label": "LLMConfig",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/llm/types.ts",
+      "source_location": "L61",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_llm_types_tasktype",
+      "label": "TaskType",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/llm/types.ts",
+      "source_location": "L75",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_memory_api_creatememory",
+      "label": "createMemory",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/memory/api.ts",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_memory_api_searchmemory",
+      "label": "searchMemory",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/memory/api.ts",
+      "source_location": "L15",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_memory_api_listmemory",
+      "label": "listMemory",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/memory/api.ts",
+      "source_location": "L20",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_memory_api_getmemory",
+      "label": "getMemory",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/memory/api.ts",
+      "source_location": "L27",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_memory_api_updatememory",
+      "label": "updateMemory",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/memory/api.ts",
+      "source_location": "L28",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_memory_api_deletememory",
+      "label": "deleteMemory",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/memory/api.ts",
+      "source_location": "L31",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_memory_api_countmemory",
+      "label": "countMemory",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/memory/api.ts",
+      "source_location": "L32",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_memory_api_exportmemory",
+      "label": "exportMemory",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/memory/api.ts",
+      "source_location": "L33",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_memory_relevance_retrieverelevant",
+      "label": "retrieveRelevant",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/memory/relevance.ts",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_memory_types_memorycategory",
+      "label": "MemoryCategory",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/memory/types.ts",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_memory_types_memoryentry",
+      "label": "MemoryEntry",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/memory/types.ts",
+      "source_location": "L17",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_memory_types_creatememoryentry",
+      "label": "CreateMemoryEntry",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/memory/types.ts",
+      "source_location": "L33",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_memory_types_memorysearchoptions",
+      "label": "MemorySearchOptions",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/memory/types.ts",
+      "source_location": "L39",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_safety_runtime_listsafetystate",
+      "label": "listSafetyState",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/safety/runtime.ts",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_safety_runtime_requestapproval",
+      "label": "requestApproval",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/safety/runtime.ts",
+      "source_location": "L9",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_safety_runtime_decideapproval",
+      "label": "decideApproval",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/safety/runtime.ts",
+      "source_location": "L12",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_safety_runtime_consumeapproval",
+      "label": "consumeApproval",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/safety/runtime.ts",
+      "source_location": "L15",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_safety_runtime_createrollback",
+      "label": "createRollback",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/safety/runtime.ts",
+      "source_location": "L18",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_safety_runtime_applychanges",
+      "label": "applyChanges",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/safety/runtime.ts",
+      "source_location": "L23",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_safety_runtime_rollbackchange",
+      "label": "rollbackChange",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/safety/runtime.ts",
+      "source_location": "L24",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_skills_runtime_listskills",
+      "label": "listSkills",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/skills/runtime.ts",
+      "source_location": "L7",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_skills_runtime_createskill",
+      "label": "createSkill",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/skills/runtime.ts",
+      "source_location": "L19",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_tools_runtime_listtools",
+      "label": "listTools",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/tools/runtime.ts",
+      "source_location": "L25",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_tools_runtime_executetool",
+      "label": "executeTool",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/tools/runtime.ts",
+      "source_location": "L63",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_jarvis_tools_runtime_registertool",
+      "label": "registerTool",
+      "file_type": "code",
+      "source_file": "src/lib/jarvis/tools/runtime.ts",
+      "source_location": "L69",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_supabase_server_getserversupabase",
+      "label": "getServerSupabase",
+      "file_type": "code",
+      "source_file": "src/lib/supabase.server.ts",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "src_lib_supabase_getsupabase",
+      "label": "getSupabase",
+      "file_type": "code",
+      "source_file": "src/lib/supabase.ts",
+      "source_location": "L6",
+      "_origin": "ast"
+    }
+  ],
+  "edges": [
+    {
+      "source": "src_lib_jarvis_llm_config",
+      "target": "src_lib_jarvis_llm_types",
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/config.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_automation_runtime",
+      "target": "src_lib_jarvis_core_store_createentity",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/automation/runtime.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_automation_runtime",
+      "target": "src_lib_jarvis_core_store_record",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/automation/runtime.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_automation_runtime",
+      "target": "src_lib_jarvis_core_store_snapshot",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/automation/runtime.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_automation_runtime",
+      "target": "src_lib_jarvis_core_store_transaction",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/automation/runtime.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_automation_runtime",
+      "target": "src_lib_jarvis_core_store_updateentity",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/automation/runtime.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_briefing_runtime",
+      "target": "src_lib_jarvis_core_store_snapshot",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/briefing/runtime.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_briefing_runtime",
+      "target": "src_lib_jarvis_core_store_transaction",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/briefing/runtime.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_core_store",
+      "target": "src_lib_jarvis_core_types_auditevent",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/core/store.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_core_store",
+      "target": "src_lib_jarvis_core_types_baseentity",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/core/store.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_core_store",
+      "target": "src_lib_jarvis_core_types_entitykind",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/core/store.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_core_store",
+      "target": "src_lib_jarvis_core_types_jarvisdata",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/core/store.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_evaluation_runtime",
+      "target": "src_lib_jarvis_core_store_record",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/evaluation/runtime.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_evaluation_runtime",
+      "target": "src_lib_jarvis_core_store_snapshot",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/evaluation/runtime.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_evaluation_runtime",
+      "target": "src_lib_jarvis_core_store_transaction",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/evaluation/runtime.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_evaluation_runtime",
+      "target": "src_lib_jarvis_core_types_executionmetric",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/evaluation/runtime.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_evaluation_runtime",
+      "target": "src_lib_jarvis_core_types_improvementproposal",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/evaluation/runtime.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_evaluation_upgrades",
+      "target": "src_lib_jarvis_core_store_record",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/evaluation/upgrades.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_evaluation_upgrades",
+      "target": "src_lib_jarvis_core_store_snapshot",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/evaluation/upgrades.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_evaluation_upgrades",
+      "target": "src_lib_jarvis_core_store_transaction",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/evaluation/upgrades.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_evaluation_upgrades",
+      "target": "src_lib_jarvis_core_types_upgradeplan",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/evaluation/upgrades.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_intelligence_runtime",
+      "target": "src_lib_jarvis_memory_api_creatememory",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/intelligence/runtime.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_intelligence_runtime",
+      "target": "src_lib_jarvis_core_store_record",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/intelligence/runtime.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_intelligence_runtime",
+      "target": "src_lib_jarvis_core_store_snapshot",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/intelligence/runtime.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_intelligence_runtime",
+      "target": "src_lib_jarvis_core_store_transaction",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/intelligence/runtime.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_intelligence_runtime",
+      "target": "src_lib_jarvis_llm_types_chatmessage",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/intelligence/runtime.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_intelligence_runtime",
+      "target": "src_lib_jarvis_evaluation_runtime_recordexecution",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/intelligence/runtime.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_config",
+      "target": "src_lib_jarvis_llm_types_llmconfig",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/config.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_anthropic",
+      "target": "src_lib_jarvis_llm_types_llmprovider",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/anthropic.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_anthropic",
+      "target": "src_lib_jarvis_llm_types_chatrequest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/anthropic.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_anthropic",
+      "target": "src_lib_jarvis_llm_types_chatresponse",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/anthropic.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_anthropic",
+      "target": "src_lib_jarvis_llm_types_modelinfo",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/anthropic.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_anthropic",
+      "target": "src_lib_jarvis_llm_types_providercapabilities",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/anthropic.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_anthropic",
+      "target": "src_lib_jarvis_llm_errors_authfailed",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/anthropic.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_anthropic",
+      "target": "src_lib_jarvis_llm_errors_ratelimited",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/anthropic.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_anthropic",
+      "target": "src_lib_jarvis_llm_errors_offline",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/anthropic.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_ollama",
+      "target": "src_lib_jarvis_llm_types_llmprovider",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/ollama.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_ollama",
+      "target": "src_lib_jarvis_llm_types_chatrequest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/ollama.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_ollama",
+      "target": "src_lib_jarvis_llm_types_chatresponse",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/ollama.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_ollama",
+      "target": "src_lib_jarvis_llm_types_modelinfo",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/ollama.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_ollama",
+      "target": "src_lib_jarvis_llm_types_providercapabilities",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/ollama.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_ollama",
+      "target": "src_lib_jarvis_llm_errors_offline",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/ollama.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_openai_compatible",
+      "target": "src_lib_jarvis_llm_types_llmprovider",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/openai-compatible.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_openai_compatible",
+      "target": "src_lib_jarvis_llm_types_chatrequest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/openai-compatible.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_openai_compatible",
+      "target": "src_lib_jarvis_llm_types_chatresponse",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/openai-compatible.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_openai_compatible",
+      "target": "src_lib_jarvis_llm_types_modelinfo",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/openai-compatible.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_openai_compatible",
+      "target": "src_lib_jarvis_llm_types_providercapabilities",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/openai-compatible.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_openai_compatible",
+      "target": "src_lib_jarvis_llm_errors_offline",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/openai-compatible.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_openai_compatible",
+      "target": "src_lib_jarvis_llm_errors_authfailed",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/openai-compatible.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_openai_compatible",
+      "target": "src_lib_jarvis_llm_errors_ratelimited",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/openai-compatible.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_router",
+      "target": "src_lib_jarvis_llm_types_llmprovider",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_router",
+      "target": "src_lib_jarvis_llm_types_chatrequest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_router",
+      "target": "src_lib_jarvis_llm_types_chatresponse",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_router",
+      "target": "src_lib_jarvis_llm_types_providerhealth",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_router",
+      "target": "src_lib_jarvis_llm_types_tasktype",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_router",
+      "target": "src_lib_jarvis_llm_types_modelinfo",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_router",
+      "target": "src_lib_jarvis_llm_types_llmconfig",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_router",
+      "target": "src_lib_jarvis_llm_providers_ollama_ollamaprovider",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_router",
+      "target": "src_lib_jarvis_llm_providers_openai_compatible_openaicompatibleprovider",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_router",
+      "target": "src_lib_jarvis_llm_providers_anthropic_anthropicprovider",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_router",
+      "target": "src_lib_jarvis_llm_errors_llmerror",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_router",
+      "target": "src_lib_jarvis_llm_errors_offline",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_memory_api",
+      "target": "src_lib_jarvis_memory_types_memoryentry",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/memory/api.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_memory_api",
+      "target": "src_lib_jarvis_memory_types_creatememoryentry",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/memory/api.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_memory_api",
+      "target": "src_lib_jarvis_memory_types_memorysearchoptions",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/memory/api.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_memory_api",
+      "target": "src_lib_jarvis_memory_types_memorycategory",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/memory/api.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_memory_api",
+      "target": "src_lib_jarvis_core_store_record",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/memory/api.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_memory_api",
+      "target": "src_lib_jarvis_core_store_snapshot",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/memory/api.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_memory_api",
+      "target": "src_lib_jarvis_core_store_transaction",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/memory/api.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_memory_relevance",
+      "target": "src_lib_jarvis_core_store_snapshot",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/memory/relevance.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_safety_runtime",
+      "target": "src_lib_jarvis_core_store_record",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/safety/runtime.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_safety_runtime",
+      "target": "src_lib_jarvis_core_store_snapshot",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/safety/runtime.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_safety_runtime",
+      "target": "src_lib_jarvis_core_store_transaction",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/safety/runtime.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_safety_runtime",
+      "target": "src_lib_jarvis_core_types_approval",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/safety/runtime.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_safety_runtime",
+      "target": "src_lib_jarvis_core_types_rollbackrecord",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/safety/runtime.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_skills_runtime",
+      "target": "src_lib_jarvis_core_store_record",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/skills/runtime.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_skills_runtime",
+      "target": "src_lib_jarvis_core_store_snapshot",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/skills/runtime.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_skills_runtime",
+      "target": "src_lib_jarvis_core_store_transaction",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/skills/runtime.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_tools_runtime",
+      "target": "src_lib_jarvis_core_store_createentity",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/tools/runtime.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_tools_runtime",
+      "target": "src_lib_jarvis_core_store_record",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/tools/runtime.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_tools_runtime",
+      "target": "src_lib_jarvis_core_store_transaction",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/tools/runtime.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_tools_runtime",
+      "target": "src_lib_jarvis_core_types_toolmanifest",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/tools/runtime.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_tools_runtime",
+      "target": "src_lib_jarvis_safety_runtime_applychanges",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/tools/runtime.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_tools_runtime",
+      "target": "src_lib_jarvis_safety_runtime_consumeapproval",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/tools/runtime.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_tools_runtime",
+      "target": "src_lib_jarvis_safety_runtime_createrollback",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/tools/runtime.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_tools_runtime",
+      "target": "src_lib_jarvis_evaluation_runtime_recordexecution",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/tools/runtime.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_tools_runtime_executetoolinternal",
+      "target": "src_lib_jarvis_safety_runtime_consumeapproval",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/tools/runtime.ts",
+      "source_location": "L32",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_tools_runtime_executetoolinternal",
+      "target": "src_lib_jarvis_core_store_createentity",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/tools/runtime.ts",
+      "source_location": "L41",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_tools_runtime_executetoolinternal",
+      "target": "src_lib_jarvis_safety_runtime_createrollback",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/tools/runtime.ts",
+      "source_location": "L45",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_tools_runtime_executetoolinternal",
+      "target": "src_lib_jarvis_safety_runtime_applychanges",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/tools/runtime.ts",
+      "source_location": "L45",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_tools_runtime_executetoolinternal",
+      "target": "src_lib_jarvis_core_store_transaction",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/tools/runtime.ts",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_tools_runtime_executetoolinternal",
+      "target": "src_lib_jarvis_core_store_record",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/tools/runtime.ts",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_core_types_task",
+      "target": "src_lib_jarvis_core_types_baseentity",
+      "relation": "inherits",
+      "context": "type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_core_types_note",
+      "target": "src_lib_jarvis_core_types_baseentity",
+      "relation": "inherits",
+      "context": "type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_core_types_project",
+      "target": "src_lib_jarvis_core_types_baseentity",
+      "relation": "inherits",
+      "context": "type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_core_types_calendarevent",
+      "target": "src_lib_jarvis_core_types_baseentity",
+      "relation": "inherits",
+      "context": "type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_core_types_researchitem",
+      "target": "src_lib_jarvis_core_types_baseentity",
+      "relation": "inherits",
+      "context": "type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_core_types_automation",
+      "target": "src_lib_jarvis_core_types_baseentity",
+      "relation": "inherits",
+      "context": "type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_core_types_learningitem",
+      "target": "src_lib_jarvis_core_types_baseentity",
+      "relation": "inherits",
+      "context": "type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/core/types.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_anthropic_anthropicprovider",
+      "target": "src_lib_jarvis_llm_types_llmprovider",
+      "relation": "implements",
+      "context": "type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/anthropic.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_anthropic_anthropicprovider",
+      "target": "src_lib_jarvis_llm_types_providercapabilities",
+      "relation": "references",
+      "context": "field",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/anthropic.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_providers_anthropic_anthropicprovider_listmodels",
+      "target": "src_lib_jarvis_llm_types_modelinfo",
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/anthropic.ts",
+      "source_location": "L44",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_providers_anthropic_anthropicprovider_chat",
+      "target": "src_lib_jarvis_llm_types_chatrequest",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/anthropic.ts",
+      "source_location": "L52",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_providers_anthropic_anthropicprovider_chat",
+      "target": "src_lib_jarvis_llm_types_chatresponse",
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/anthropic.ts",
+      "source_location": "L52",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_providers_anthropic_anthropicprovider_chatstream",
+      "target": "src_lib_jarvis_llm_types_chatrequest",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/anthropic.ts",
+      "source_location": "L87",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_ollama_ollamaprovider",
+      "target": "src_lib_jarvis_llm_types_llmprovider",
+      "relation": "implements",
+      "context": "type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/ollama.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_ollama_ollamaprovider",
+      "target": "src_lib_jarvis_llm_types_providercapabilities",
+      "relation": "references",
+      "context": "field",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/ollama.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_providers_ollama_ollamaprovider_listmodels",
+      "target": "src_lib_jarvis_llm_types_modelinfo",
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/ollama.ts",
+      "source_location": "L28",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_providers_ollama_ollamaprovider_chat",
+      "target": "src_lib_jarvis_llm_types_chatrequest",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/ollama.ts",
+      "source_location": "L43",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_providers_ollama_ollamaprovider_chat",
+      "target": "src_lib_jarvis_llm_types_chatresponse",
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/ollama.ts",
+      "source_location": "L43",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_providers_ollama_ollamaprovider_chatstream",
+      "target": "src_lib_jarvis_llm_types_chatrequest",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/ollama.ts",
+      "source_location": "L65",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_openai_compatible_openaicompatibleprovider",
+      "target": "src_lib_jarvis_llm_types_llmprovider",
+      "relation": "implements",
+      "context": "type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/openai-compatible.ts",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_providers_openai_compatible_openaicompatibleprovider",
+      "target": "src_lib_jarvis_llm_types_providercapabilities",
+      "relation": "references",
+      "context": "field",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/openai-compatible.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_providers_openai_compatible_openaicompatibleprovider_listmodels",
+      "target": "src_lib_jarvis_llm_types_modelinfo",
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/openai-compatible.ts",
+      "source_location": "L44",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_providers_openai_compatible_openaicompatibleprovider_chat",
+      "target": "src_lib_jarvis_llm_types_chatrequest",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/openai-compatible.ts",
+      "source_location": "L62",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_providers_openai_compatible_openaicompatibleprovider_chat",
+      "target": "src_lib_jarvis_llm_types_chatresponse",
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/openai-compatible.ts",
+      "source_location": "L62",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_providers_openai_compatible_openaicompatibleprovider_chatstream",
+      "target": "src_lib_jarvis_llm_types_chatrequest",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/providers/openai-compatible.ts",
+      "source_location": "L97",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_router_llmrouter",
+      "target": "src_lib_jarvis_llm_types_llmprovider",
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_jarvis_llm_router_llmrouter",
+      "target": "src_lib_jarvis_llm_types_llmconfig",
+      "relation": "references",
+      "context": "field",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_router_llmrouter_constructor",
+      "target": "src_lib_jarvis_llm_types_llmconfig",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_router_llmrouter_providerorder",
+      "target": "src_lib_jarvis_llm_types_tasktype",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L39",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_router_llmrouter_modelfortask",
+      "target": "src_lib_jarvis_llm_types_tasktype",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L56",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_router_llmrouter_getavailableprovider",
+      "target": "src_lib_jarvis_llm_types_tasktype",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L66",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_router_llmrouter_getavailableprovider",
+      "target": "src_lib_jarvis_llm_types_llmprovider",
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L66",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_router_llmrouter_chat",
+      "target": "src_lib_jarvis_llm_types_chatrequest",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L78",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_router_llmrouter_chat",
+      "target": "src_lib_jarvis_llm_types_tasktype",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L78",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_router_llmrouter_chat",
+      "target": "src_lib_jarvis_llm_types_chatresponse",
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L78",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_router_llmrouter_chatstream",
+      "target": "src_lib_jarvis_llm_types_chatrequest",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L84",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_router_llmrouter_chatstream",
+      "target": "src_lib_jarvis_llm_types_tasktype",
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L84",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_router_llmrouter_checkallproviders",
+      "target": "src_lib_jarvis_llm_types_providerhealth",
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L90",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_router_llmrouter_listallmodels",
+      "target": "src_lib_jarvis_llm_types_modelinfo",
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L115",
+      "weight": 1.0
+    },
+    {
+      "source": "c_users_gcjr_documents_code_workspace_aib_src_lib_jarvis_llm_router_llmrouter_getprovider",
+      "target": "src_lib_jarvis_llm_types_llmprovider",
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/jarvis/llm/router.ts",
+      "source_location": "L131",
+      "weight": 1.0
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

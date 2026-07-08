@@ -8,6 +8,13 @@
 		"prepare": "svelte-kit sync || echo ''",
 		"prepack": "svelte-kit sync && svelte-package && publint",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
+		"test": "vitest run",
+		"test:unit": "vitest run src",
+		"test:integration": "vitest run tests/integration",
+		"test:e2e": "playwright test",
+		"test:all": "npm run check && npm run test && npm run test:e2e",
+		"graph": "graphify update . --force",
+		"graph:check": "graphify diagnose multigraph --graph graphify-out/graph.json",
 		"ai:validate": "node scripts/ai/validate.js"
 	},
 	"files": [
@@ -31,6 +38,7 @@
 		"svelte": "^5.0.0"
 	},
 	"devDependencies": {
+		"@playwright/test": "^1.61.1",
 		"@sveltejs/adapter-node": "^5.5.7",
 		"@sveltejs/kit": "^2.63.0",
 		"@sveltejs/package": "^2.5.8",
@@ -44,7 +52,8 @@
 		"svelte-check": "^4.7.2",
 		"tailwindcss": "^4.3.0",
 		"typescript": "^6.0.3",
-		"vite": "^8.0.16"
+		"vite": "^8.0.16",
+		"vitest": "^4.1.10"
 	},
 	"dependencies": {
 		"@supabase/supabase-js": "^2.50.0"

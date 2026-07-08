@@ -1,0 +1,492 @@
+{
+  "communities": {
+    "0": [
+      "src_lib_jarvis_core_types_automation",
+      "src_lib_jarvis_core_types_baseentity",
+      "src_lib_jarvis_core_types_calendarevent",
+      "src_lib_jarvis_core_types_learningitem",
+      "src_lib_jarvis_core_types_note",
+      "src_lib_jarvis_core_types_project",
+      "src_lib_jarvis_core_types_researchitem",
+      "src_lib_jarvis_core_types_task"
+    ],
+    "1": [
+      "src_lib_jarvis_llm_providers_anthropic_anthropicprovider",
+      "src_lib_jarvis_llm_providers_ollama_ollamaprovider",
+      "src_lib_jarvis_llm_providers_openai_compatible_openaicompatibleprovider",
+      "src_lib_jarvis_llm_types_llmprovider",
+      "src_lib_jarvis_llm_types_providercapabilities"
+    ],
+    "2": [
+      "src_lib_jarvis_llm_router_llmrouter",
+      "src_lib_jarvis_llm_types_llmconfig"
+    ],
+    "3": [
+      "src_lib_jarvis_automation_runtime_checkcalendarreminders"
+    ],
+    "4": [
+      "src_lib_jarvis_automation_runtime_nextrun"
+    ],
+    "5": [
+      "src_lib_jarvis_automation_runtime_notify"
+    ],
+    "6": [
+      "src_lib_jarvis_automation_runtime_runautomation"
+    ],
+    "7": [
+      "src_lib_jarvis_automation_runtime_schedulertick"
+    ],
+    "8": [
+      "src_lib_jarvis_automation_runtime_startscheduler"
+    ],
+    "9": [
+      "src_lib_jarvis_briefing_runtime_generatebriefing"
+    ],
+    "10": [
+      "src_lib_jarvis_core_store_createentity"
+    ],
+    "11": [
+      "src_lib_jarvis_core_store_deleteentity"
+    ],
+    "12": [
+      "src_lib_jarvis_core_store_listentities"
+    ],
+    "13": [
+      "src_lib_jarvis_core_store_record"
+    ],
+    "14": [
+      "src_lib_jarvis_core_store_snapshot"
+    ],
+    "15": [
+      "src_lib_jarvis_core_store_transaction"
+    ],
+    "16": [
+      "src_lib_jarvis_core_store_updateentity"
+    ],
+    "17": [
+      "src_lib_jarvis_core_types_approval"
+    ],
+    "18": [
+      "src_lib_jarvis_core_types_auditevent"
+    ],
+    "19": [
+      "src_lib_jarvis_core_types_briefing"
+    ],
+    "20": [
+      "src_lib_jarvis_core_types_conversation"
+    ],
+    "21": [
+      "src_lib_jarvis_core_types_entitykind"
+    ],
+    "22": [
+      "src_lib_jarvis_core_types_executionmetric"
+    ],
+    "23": [
+      "src_lib_jarvis_core_types_improvementproposal"
+    ],
+    "24": [
+      "src_lib_jarvis_core_types_jarvisdata"
+    ],
+    "25": [
+      "src_lib_jarvis_core_types_localmemory"
+    ],
+    "26": [
+      "src_lib_jarvis_core_types_modelrun"
+    ],
+    "27": [
+      "src_lib_jarvis_core_types_notification"
+    ],
+    "28": [
+      "src_lib_jarvis_core_types_rollbackrecord"
+    ],
+    "29": [
+      "src_lib_jarvis_core_types_skillmanifest"
+    ],
+    "30": [
+      "src_lib_jarvis_core_types_toolmanifest"
+    ],
+    "31": [
+      "src_lib_jarvis_core_types_upgradeplan"
+    ],
+    "32": [
+      "src_lib_jarvis_evaluation_runtime_decideproposal"
+    ],
+    "33": [
+      "src_lib_jarvis_evaluation_runtime_evaluationsnapshot"
+    ],
+    "34": [
+      "src_lib_jarvis_evaluation_runtime_generateproposals"
+    ],
+    "35": [
+      "src_lib_jarvis_evaluation_runtime_recordexecution"
+    ],
+    "36": [
+      "src_lib_jarvis_evaluation_upgrades_listupgradeplans"
+    ],
+    "37": [
+      "src_lib_jarvis_evaluation_upgrades_prepareupgrade"
+    ],
+    "38": [
+      "src_lib_jarvis_evaluation_upgrades_verifyupgrade"
+    ],
+    "39": [
+      "src_lib_jarvis_intelligence_runtime_appendconversation"
+    ],
+    "40": [
+      "src_lib_jarvis_intelligence_runtime_deleteconversation"
+    ],
+    "41": [
+      "src_lib_jarvis_intelligence_runtime_ensureconversation"
+    ],
+    "42": [
+      "src_lib_jarvis_intelligence_runtime_extractmemories"
+    ],
+    "43": [
+      "src_lib_jarvis_intelligence_runtime_getconversation"
+    ],
+    "44": [
+      "src_lib_jarvis_intelligence_runtime_listconversations"
+    ],
+    "45": [
+      "src_lib_jarvis_intelligence_runtime_recordmodelrun"
+    ],
+    "46": [
+      "src_lib_jarvis_llm_config_getllmconfig"
+    ],
+    "47": [
+      "src_lib_jarvis_llm_errors_authfailed"
+    ],
+    "48": [
+      "src_lib_jarvis_llm_errors_isllmerror"
+    ],
+    "49": [
+      "src_lib_jarvis_llm_errors_llmerror"
+    ],
+    "50": [
+      "src_lib_jarvis_llm_errors_offline"
+    ],
+    "51": [
+      "src_lib_jarvis_llm_errors_ratelimited"
+    ],
+    "52": [
+      "src_lib_jarvis_llm_router_getrouter"
+    ],
+    "53": [
+      "src_lib_jarvis_llm_router_resetrouter"
+    ],
+    "54": [
+      "src_lib_jarvis_llm_types_chatmessage"
+    ],
+    "55": [
+      "src_lib_jarvis_llm_types_chatrequest"
+    ],
+    "56": [
+      "src_lib_jarvis_llm_types_chatresponse"
+    ],
+    "57": [
+      "src_lib_jarvis_llm_types_modelinfo"
+    ],
+    "58": [
+      "src_lib_jarvis_llm_types_providerhealth"
+    ],
+    "59": [
+      "src_lib_jarvis_llm_types_tasktype"
+    ],
+    "60": [
+      "src_lib_jarvis_memory_api_countmemory"
+    ],
+    "61": [
+      "src_lib_jarvis_memory_api_creatememory"
+    ],
+    "62": [
+      "src_lib_jarvis_memory_api_deletememory"
+    ],
+    "63": [
+      "src_lib_jarvis_memory_api_exportmemory"
+    ],
+    "64": [
+      "src_lib_jarvis_memory_api_getmemory"
+    ],
+    "65": [
+      "src_lib_jarvis_memory_api_listmemory"
+    ],
+    "66": [
+      "src_lib_jarvis_memory_api_searchmemory"
+    ],
+    "67": [
+      "src_lib_jarvis_memory_api_updatememory"
+    ],
+    "68": [
+      "src_lib_jarvis_memory_relevance_retrieverelevant"
+    ],
+    "69": [
+      "src_lib_jarvis_memory_types_creatememoryentry"
+    ],
+    "70": [
+      "src_lib_jarvis_memory_types_memorycategory"
+    ],
+    "71": [
+      "src_lib_jarvis_memory_types_memoryentry"
+    ],
+    "72": [
+      "src_lib_jarvis_memory_types_memorysearchoptions"
+    ],
+    "73": [
+      "src_lib_jarvis_safety_runtime_applychanges"
+    ],
+    "74": [
+      "src_lib_jarvis_safety_runtime_consumeapproval"
+    ],
+    "75": [
+      "src_lib_jarvis_safety_runtime_createrollback"
+    ],
+    "76": [
+      "src_lib_jarvis_safety_runtime_decideapproval"
+    ],
+    "77": [
+      "src_lib_jarvis_safety_runtime_listsafetystate"
+    ],
+    "78": [
+      "src_lib_jarvis_safety_runtime_requestapproval"
+    ],
+    "79": [
+      "src_lib_jarvis_safety_runtime_rollbackchange"
+    ],
+    "80": [
+      "src_lib_jarvis_skills_runtime_createskill"
+    ],
+    "81": [
+      "src_lib_jarvis_skills_runtime_listskills"
+    ],
+    "82": [
+      "src_lib_jarvis_tools_runtime_executetool"
+    ],
+    "83": [
+      "src_lib_jarvis_tools_runtime_listtools"
+    ],
+    "84": [
+      "src_lib_jarvis_tools_runtime_registertool"
+    ],
+    "85": [
+      "src_lib_supabase_getsupabase"
+    ],
+    "86": [
+      "src_lib_supabase_server_getserversupabase"
+    ]
+  },
+  "cohesion": {
+    "0": 0.25,
+    "1": 0.6,
+    "2": 1.0,
+    "3": 1.0,
+    "4": 1.0,
+    "5": 1.0,
+    "6": 1.0,
+    "7": 1.0,
+    "8": 1.0,
+    "9": 1.0,
+    "10": 1.0,
+    "11": 1.0,
+    "12": 1.0,
+    "13": 1.0,
+    "14": 1.0,
+    "15": 1.0,
+    "16": 1.0,
+    "17": 1.0,
+    "18": 1.0,
+    "19": 1.0,
+    "20": 1.0,
+    "21": 1.0,
+    "22": 1.0,
+    "23": 1.0,
+    "24": 1.0,
+    "25": 1.0,
+    "26": 1.0,
+    "27": 1.0,
+    "28": 1.0,
+    "29": 1.0,
+    "30": 1.0,
+    "31": 1.0,
+    "32": 1.0,
+    "33": 1.0,
+    "34": 1.0,
+    "35": 1.0,
+    "36": 1.0,
+    "37": 1.0,
+    "38": 1.0,
+    "39": 1.0,
+    "40": 1.0,
+    "41": 1.0,
+    "42": 1.0,
+    "43": 1.0,
+    "44": 1.0,
+    "45": 1.0,
+    "46": 1.0,
+    "47": 1.0,
+    "48": 1.0,
+    "49": 1.0,
+    "50": 1.0,
+    "51": 1.0,
+    "52": 1.0,
+    "53": 1.0,
+    "54": 1.0,
+    "55": 1.0,
+    "56": 1.0,
+    "57": 1.0,
+    "58": 1.0,
+    "59": 1.0,
+    "60": 1.0,
+    "61": 1.0,
+    "62": 1.0,
+    "63": 1.0,
+    "64": 1.0,
+    "65": 1.0,
+    "66": 1.0,
+    "67": 1.0,
+    "68": 1.0,
+    "69": 1.0,
+    "70": 1.0,
+    "71": 1.0,
+    "72": 1.0,
+    "73": 1.0,
+    "74": 1.0,
+    "75": 1.0,
+    "76": 1.0,
+    "77": 1.0,
+    "78": 1.0,
+    "79": 1.0,
+    "80": 1.0,
+    "81": 1.0,
+    "82": 1.0,
+    "83": 1.0,
+    "84": 1.0,
+    "85": 1.0,
+    "86": 1.0
+  },
+  "gods": [
+    {
+      "id": "src_lib_jarvis_core_types_baseentity",
+      "label": "BaseEntity",
+      "degree": 7
+    },
+    {
+      "id": "src_lib_jarvis_llm_types_llmprovider",
+      "label": "LLMProvider",
+      "degree": 4
+    },
+    {
+      "id": "src_lib_jarvis_llm_types_providercapabilities",
+      "label": "ProviderCapabilities",
+      "degree": 3
+    },
+    {
+      "id": "src_lib_jarvis_llm_providers_anthropic_anthropicprovider",
+      "label": "AnthropicProvider",
+      "degree": 2
+    },
+    {
+      "id": "src_lib_jarvis_llm_providers_ollama_ollamaprovider",
+      "label": "OllamaProvider",
+      "degree": 2
+    },
+    {
+      "id": "src_lib_jarvis_llm_providers_openai_compatible_openaicompatibleprovider",
+      "label": "OpenAICompatibleProvider",
+      "degree": 2
+    },
+    {
+      "id": "src_lib_jarvis_llm_router_llmrouter",
+      "label": "LLMRouter",
+      "degree": 2
+    },
+    {
+      "id": "src_lib_jarvis_core_types_task",
+      "label": "Task",
+      "degree": 1
+    },
+    {
+      "id": "src_lib_jarvis_core_types_note",
+      "label": "Note",
+      "degree": 1
+    },
+    {
+      "id": "src_lib_jarvis_core_types_project",
+      "label": "Project",
+      "degree": 1
+    }
+  ],
+  "surprises": [
+    {
+      "source": "LLMRouter",
+      "target": "LLMProvider",
+      "source_files": [
+        "src/lib/jarvis/llm/router.ts",
+        "src/lib/jarvis/llm/types.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "AnthropicProvider",
+      "target": "LLMProvider",
+      "source_files": [
+        "src/lib/jarvis/llm/providers/anthropic.ts",
+        "src/lib/jarvis/llm/types.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "implements",
+      "why": "cross-file semantic connection"
+    },
+    {
+      "source": "AnthropicProvider",
+      "target": "ProviderCapabilities",
+      "source_files": [
+        "src/lib/jarvis/llm/providers/anthropic.ts",
+        "src/lib/jarvis/llm/types.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "cross-file semantic connection"
+    },
+    {
+      "source": "OllamaProvider",
+      "target": "LLMProvider",
+      "source_files": [
+        "src/lib/jarvis/llm/providers/ollama.ts",
+        "src/lib/jarvis/llm/types.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "implements",
+      "why": "cross-file semantic connection"
+    },
+    {
+      "source": "OllamaProvider",
+      "target": "ProviderCapabilities",
+      "source_files": [
+        "src/lib/jarvis/llm/providers/ollama.ts",
+        "src/lib/jarvis/llm/types.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "cross-file semantic connection"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `LLMProvider` connect `Community 1` to `Community 2`?",
+      "why": "High betweenness centrality (0.002) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `LLMRouter` connect `Community 2` to `Community 1`?",
+      "why": "High betweenness centrality (0.001) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `nextRun`, `notify`, `runAutomation` to the rest of the system?",
+      "why": "92 weakly-connected nodes found - possible documentation gaps or missing edges."
+    }
+  ]
+}

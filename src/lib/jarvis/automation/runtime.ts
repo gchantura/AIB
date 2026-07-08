@@ -27,13 +27,30 @@ export async function runAutomation(id: string) {
 }
 
 export async function schedulerTick(now = new Date()) {
-  const due = (await snapshot()).automations.filter((item) => item.enabled && item.nextRunAt && new Date(item.nextRunAt) <= now); const results = [];
-  for (const item of due) { try { results.push({ id: item.id, ok: true, result: await runAutomation(item.id) }); } catch (error) { await notify('Automation failed', `${item.name}: ${error instanceof Error ? error.message : String(error)}`, `automation:${item.id}`, 'error'); results.push({ id: item.id, ok: false }); } }
-  return results;
+  const results = await checkCalendarReminders(now);
+  const due = (await snapshot()).automations.filter((item) => item.enabled && item.nextRunAt && new Date(item.nextRunAt) <= now); const arr: { id: string; title: string; fired: boolean; result?: unknown }[] = [...results];
+  for (const item of due) { try { arr.push({ id: item.id, title: item.name, fired: true, result: await runAutomation(item.id) }); } catch (error) { await notify('Automation failed', `${item.name}: ${error instanceof Error ? error.message : String(error)}`, `automation:${item.id}`, 'error'); arr.push({ id: item.id, title: item.name, fired: false }); } }
+  return arr;
 }
 
 export function startScheduler() {
   const global = globalThis as typeof globalThis & { __jarvisScheduler?: NodeJS.Timeout };
   if (global.__jarvisScheduler) return;
   void schedulerTick(); global.__jarvisScheduler = setInterval(() => void schedulerTick(), 30_000); global.__jarvisScheduler.unref?.();
+}
+
+/** Find calendar events within their reminder window and fire notifications. */
+export async function checkCalendarReminders(now = new Date()) {
+  const data = await snapshot();
+  const results: { id: string; title: string; fired: boolean }[] = [];
+  for (const ev of data.events) {
+    if (ev.notified) continue;
+    const reminderTime = new Date(ev.startsAt).getTime() - (ev.reminderMinutes ?? 15) * 60_000;
+    if (now.getTime() < reminderTime) continue;                       // not yet due
+    if (now.getTime() < reminderTime + 60_000) continue;            // within first minute — debounce
+    await updateEntity('events', ev.id, { notified: true });
+    void notify(ev.title, `Starts at ${new Date(ev.startsAt).toLocaleString()}`, 'calendar:reminder');
+    results.push({ id: ev.id, title: ev.title, fired: true });
+  }
+  return results;
 }

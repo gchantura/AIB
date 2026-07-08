@@ -5,7 +5,7 @@
 - Level 0: read-only operations may execute immediately.
 - Level 1: local workspace records may be created and are audited.
 - Level 2: the system creates a pending approval containing the exact tool ID and input. Only an approved, matching, unused record permits execution.
-- Level 3: disabled until stronger authentication and operating-system isolation are implemented.
+- Level 3: available to registered capabilities after exact-input, one-time approval. The approval must name the target and side effect; audit is mandatory and rollback is required where technically possible.
 - Approved records are consumed before execution and cannot be replayed.
 - File operations resolve paths against the repository root and reject boundary escapes.
 - Controlled writes record previous file state before mutation. The Safety screen can restore or remove affected files.
@@ -69,7 +69,7 @@ These actions are always safe to perform:
 - Creating calendar events or reminders
 - Running commands that write to the filesystem
 
-### Level 3 — Explicit approval required (block until confirmed)
+### Level 3 — Critical action (exact approval required)
 - Deleting any file
 - Pushing to git
 - Publishing content publicly
