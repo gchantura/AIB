@@ -6,6 +6,27 @@ This file is updated after every validation run. See `docs/SELF_IMPROVEMENT_LOG.
 
 ---
 
+## Auto-run: 2026-07-09T09:50:43.195Z
+
+- `npm run build`: ✅ Success
+- Graphify: ⚠ Skipped (not installed)
+
+---
+
+## Run: 2026-07-09 — Full Supabase Migration
+
+### Commands: `npm run build`, `npm run ai:validate`
+
+- `npm run build`: ✅ Success (exit 0, 0 errors, 0 warnings)
+- `npm run ai:validate`: ✅ 41 passed, 0 failed
+- Graphify: Existing graph retained (binary not available in this environment)
+
+**Changes:** All 20 entity collections migrated from local JSON (`.jarvis/workspace.json`) to Supabase tables. Local JSON store completely removed. `store.ts` rewritten with `snapshot()`, `record()`, entity CRUD, and generic row helpers (`insertRow`, `updateRow`, `deleteRow`, `upsertRow`, `clearTable`) — all backed by Supabase. All 10 runtime modules and 2 API routes updated to use direct Supabase operations instead of `transaction()`. Only SMTP settings remain in local file (`.jarvis/settings.json`).
+
+**Result: PASS**
+
+---
+
 ## Auto-run: 2026-07-09T09:39:41.649Z
 
 - `npm run build`: ✅ Success

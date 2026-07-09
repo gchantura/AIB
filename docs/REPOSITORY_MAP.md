@@ -1,17 +1,17 @@
 # Repository Map
 
 **Status:** Live manual map (Graphify remains optional)
-**Last updated:** 2026-07-09 after Supabase workspace migration
+**Last updated:** 2026-07-09 after full Supabase migration
 
 ## Runtime
 
-SvelteKit 2 + Svelte 5 runs as a local Node application through `@sveltejs/adapter-node`. Workspace data (events, tasks, notes, projects) is persisted in Supabase tables (`workspace_events`, `workspace_tasks`, `workspace_notes`, `workspace_projects`) with RLS enabled. All other entity kinds (research, automations, learning, audit, conversations, notifications, etc.) remain in the local atomic JSON store at `.jarvis/workspace.json`. The `snapshot()` function in `src/lib/jarvis/core/store.ts` merges both sources.
+SvelteKit 2 + Svelte 5 runs as a local Node application through `@sveltejs/adapter-node`. All workspace data is persisted in Supabase database tables (20 tables total) with RLS enabled. The local JSON store has been completely removed. The `snapshot()` function in `src/lib/jarvis/core/store.ts` loads all collections from Supabase in parallel. SMTP settings remain in `.jarvis/settings.json` (a local config file, not workspace data).
 
 ## Core modules
 
 | Path | Responsibility |
 |---|---|
-| `src/lib/jarvis/core/` | Data types, Supabase+local hybrid storage, CRUD and audit |
+| `src/lib/jarvis/core/` | Data types, Supabase-backed storage (snapshot, CRUD, audit, generic row helpers) |
 | `src/lib/supabase.server.ts` | Server-side Supabase client singleton (reads `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY`) |
 | `src/lib/jarvis/llm/` | Provider interfaces, Ollama/OpenAI-compatible/Anthropic adapters and router |
 | `src/lib/jarvis/memory/` | Memory CRUD and relevance retrieval |
@@ -21,6 +21,7 @@ SvelteKit 2 + Svelte 5 runs as a local Node application through `@sveltejs/adapt
 | `src/lib/jarvis/automation/` | Restart-safe scheduler and notifications |
 | `src/lib/jarvis/intelligence/` | Conversations, memory extraction and model-run history |
 | `src/lib/jarvis/briefing/` | Offline daily planning |
+| `src/lib/jarvis/core/settings.ts` | SMTP settings (local file `.jarvis/settings.json`) |
 | `src/hooks.server.ts` | Starts the Node scheduler once per process |
 
 ## User interface
@@ -39,12 +40,38 @@ SvelteKit 2 + Svelte 5 runs as a local Node application through `@sveltejs/adapt
 | `/api/repository` | Live repository inventory |
 | `/api/intelligence/*` | Evidence-bound research, coding and briefings |
 
+## Database tables (Supabase)
+
+All tables use RLS with `TO anon, authenticated` (no-auth app, single-tenant).
+
+| Table | Collection |
+|---|---|
+| `workspace_events` | Calendar events |
+| `workspace_tasks` | Tasks |
+| `workspace_notes` | Notes |
+| `workspace_projects` | Projects |
+| `workspace_research` | Research items |
+| `workspace_automations` | Scheduled automations |
+| `workspace_learning` | Learning items |
+| `workspace_audit` | Audit event log |
+| `workspace_generated_tools` | Dynamically registered tools |
+| `workspace_generated_skills` | Dynamically generated skills |
+| `workspace_memories` | Local memory entries |
+| `workspace_approvals` | Tool approval requests |
+| `workspace_rollbacks` | Rollback records |
+| `workspace_conversations` | Chat conversations |
+| `workspace_model_runs` | Model execution logs |
+| `workspace_notifications` | User notifications |
+| `workspace_briefings` | Daily briefings |
+| `workspace_execution_metrics` | Execution metrics |
+| `workspace_improvement_proposals` | Self-improvement proposals |
+| `workspace_upgrade_plans` | Upgrade plans |
+
 ## Generated and private state
 
-- `.jarvis/` contains local user data (non-workspace entities, audit log) and is ignored by Git.
-- Supabase tables `workspace_events`, `workspace_tasks`, `workspace_notes`, `workspace_projects` store workspace data with RLS (anon + authenticated, no-auth app).
+- `.jarvis/settings.json` stores SMTP configuration only (ignored by Git).
 - `generated-apps/` is created only through an approved app-factory action.
-- `.claude/skills/` contains readable skill definitions; generated skills are registered locally.
+- `.claude/skills/` contains readable skill definitions; generated skills are registered in the database.
 
 ## Validation
 

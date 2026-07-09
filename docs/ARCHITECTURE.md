@@ -2,7 +2,7 @@
 
 ## System Overview
 
-Super J.A.R.V.I.S. is a SvelteKit 2.x application (Svelte 5 runes mode) that serves as the user interface and server-side logic layer for a local-first AI operating system.
+Super J.A.R.V.I.S. is a SvelteKit 2.x application (Svelte 5 runes mode) that serves as the user interface and server-side logic layer for a database-backed AI operating system.
 
 ---
 
@@ -21,11 +21,20 @@ Super J.A.R.V.I.S. is a SvelteKit 2.x application (Svelte 5 runes mode) that ser
        │              │              │
 ┌──────▼───┐  ┌───────▼───┐  ┌──────▼──────┐
 │  LLM     │  │  Memory   │  │  Tools      │
-│Providers │  │  (SQLite/ │  │  Registry   │
-│(Ollama,  │  │  Supabase)│  │  + Factory  │
-│OpenAI,   │  └───────────┘  └─────────────┘
+│Providers │  │ (Supabase) │  │  Registry   │
+│(Ollama,  │  └───────────┘  │  + Factory  │
+│OpenAI,   │                  └─────────────┘
 │Gemini...)│
-└──────────┘
+└──────▼───┘
+       │
+┌──────▼──────────────────────────────────────────────┐
+│              Supabase Database (20 tables)           │
+│  Events · Tasks · Notes · Projects · Research ·     │
+│  Automations · Learning · Audit · Tools · Skills ·  │
+│  Memories · Approvals · Rollbacks · Conversations · │
+│  ModelRuns · Notifications · Briefings · Metrics ·   │
+│  Proposals · UpgradePlans                            │
+└─────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -35,42 +44,42 @@ Super J.A.R.V.I.S. is a SvelteKit 2.x application (Svelte 5 runes mode) that ser
 ```
 src/
   lib/
-    components/          # Shared UI — buttons, cards, modals, etc.
+    components/          # Shared UI — Toaster
     jarvis/
+      core/              # Types, Supabase-backed store, settings
+        store.ts         # snapshot(), record(), CRUD, generic row helpers
+        types.ts         # All entity interfaces
+        settings.ts      # SMTP settings (local file only)
       llm/               # Model provider abstraction
-        providers/       # One file per provider
+        providers/       # Ollama, OpenAI-compatible, Anthropic
         router.ts        # Task-based model routing
         types.ts         # Provider interface types
         config.ts        # Runtime configuration
-        capabilities.ts  # Model capability metadata
-        prompts.ts       # Shared prompt templates
         errors.ts        # Typed LLM errors
       memory/            # Persistent memory system
-        schema.ts        # Database schema definitions
-        api.ts           # Memory CRUD API
-        search.ts        # Memory search abstraction
+        api.ts            # Memory CRUD (Supabase)
+        relevance.ts     # Offline relevance ranking
         types.ts
       tools/             # Tool system
-        registry.ts      # Tool registry (in-memory + persisted)
-        schema.ts        # Zod tool manifest schema
-        types.ts
-        safe-tools/      # Pre-approved safe tools
+        runtime.ts       # Registry + controlled execution
       skills/            # Skill runtime
-        registry.ts      # Skill registry
-        types.ts
-        loader.ts        # Load skill SKILL.md files
-      automation/        # Scheduler and recurring jobs
-        scheduler.ts
-        types.ts
-      research/          # Research system
-        types.ts
-      coding/            # Coding agent workflows
-        scanner.ts
-        types.ts
+        runtime.ts       # Discovery + generation
+      safety/            # Approvals + rollback
+        runtime.ts
+      automation/        # Scheduler, notifications, email
+        runtime.ts
+        email.ts
+      intelligence/      # Conversations, model runs, memory extraction
+        runtime.ts
+      briefing/          # Daily planning
+        runtime.ts
+      evaluation/        # Metrics, proposals, upgrade plans
+        runtime.ts
+        upgrades.ts
     styles/
       tokens.css         # Design tokens (CSS custom properties)
-    types/               # Global shared types
-    utils/               # Utility functions
+    supabase.server.ts  # Server-side Supabase client singleton
+    supabase.ts         # Client-side Supabase client
   routes/
     (jarvis)/            # Main layout group
       +layout.svelte     # Shell: sidebar nav + main content
@@ -81,22 +90,39 @@ src/
       memory/            # Memory explorer
       calendar/          # Calendar + reminders
       research/          # AI research dashboard
+      coding/            # Coding assistant
       learning/          # Learning roadmap + progress
-      settings/          # Providers, privacy, theme
-    api/
-      chat/              # Streaming chat endpoint
+      automations/       # Scheduler dashboard
+      safety/            # Approvals + rollback
+      evaluation/        # Metrics + proposals
+      briefing/          # Daily briefing
+      repository/        # Repository intelligence
+      docs/              # System documentation
+      settings/          # Providers, privacy, SMTP
+    api/                 # REST API endpoints
+      chat/              # Streaming chat
+      conversations/     # Conversation CRUD
       memory/            # Memory REST API
+      workspace/         # Entity CRUD (7 kinds)
       tools/             # Tool execution API
-      research/          # Research API
+      skills/            # Skill API
+      safety/            # Approval + rollback API
       models/            # Model listing API
+      notifications/     # Notification API
+      automations/       # Automation run API
+      repository/        # Repository inventory API
+      settings/          # Settings API
+      evaluation/        # Evaluation API
+      upgrades/          # Upgrade plan API
+      intelligence/      # Research, coding, briefing APIs
 
 .claude/
-  skills/                # 15 mandatory skill definitions
+  skills/                # 15 skill definitions (SKILL.md)
   agents/                # Subagent definitions
   hooks/                 # Hook scripts
 
-docs/                    # All architecture + registry docs
-scripts/ai/              # Validation + utility scripts
+docs/                    # Architecture + registry docs
+scripts/ai/              # Validation script
 ```
 
 ---
@@ -106,8 +132,8 @@ scripts/ai/              # Validation + utility scripts
 ### Decision 1: SvelteKit as the sole UI framework
 Rationale: Already in place. SvelteKit provides SSR, form actions, and API routes in one coherent system. No need to introduce a separate backend framework.
 
-### Decision 2: Hybrid persistence — Supabase for workspace, local JSON for the rest
-Rationale: Workspace data (events, tasks, notes, projects) is persisted in Supabase tables with RLS, enabling durability across restarts and future multi-device sync. All other entity kinds (research, automations, learning, audit log, conversations, notifications, etc.) remain in the local atomic JSON store at `.jarvis/workspace.json`. The `snapshot()` function merges both sources so callers see a unified `JarvisData` object.
+### Decision 2: Supabase as the sole persistence layer
+Rationale: All workspace data — events, tasks, notes, projects, research, automations, learning, audit log, memories, approvals, rollbacks, conversations, model runs, notifications, briefings, execution metrics, improvement proposals, and upgrade plans — is persisted in 20 Supabase tables with RLS enabled. The local JSON store (`.jarvis/workspace.json`) has been completely removed. The `snapshot()` function loads all collections from Supabase in a single parallel batch. Only SMTP settings remain in a local file (`.jarvis/settings.json`).
 
 ### Decision 3: Provider abstraction before first model call
 Rationale: Hardcoding Anthropic, OpenAI, or Ollama creates lock-in. The router pattern allows switching providers per task without changing application code.
@@ -128,8 +154,8 @@ Rationale: Minimalistic design requirement. Neutral tones, clean whitespace, no 
 | Styling | Tailwind CSS v4 |
 | Icons | lucide-svelte |
 | Package Manager | npm |
-| Database | Supabase (workspace tables) + atomic local JSON (`.jarvis/workspace.json` for non-workspace entities) |
-| RLS | Enabled on all workspace tables (anon + authenticated, no-auth app) |
+| Database | Supabase (20 tables, all RLS-enabled) |
+| RLS | Enabled on all tables (anon + authenticated, no-auth app) |
 | Adapter | @sveltejs/adapter-node |
 | Validation | Zod |
 | Build | Vite 8 |
@@ -141,14 +167,14 @@ Rationale: Minimalistic design requirement. Neutral tones, clean whitespace, no 
 
 - UI: Functional workspace for chat, memory, tasks, notes, projects, calendar, research, tools, skills, automations, learning, settings, and repository intelligence.
 - LLM core: Local-first task router with Ollama and OpenAI-compatible adapters plus opt-in cloud providers.
-- Memory: Persistent local CRUD and search, independent of cloud configuration.
+- Memory: Persistent CRUD and search via Supabase, independent of cloud configuration.
 - Tools: Runtime registry, boundary-checked read tools, local creation tools, and execution audit.
 - Skills: Discovers `SKILL.md` files and can generate validated skill scaffolds.
-- Automation: Declarative local `task:` and `note:` actions with enable/disable and manual execution.
+- Automation: Declarative `task:` and `note:` actions with enable/disable and manual execution.
 - Repository intelligence: Live file, route, dependency, extension, and command inventory.
-- Safety: Repository-changing and critical actions use exact-input, one-time approvals and pre-mutation rollback journals where possible. Capability availability is separate from risk level; critical actions are not blanket-disabled. All decisions and mutations generate audit events.
+- Safety: Repository-changing and critical actions use exact-input, one-time approvals and pre-mutation rollback journals where possible. All decisions and mutations generate audit events.
 - App factory: Generates isolated Svelte 5/Vite applications under `generated-apps/` only after approval.
-- Conversations: Complete sessions and model-run outcomes persist locally; explicit preference and goal phrases produce source-linked memories.
+- Conversations: Complete sessions and model-run outcomes persist in Supabase; explicit preference and goal phrases produce source-linked memories.
 - Research intelligence: Model-assisted briefs are constrained to user-supplied source excerpts and must expose uncertainty when evidence is absent.
 - Coding intelligence: Repository-aware prompts read at most eight explicitly selected, boundary-checked files and never mutate them.
 - Proactive runtime: A Node-side scheduler wakes every 30 seconds, executes persisted due jobs once, advances `nextRunAt`, and emits local notifications.

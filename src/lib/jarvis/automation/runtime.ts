@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { createEntity, record, snapshot, transaction, updateEntity } from '../core/store.js';
+import { createEntity, record, snapshot, updateEntity, insertRow } from '../core/store.js';
 import { sendEmailReminder } from './email.js';
 import { getSettings, saveSettings } from '../core/settings.js';
 
@@ -14,7 +14,7 @@ export function nextRun(schedule: string, from = new Date()) {
 }
 
 export async function notify(title: string, message: string, source: string, level: 'info'|'success'|'warning'|'error' = 'info') {
-  return transaction((data) => { const item = { id: randomUUID(), title, message, source, level, createdAt: new Date().toISOString() }; data.notifications.unshift(item); data.notifications = data.notifications.slice(0, 300); return item; });
+  return insertRow('notifications', { id: randomUUID(), title, message, source, level, createdAt: new Date().toISOString() });
 }
 
 export async function runAutomation(id: string) {
@@ -25,7 +25,7 @@ export async function runAutomation(id: string) {
   else if (kind === 'notify') result = await notify(automation.name, value, `automation:${id}`);
   else throw new Error('Supported actions are task:<title>, note:<content>, and notify:<message>');
   const now = new Date(); await updateEntity('automations', id, { lastRunAt: now.toISOString(), nextRunAt: nextRun(automation.schedule, now) }); await notify('Automation completed', automation.name, `automation:${id}`, 'success');
-  await transaction((data) => record(data, { action: 'run-automation', entity: 'automations', entityId: id, outcome: 'success', detail: automation.action })); return result;
+  await record(null, { action: 'run-automation', entity: 'automations', entityId: id, outcome: 'success', detail: automation.action }); return result;
 }
 
 export async function schedulerTick(now = new Date()) {
@@ -42,17 +42,10 @@ export function startScheduler() {
   void schedulerTick(); global.__jarvisScheduler = setInterval(() => void schedulerTick(), 30_000); global.__jarvisScheduler.unref?.();
 }
 
-/** Find calendar events and tasks within their reminder window and fire notifications.
- *  IMPORTANT: Reminders only fire when the computed trigger time has been reached.
- *  - One-time: fires once when `now >= (startsAt - reminderMinutes)` AND startsAt is not
- *    too far in the past (grace: 30 min). This prevents firing for old events.
- *  - Recurring: REQUIRES `nextNotifyAt` to be set. If null, it is computed from the event
- *    start time on first encounter. Only fires when `now >= nextNotifyAt`.
- */
 export async function checkCalendarReminders(now = new Date()) {
   const data = await snapshot();
   const results: { id: string; title: string; fired: boolean }[] = [];
-  const GRACE_MS = 30 * 60_000; // 30-minute grace window for one-time reminders
+  const GRACE_MS = 30 * 60_000;
 
   for (const ev of data.events) {
     const repeat = ev.reminderRepeat ?? 'none';
@@ -61,13 +54,9 @@ export async function checkCalendarReminders(now = new Date()) {
     const reminderMs = (ev.reminderMinutes ?? 15) * 60_000;
 
     if (isRecurring) {
-      // Recurring: only fire if nextNotifyAt is set and has been reached
       if (!ev.nextNotifyAt) {
-        // Initialize nextNotifyAt if missing: set to (startsAt - reminderMinutes)
-        // but only if that time is in the future; otherwise advance to next cycle
         let firstNotify = startMs - reminderMs;
         if (firstNotify <= now.getTime()) {
-          // The first notification time has already passed, advance until we find a future one
           const nextBase = new Date(ev.startsAt);
           let nextTime = calculateNextRun(nextBase, repeat);
           let safety = 0;
@@ -80,14 +69,13 @@ export async function checkCalendarReminders(now = new Date()) {
         } else {
           await updateEntity('events', ev.id, { nextNotifyAt: ev.startsAt });
         }
-        continue; // Don't fire on this tick, wait for next scheduler cycle
+        continue;
       }
 
       const nextNotifyMs = new Date(ev.nextNotifyAt).getTime();
       const triggerTime = nextNotifyMs - reminderMs;
       if (now.getTime() < triggerTime) continue;
 
-      // Fire notification
       void notify(ev.title, `Starts at ${new Date(ev.startsAt).toLocaleString()}`, 'calendar:reminder');
       if (ev.emailReminder) {
         sendEmailReminder(
@@ -100,23 +88,15 @@ export async function checkCalendarReminders(now = new Date()) {
         });
       }
 
-      // Advance to next cycle
       const next = calculateNextRun(new Date(ev.nextNotifyAt), repeat);
       await updateEntity('events', ev.id, { nextNotifyAt: next.toISOString() });
       results.push({ id: ev.id, title: ev.title, fired: true });
 
     } else {
-      // One-time reminder
       if (ev.notified) continue;
-
       const triggerTime = startMs - reminderMs;
-
-      // Only fire if trigger time has been reached
       if (now.getTime() < triggerTime) continue;
-
-      // Don't fire if the event start time is too far in the past (prevents instant fire on old events)
       if (startMs + GRACE_MS < now.getTime()) {
-        // Event is more than 30 minutes past, mark as notified silently to stop checking
         await updateEntity('events', ev.id, { notified: true });
         continue;
       }
@@ -183,11 +163,8 @@ export async function checkCalendarReminders(now = new Date()) {
 
     } else {
       if (task.notified) continue;
-
       const triggerTime = dueMs - reminderMs;
       if (now.getTime() < triggerTime) continue;
-
-      // Don't fire for tasks due more than 30 min ago
       if (dueMs + GRACE_MS < now.getTime()) {
         await updateEntity('tasks', task.id, { notified: true });
         continue;
@@ -247,11 +224,9 @@ function getLocalDateStr(d: Date) {
 export async function sendDailyBriefing(now = new Date()) {
   const settings = await getSettings();
   if (!settings.dailyBriefingEnabled) return;
-  
+
   const todayStr = getLocalDateStr(now);
-  if (settings.lastDailyBriefingSentDate === todayStr) return; // Already sent today
-  
-  // Send at 8:00 AM local time
+  if (settings.lastDailyBriefingSentDate === todayStr) return;
   if (now.getHours() < 8) return;
 
   const data = await snapshot();
@@ -259,7 +234,6 @@ export async function sendDailyBriefing(now = new Date()) {
   const todayTasks = data.tasks.filter(t => t.dueAt?.startsWith(todayStr) && t.status !== 'done');
   const overdueTasks = data.tasks.filter(t => t.dueAt && t.dueAt < todayStr && t.status !== 'done');
 
-  // Skip briefing if no email address is set
   const recipient = settings.smtpFrom || settings.smtpUser;
   if (!recipient) return;
 

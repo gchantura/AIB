@@ -524,7 +524,7 @@
   <div class="page-header">
     <div>
       <h1 class="page-title">Workspace</h1>
-      <p class="page-sub">Tasks, calendar, notes, and projects — stored locally.</p>
+      <p class="page-sub">Tasks, calendar, notes, and projects — saved to your database.</p>
     </div>
   </div>
 

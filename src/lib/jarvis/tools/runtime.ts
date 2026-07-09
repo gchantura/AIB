@@ -1,6 +1,7 @@
+import { randomUUID } from 'node:crypto';
+import { resolve, join, relative } from 'node:path';
 import { readdir, readFile } from 'node:fs/promises';
-import { resolve, relative, join } from 'node:path';
-import { createEntity, record, transaction } from '../core/store.js';
+import { snapshot, record, createEntity, insertRow } from '../core/store.js';
 import type { ToolManifest } from '../core/types.js';
 import { applyChanges, consumeApproval, createRollback } from '../safety/runtime.js';
 import { recordExecution } from '../evaluation/runtime.js';
@@ -22,7 +23,7 @@ function insideRepo(path = '.') {
   return target;
 }
 
-export async function listTools() { const data = await import('../core/store.js').then((m) => m.snapshot()); return [...builtinTools, ...data.generatedTools]; }
+export async function listTools() { const data = await snapshot(); return [...builtinTools, ...data.generatedTools]; }
 
 async function executeToolInternal(id: string, input: Record<string, unknown>, approvalId?: string) {
   const tool = (await listTools()).find((item) => item.id === id);
@@ -56,7 +57,7 @@ async function executeToolInternal(id: string, input: Record<string, unknown>, a
     ];
     changes.forEach((change) => insideRepo(change.path)); const rollback = await createRollback(approvalId!, id, changes); await applyChanges(changes); output = { directory: base, files: changes.map((change) => change.path), rollbackId: rollback.id };
   } else output = { accepted: true, input, message: 'Generated declarative tool invoked' };
-  await transaction((data) => record(data, { action: `tool:${id}`, entity: 'tool', outcome: 'success', detail: JSON.stringify(input).slice(0, 300) }));
+  await record(null, { action: `tool:${id}`, entity: 'tool', outcome: 'success', detail: JSON.stringify(input).slice(0, 300) });
   return output;
 }
 
@@ -69,11 +70,10 @@ export async function executeTool(id: string, input: Record<string, unknown>, ap
 export async function registerTool(input: Omit<ToolManifest, 'generated'>) {
   if (!/^[a-z0-9-]+$/.test(input.id)) throw new Error('Tool id must use lowercase letters, numbers, and hyphens');
   if (input.safetyLevel < 0 || input.safetyLevel > 3) throw new Error('Invalid safety level');
-  return transaction((data) => {
-    if ([...builtinTools, ...data.generatedTools].some((tool) => tool.id === input.id)) throw new Error('Tool id already exists');
-    const tool = { ...input, generated: true } as ToolManifest;
-    data.generatedTools.push(tool);
-    record(data, { action: 'register-tool', entity: 'tool', entityId: tool.id, outcome: 'success', detail: tool.description });
-    return tool;
-  });
+  const existing = (await listTools()).some((tool) => tool.id === input.id);
+  if (existing) throw new Error('Tool id already exists');
+  const tool = { ...input, generated: true } as ToolManifest;
+  await insertRow('generatedTools', { id: randomUUID(), toolId: tool.id, name: tool.name, description: tool.description, category: tool.category, safetyLevel: tool.safetyLevel, generated: true, createdAt: new Date().toISOString() });
+  await record(null, { action: 'register-tool', entity: 'tool', entityId: tool.id, outcome: 'success', detail: tool.description });
+  return tool;
 }

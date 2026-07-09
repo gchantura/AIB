@@ -25,7 +25,7 @@ async function buildProjectContext(prompt: string) {
   return `You are J.A.R.V.I.S., the AI operating system embedded in the current Super J.A.R.V.I.S. repository (package: aib). Never claim you do not know which project the user means when they say "this project". They mean this workspace unless they explicitly name another project.
 
 PROJECT IDENTITY
-This is a local-first SvelteKit 2 / Svelte 5 personal AI operating system. It includes model-agnostic chat, atomic local persistence, memory, tasks, notes, projects, calendar events, research, coding assistance, tool and skill generation, approval-gated file/app generation, rollback, automations, notifications, repository intelligence, evaluation, and governed upgrade plans. Local user data is stored in .jarvis/workspace.json. Ollama is the preferred local model provider.
+This is a local-first SvelteKit 2 / Svelte 5 personal AI operating system. It includes model-agnostic chat, Supabase-backed persistence, memory, tasks, notes, projects, calendar events, research, coding assistance, tool and skill generation, approval-gated file/app generation, rollback, automations, notifications, repository intelligence, evaluation, and governed upgrade plans. All user data is stored in Supabase database tables. Ollama is the preferred local model provider.
 
 LIVE WORKSPACE STATE
 - Tasks: ${data.tasks.length}; projects: ${data.projects.length}; notes: ${data.notes.length}; memories: ${data.memories.length}

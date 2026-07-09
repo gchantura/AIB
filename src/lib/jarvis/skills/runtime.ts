@@ -1,6 +1,6 @@
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { record, snapshot, transaction } from '../core/store.js';
+import { record, snapshot, insertRow } from '../core/store.js';
 
 const skillsDir = join(process.cwd(), '.claude', 'skills');
 
@@ -24,6 +24,7 @@ export async function createSkill(input: { id: string; name: string; description
   const content = `# ${input.name}\n\n## Purpose\n\n${input.description}\n\n## Instructions\n\n${input.instructions}\n\n## Validation\n\n- Verify outputs before reporting completion.\n- Record material decisions and reusable improvements.\n`;
   await writeFile(join(dir, 'SKILL.md'), content, 'utf8');
   const skill = { id: input.id, name: input.name, description: input.description, path: `.claude/skills/${input.id}/SKILL.md`, generated: true };
-  await transaction((data) => { data.generatedSkills.push(skill); record(data, { action: 'create-skill', entity: 'skill', entityId: skill.id, outcome: 'success', detail: skill.description }); });
+  await insertRow('generatedSkills', { id: crypto.randomUUID(), skillId: skill.id, name: skill.name, description: skill.description, path: skill.path, generated: true, createdAt: new Date().toISOString() });
+  await record(null, { action: 'create-skill', entity: 'skill', entityId: skill.id, outcome: 'success', detail: skill.description });
   return skill;
 }

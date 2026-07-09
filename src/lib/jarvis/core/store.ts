@@ -1,68 +1,63 @@
-import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import type { AuditEvent, BaseEntity, EntityKind, JarvisData } from './types.js';
 import { getServerSupabase } from '$lib/supabase.server.js';
 
-const dataDir = join(process.cwd(), '.jarvis');
-const dataFile = join(dataDir, 'workspace.json');
-const tempFile = join(dataDir, 'workspace.tmp.json');
-let queue = Promise.resolve();
-
-const emptyData = (): JarvisData => ({ version: 1, tasks: [], notes: [], projects: [], events: [], research: [], automations: [], learning: [], audit: [], generatedTools: [], generatedSkills: [], memories: [], approvals: [], rollbacks: [], conversations: [], modelRuns: [], notifications: [], briefings: [], executionMetrics: [], improvementProposals: [], upgradePlans: [] });
-
-async function load(): Promise<JarvisData> {
-  await mkdir(dataDir, { recursive: true });
-  try { return { ...emptyData(), ...JSON.parse(await readFile(dataFile, 'utf8')) }; }
-  catch (error) {
-    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return emptyData();
-    throw error;
-  }
-}
-
-async function save(data: JarvisData) {
-  await writeFile(tempFile, JSON.stringify(data, null, 2), 'utf8');
-  await rename(tempFile, dataFile);
-}
-
-export function transaction<T>(work: (data: JarvisData) => T | Promise<T>): Promise<T> {
-  const result = queue.then(async () => { const data = await load(); const value = await work(data); await save(data); return value; });
-  queue = result.then(() => undefined, () => undefined);
-  return result;
-}
-
-export async function snapshot(): Promise<JarvisData> {
-  await queue;
-  const local = await load();
-  const supa = await loadWorkspaceFromSupabase();
-  return { ...local, ...supa };
-}
-
-export function record(data: JarvisData, event: Omit<AuditEvent, 'id' | 'at'>) {
-  data.audit.unshift({ id: randomUUID(), at: new Date().toISOString(), ...event });
-  data.audit = data.audit.slice(0, 500);
-}
-
-// ── Supabase-backed workspace kinds ──
-const SUPA_KINDS = new Set<EntityKind>(['events', 'tasks', 'notes', 'projects']);
-
-const TABLE_MAP: Record<string, string> = {
+// ── Table mapping ──
+// EntityKind -> Supabase table name
+const ENTITY_TABLES: Record<EntityKind, string> = {
   events: 'workspace_events',
   tasks: 'workspace_tasks',
   notes: 'workspace_notes',
   projects: 'workspace_projects',
+  research: 'workspace_research',
+  automations: 'workspace_automations',
+  learning: 'workspace_learning',
 };
 
-// Map camelCase fields from the API to snake_case for Supabase
-const FIELD_MAP: Record<string, Record<string, string>> = {
-  events: { startsAt: 'starts_at', endsAt: 'ends_at', reminderMinutes: 'reminder_minutes', reminderRepeat: 'reminder_repeat', nextNotifyAt: 'next_notify_at', emailReminder: 'email_reminder', emailCc: 'email_cc', createdAt: 'created_at', updatedAt: 'updated_at' },
-  tasks: { dueAt: 'due_at', reminderMinutes: 'reminder_minutes', reminderRepeat: 'reminder_repeat', nextNotifyAt: 'next_notify_at', emailReminder: 'email_reminder', emailCc: 'email_cc', emailSubject: 'email_subject', createdAt: 'created_at', updatedAt: 'updated_at' },
-  notes: { projectId: 'project_id', createdAt: 'created_at', updatedAt: 'updated_at' },
-  projects: { createdAt: 'created_at', updatedAt: 'updated_at' },
+// Collection key in JarvisData -> Supabase table name
+const COLLECTION_TABLES: Record<string, string> = {
+  ...ENTITY_TABLES,
+  audit: 'workspace_audit',
+  generatedTools: 'workspace_generated_tools',
+  generatedSkills: 'workspace_generated_skills',
+  memories: 'workspace_memories',
+  approvals: 'workspace_approvals',
+  rollbacks: 'workspace_rollbacks',
+  conversations: 'workspace_conversations',
+  modelRuns: 'workspace_model_runs',
+  notifications: 'workspace_notifications',
+  briefings: 'workspace_briefings',
+  executionMetrics: 'workspace_execution_metrics',
+  improvementProposals: 'workspace_improvement_proposals',
+  upgradePlans: 'workspace_upgrade_plans',
 };
 
-function toSnake(kind: string, obj: Record<string, unknown>): Record<string, unknown> {
-  const map = FIELD_MAP[kind] ?? {};
+// camelCase <-> snake_case field maps per table
+const FIELD_MAPS: Record<string, Record<string, string>> = {
+  workspace_events: { startsAt: 'starts_at', endsAt: 'ends_at', reminderMinutes: 'reminder_minutes', reminderRepeat: 'reminder_repeat', nextNotifyAt: 'next_notify_at', emailReminder: 'email_reminder', emailCc: 'email_cc', createdAt: 'created_at', updatedAt: 'updated_at' },
+  workspace_tasks: { dueAt: 'due_at', reminderMinutes: 'reminder_minutes', reminderRepeat: 'reminder_repeat', nextNotifyAt: 'next_notify_at', emailReminder: 'email_reminder', emailCc: 'email_cc', emailSubject: 'email_subject', createdAt: 'created_at', updatedAt: 'updated_at' },
+  workspace_notes: { projectId: 'project_id', createdAt: 'created_at', updatedAt: 'updated_at' },
+  workspace_projects: { createdAt: 'created_at', updatedAt: 'updated_at' },
+  workspace_research: { createdAt: 'created_at', updatedAt: 'updated_at' },
+  workspace_automations: { lastRunAt: 'last_run_at', nextRunAt: 'next_run_at', createdAt: 'created_at', updatedAt: 'updated_at' },
+  workspace_learning: { createdAt: 'created_at', updatedAt: 'updated_at' },
+  workspace_audit: { at: 'at', entityId: 'entity_id' },
+  workspace_generated_tools: { toolId: 'tool_id', safetyLevel: 'safety_level', createdAt: 'created_at' },
+  workspace_generated_skills: { skillId: 'skill_id', createdAt: 'created_at' },
+  workspace_memories: { isInferred: 'is_inferred', projectId: 'project_id', toolId: 'tool_id', createdAt: 'created_at', updatedAt: 'updated_at', expiresAt: 'expires_at' },
+  workspace_approvals: { toolId: 'tool_id', createdAt: 'created_at', decidedAt: 'decided_at', consumedAt: 'consumed_at' },
+  workspace_rollbacks: { approvalId: 'approval_id', toolId: 'tool_id', createdAt: 'created_at', rolledBackAt: 'rolled_back_at' },
+  workspace_conversations: { createdAt: 'created_at', updatedAt: 'updated_at' },
+  workspace_model_runs: { createdAt: 'created_at' },
+  workspace_notifications: { createdAt: 'created_at', readAt: 'read_at' },
+  workspace_briefings: { createdAt: 'created_at', taskIds: 'task_ids', eventIds: 'event_ids' },
+  workspace_execution_metrics: { startedAt: 'started_at', durationMs: 'duration_ms' },
+  workspace_improvement_proposals: { createdAt: 'created_at', decidedAt: 'decided_at' },
+  workspace_upgrade_plans: { proposalId: 'proposal_id', createdAt: 'created_at', updatedAt: 'updated_at' },
+};
+
+function toSnake(table: string, obj: Record<string, unknown>): Record<string, unknown> {
+  const map = FIELD_MAPS[table] ?? {};
   const result: Record<string, unknown> = {};
   for (const [key, val] of Object.entries(obj)) {
     result[map[key] ?? key] = val;
@@ -70,8 +65,8 @@ function toSnake(kind: string, obj: Record<string, unknown>): Record<string, unk
   return result;
 }
 
-function toCamel(kind: string, obj: Record<string, unknown>): Record<string, unknown> {
-  const map = FIELD_MAP[kind] ?? {};
+function toCamel(table: string, obj: Record<string, unknown>): Record<string, unknown> {
+  const map = FIELD_MAPS[table] ?? {};
   const reverse: Record<string, string> = {};
   for (const [camel, snake] of Object.entries(map)) reverse[snake] = camel;
   const result: Record<string, unknown> = {};
@@ -81,96 +76,174 @@ function toCamel(kind: string, obj: Record<string, unknown>): Record<string, unk
   return result;
 }
 
-async function loadWorkspaceFromSupabase(): Promise<Partial<JarvisData>> {
-  try {
-    const supa = getServerSupabase();
-    const [ev, tk, nt, pr] = await Promise.all([
-      supa.from('workspace_events').select('*').order('created_at', { ascending: false }),
-      supa.from('workspace_tasks').select('*').order('created_at', { ascending: false }),
-      supa.from('workspace_notes').select('*').order('created_at', { ascending: false }),
-      supa.from('workspace_projects').select('*').order('created_at', { ascending: false }),
-    ]);
+function supa() { return getServerSupabase(); }
 
-    return {
-      events: (ev.data ?? []).map(r => toCamel('events', r)) as never,
-      tasks: (tk.data ?? []).map(r => toCamel('tasks', r)) as never,
-      notes: (nt.data ?? []).map(r => toCamel('notes', r)) as never,
-      projects: (pr.data ?? []).map(r => toCamel('projects', r)) as never,
-    };
-  } catch {
-    return {};
-  }
+// ── snapshot() — load all collections from Supabase ──
+export async function snapshot(): Promise<JarvisData> {
+  const s = supa();
+  const [
+    events, tasks, notes, projects, research, automations, learning,
+    audit, generatedTools, generatedSkills, memories, approvals, rollbacks,
+    conversations, modelRuns, notifications, briefings, executionMetrics,
+    improvementProposals, upgradePlans,
+  ] = await Promise.all([
+    s.from('workspace_events').select('*').order('created_at', { ascending: false }),
+    s.from('workspace_tasks').select('*').order('created_at', { ascending: false }),
+    s.from('workspace_notes').select('*').order('created_at', { ascending: false }),
+    s.from('workspace_projects').select('*').order('created_at', { ascending: false }),
+    s.from('workspace_research').select('*').order('created_at', { ascending: false }),
+    s.from('workspace_automations').select('*').order('created_at', { ascending: false }),
+    s.from('workspace_learning').select('*').order('created_at', { ascending: false }),
+    s.from('workspace_audit').select('*').order('at', { ascending: false }).limit(500),
+    s.from('workspace_generated_tools').select('*').order('created_at', { ascending: false }),
+    s.from('workspace_generated_skills').select('*').order('created_at', { ascending: false }),
+    s.from('workspace_memories').select('*').order('created_at', { ascending: false }),
+    s.from('workspace_approvals').select('*').order('created_at', { ascending: false }),
+    s.from('workspace_rollbacks').select('*').order('created_at', { ascending: false }),
+    s.from('workspace_conversations').select('*').order('updated_at', { ascending: false }),
+    s.from('workspace_model_runs').select('*').order('created_at', { ascending: false }).limit(200),
+    s.from('workspace_notifications').select('*').order('created_at', { ascending: false }).limit(300),
+    s.from('workspace_briefings').select('*').order('created_at', { ascending: false }),
+    s.from('workspace_execution_metrics').select('*').order('started_at', { ascending: false }).limit(2000),
+    s.from('workspace_improvement_proposals').select('*').order('created_at', { ascending: false }),
+    s.from('workspace_upgrade_plans').select('*').order('created_at', { ascending: false }),
+  ]);
+
+  return {
+    version: 1,
+    events: (events.data ?? []).map(r => toCamel('workspace_events', r)) as never,
+    tasks: (tasks.data ?? []).map(r => toCamel('workspace_tasks', r)) as never,
+    notes: (notes.data ?? []).map(r => toCamel('workspace_notes', r)) as never,
+    projects: (projects.data ?? []).map(r => toCamel('workspace_projects', r)) as never,
+    research: (research.data ?? []).map(r => toCamel('workspace_research', r)) as never,
+    automations: (automations.data ?? []).map(r => toCamel('workspace_automations', r)) as never,
+    learning: (learning.data ?? []).map(r => toCamel('workspace_learning', r)) as never,
+    audit: (audit.data ?? []).map(r => toCamel('workspace_audit', r)) as never,
+    generatedTools: (generatedTools.data ?? []).map(r => toCamel('workspace_generated_tools', r)) as never,
+    generatedSkills: (generatedSkills.data ?? []).map(r => toCamel('workspace_generated_skills', r)) as never,
+    memories: (memories.data ?? []).map(r => toCamel('workspace_memories', r)) as never,
+    approvals: (approvals.data ?? []).map(r => toCamel('workspace_approvals', r)) as never,
+    rollbacks: (rollbacks.data ?? []).map(r => toCamel('workspace_rollbacks', r)) as never,
+    conversations: (conversations.data ?? []).map(r => toCamel('workspace_conversations', r)) as never,
+    modelRuns: (modelRuns.data ?? []).map(r => toCamel('workspace_model_runs', r)) as never,
+    notifications: (notifications.data ?? []).map(r => toCamel('workspace_notifications', r)) as never,
+    briefings: (briefings.data ?? []).map(r => toCamel('workspace_briefings', r)) as never,
+    executionMetrics: (executionMetrics.data ?? []).map(r => toCamel('workspace_execution_metrics', r)) as never,
+    improvementProposals: (improvementProposals.data ?? []).map(r => toCamel('workspace_improvement_proposals', r)) as never,
+    upgradePlans: (upgradePlans.data ?? []).map(r => toCamel('workspace_upgrade_plans', r)) as never,
+  };
 }
 
+// ── record() — insert audit event into workspace_audit ──
+export async function record(_data: JarvisData | null, event: Omit<AuditEvent, 'id' | 'at'>): Promise<void> {
+  const s = supa();
+  const row = toSnake('workspace_audit', {
+    id: randomUUID(),
+    at: new Date().toISOString(),
+    action: event.action,
+    entity: event.entity,
+    entityId: event.entityId,
+    outcome: event.outcome,
+    detail: event.detail,
+  });
+  await s.from('workspace_audit').insert(row);
+}
+
+// ── Entity CRUD (for EntityKind collections) ──
 export async function listEntities(kind: EntityKind) {
-  if (SUPA_KINDS.has(kind)) {
-    const supa = getServerSupabase();
-    const table = TABLE_MAP[kind];
-    const { data, error } = await supa.from(table).select('*').order('created_at', { ascending: false });
-    if (error) throw error;
-    return (data ?? []).map(r => toCamel(kind, r));
-  }
-  return (await snapshot())[kind];
+  const table = ENTITY_TABLES[kind];
+  const s = supa();
+  const { data, error } = await s.from(table).select('*').order('created_at', { ascending: false });
+  if (error) throw error;
+  return (data ?? []).map(r => toCamel(table, r));
 }
 
 export async function createEntity(kind: EntityKind, input: Record<string, unknown>) {
-  if (SUPA_KINDS.has(kind)) {
-    const supa = getServerSupabase();
-    const table = TABLE_MAP[kind];
-    const now = new Date().toISOString();
-    const row = toSnake(kind, { ...input, id: randomUUID(), createdAt: now, updatedAt: now });
-    const { data, error } = await supa.from(table).insert(row).select('*').single();
-    if (error) throw error;
-    const entity = toCamel(kind, data) as BaseEntity;
-    // Record audit locally
-    await transaction((d) => { record(d, { action: 'create', entity: kind, entityId: entity.id, outcome: 'success', detail: `Created ${kind.slice(0, -1)}` }); });
-    return entity;
-  }
-  return transaction((data) => {
-    const now = new Date().toISOString();
-    const entity = { ...input, id: randomUUID(), createdAt: now, updatedAt: now } as unknown as BaseEntity;
-    (data[kind] as BaseEntity[]).unshift(entity);
-    record(data, { action: 'create', entity: kind, entityId: entity.id, outcome: 'success', detail: `Created ${kind.slice(0, -1)}` });
-    return entity;
-  });
+  const table = ENTITY_TABLES[kind];
+  const s = supa();
+  const now = new Date().toISOString();
+  const row = toSnake(table, { ...input, id: randomUUID(), createdAt: now, updatedAt: now });
+  const { data, error } = await s.from(table).insert(row).select('*').single();
+  if (error) throw error;
+  const entity = toCamel(table, data) as BaseEntity;
+  await record(null, { action: 'create', entity: kind, entityId: entity.id, outcome: 'success', detail: `Created ${kind.slice(0, -1)}` });
+  return entity;
 }
 
 export async function updateEntity(kind: EntityKind, id: string, patch: Record<string, unknown>) {
-  if (SUPA_KINDS.has(kind)) {
-    const supa = getServerSupabase();
-    const table = TABLE_MAP[kind];
-    const row = toSnake(kind, { ...patch, updatedAt: new Date().toISOString() });
-    delete row.id;
-    const { data, error } = await supa.from(table).update(row).eq('id', id).select('*').single();
-    if (error) throw error;
-    const entity = toCamel(kind, data) as BaseEntity;
-    await transaction((d) => { record(d, { action: 'update', entity: kind, entityId: id, outcome: 'success', detail: `Updated ${kind.slice(0, -1)}` }); });
-    return entity;
-  }
-  return transaction((data) => {
-    const collection = data[kind] as BaseEntity[];
-    const index = collection.findIndex((item) => item.id === id);
-    if (index < 0) throw new Error('Entity not found');
-    collection[index] = { ...collection[index], ...patch, id, updatedAt: new Date().toISOString() };
-    record(data, { action: 'update', entity: kind, entityId: id, outcome: 'success', detail: `Updated ${kind.slice(0, -1)}` });
-    return collection[index];
-  });
+  const table = ENTITY_TABLES[kind];
+  const s = supa();
+  const row = toSnake(table, { ...patch, updatedAt: new Date().toISOString() });
+  delete row.id;
+  const { data, error } = await s.from(table).update(row).eq('id', id).select('*').single();
+  if (error) throw error;
+  const entity = toCamel(table, data) as BaseEntity;
+  await record(null, { action: 'update', entity: kind, entityId: id, outcome: 'success', detail: `Updated ${kind.slice(0, -1)}` });
+  return entity;
 }
 
 export async function deleteEntity(kind: EntityKind, id: string) {
-  if (SUPA_KINDS.has(kind)) {
-    const supa = getServerSupabase();
-    const table = TABLE_MAP[kind];
-    const { error } = await supa.from(table).delete().eq('id', id);
+  const table = ENTITY_TABLES[kind];
+  const s = supa();
+  const { error } = await s.from(table).delete().eq('id', id);
+  if (error) throw error;
+  await record(null, { action: 'delete', entity: kind, entityId: id, outcome: 'success', detail: `Deleted ${kind.slice(0, -1)}` });
+}
+
+// ── Generic collection helpers (for non-EntityKind collections) ──
+// These replace the old transaction() pattern with direct Supabase operations.
+
+export async function insertRow(collection: string, row: Record<string, unknown>): Promise<Record<string, unknown>> {
+  const table = COLLECTION_TABLES[collection];
+  if (!table) throw new Error(`Unknown collection: ${collection}`);
+  const s = supa();
+  const snakeRow = toSnake(table, row);
+  const { data, error } = await s.from(table).insert(snakeRow).select('*').single();
+  if (error) throw error;
+  return toCamel(table, data);
+}
+
+export async function updateRow(collection: string, id: string, patch: Record<string, unknown>): Promise<Record<string, unknown>> {
+  const table = COLLECTION_TABLES[collection];
+  if (!table) throw new Error(`Unknown collection: ${collection}`);
+  const s = supa();
+  const snakePatch = toSnake(table, patch);
+  delete snakePatch.id;
+  const { data, error } = await s.from(table).update(snakePatch).eq('id', id).select('*').single();
+  if (error) throw error;
+  return toCamel(table, data);
+}
+
+export async function deleteRow(collection: string, id: string): Promise<void> {
+  const table = COLLECTION_TABLES[collection];
+  if (!table) throw new Error(`Unknown collection: ${collection}`);
+  const s = supa();
+  const { error } = await s.from(table).delete().eq('id', id);
+  if (error) throw error;
+}
+
+export async function upsertRow(collection: string, match: Record<string, unknown>, row: Record<string, unknown>): Promise<Record<string, unknown>> {
+  const table = COLLECTION_TABLES[collection];
+  if (!table) throw new Error(`Unknown collection: ${collection}`);
+  const s = supa();
+  const { data: existing } = await s.from(table).select('*').match(toSnake(table, match)).maybeSingle();
+  if (existing) {
+    const snakePatch = toSnake(table, row);
+    delete snakePatch.id;
+    const { data, error } = await s.from(table).update(snakePatch).eq('id', existing.id).select('*').single();
     if (error) throw error;
-    await transaction((d) => { record(d, { action: 'delete', entity: kind, entityId: id, outcome: 'success', detail: `Deleted ${kind.slice(0, -1)}` }); });
-    return;
+    return toCamel(table, data);
   }
-  return transaction((data) => {
-    const collection = data[kind] as BaseEntity[];
-    const index = collection.findIndex((item) => item.id === id);
-    if (index < 0) throw new Error('Entity not found');
-    collection.splice(index, 1);
-    record(data, { action: 'delete', entity: kind, entityId: id, outcome: 'success', detail: `Deleted ${kind.slice(0, -1)}` });
-  });
+  const snakeRow = toSnake(table, { ...row, id: randomUUID() });
+  const { data, error } = await s.from(table).insert(snakeRow).select('*').single();
+  if (error) throw error;
+  return toCamel(table, data);
+}
+
+export async function clearTable(collection: string): Promise<void> {
+  const table = COLLECTION_TABLES[collection];
+  if (!table) throw new Error(`Unknown collection: ${collection}`);
+  const s = supa();
+  const { error } = await s.from(table).delete().neq('id', '00000000-0000-0000-0000-000000000000');
+  if (error) throw error;
 }

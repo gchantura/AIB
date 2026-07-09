@@ -1,9 +1,9 @@
 import { randomUUID } from 'node:crypto';
-import { record, snapshot, transaction } from '../core/store.js';
+import { record, snapshot, insertRow, updateRow } from '../core/store.js';
 import type { ExecutionMetric, ImprovementProposal } from '../core/types.js';
 
 export async function recordExecution(metric: Omit<ExecutionMetric, 'id'>) {
-  await transaction((data) => { data.executionMetrics.unshift({ id: randomUUID(), ...metric }); data.executionMetrics = data.executionMetrics.slice(0, 2000); });
+  await insertRow('executionMetrics', { id: randomUUID(), ...metric });
 }
 
 function summarize(metrics: ExecutionMetric[]) {
@@ -17,17 +17,30 @@ export async function evaluationSnapshot() {
 }
 
 export async function generateProposals() {
-  return transaction((data) => {
-    const candidates: Omit<ImprovementProposal, 'id'|'createdAt'|'status'>[] = []; const failedModels = data.modelRuns.filter((run) => run.status === 'failed').slice(0, 20);
-    if (failedModels.length >= 2) candidates.push({ title: 'Improve provider availability diagnostics', rationale: 'Repeated model runs failed. Add clearer remediation and provider-specific health detail before expanding autonomous model use.', target: 'llm-router', evidence: failedModels.slice(0, 5).map((run) => `${run.kind}: ${run.error}`), risk: 'low' });
-    const failures = data.executionMetrics.filter((metric) => !metric.ok); const byCapability = new Map<string, ExecutionMetric[]>(); for (const item of failures) byCapability.set(item.capability, [...(byCapability.get(item.capability) ?? []), item]);
-    for (const [target, items] of byCapability) if (items.length >= 2) candidates.push({ title: `Harden ${target}`, rationale: `${items.length} recorded failures indicate a reusable reliability issue.`, target, evidence: items.slice(0, 5).map((item) => item.error ?? 'Unspecified failure'), risk: 'medium' });
-    if (data.memories.length > 100) candidates.push({ title: 'Add memory consolidation review', rationale: 'The local memory collection is large enough to benefit from duplicate and contradiction review.', target: 'memory', evidence: [`${data.memories.length} local memories`], risk: 'medium' });
-    const created: ImprovementProposal[] = []; for (const candidate of candidates) { if (data.improvementProposals.some((proposal) => proposal.target === candidate.target && proposal.status === 'proposed')) continue; const proposal = { id: randomUUID(), createdAt: new Date().toISOString(), status: 'proposed' as const, ...candidate }; data.improvementProposals.unshift(proposal); created.push(proposal); }
-    record(data, { action: 'generate-improvement-proposals', entity: 'system', outcome: 'success', detail: `${created.length} proposal(s)` }); return created;
-  });
+  const data = await snapshot();
+  const candidates: Omit<ImprovementProposal, 'id'|'createdAt'|'status'>[] = [];
+  const failedModels = data.modelRuns.filter((run) => run.status === 'failed').slice(0, 20);
+  if (failedModels.length >= 2) candidates.push({ title: 'Improve provider availability diagnostics', rationale: 'Repeated model runs failed. Add clearer remediation and provider-specific health detail before expanding autonomous model use.', target: 'llm-router', evidence: failedModels.slice(0, 5).map((run) => `${run.kind}: ${run.error}`), risk: 'low' });
+  const failures = data.executionMetrics.filter((metric) => !metric.ok); const byCapability = new Map<string, ExecutionMetric[]>(); for (const item of failures) byCapability.set(item.capability, [...(byCapability.get(item.capability) ?? []), item]);
+  for (const [target, items] of byCapability) if (items.length >= 2) candidates.push({ title: `Harden ${target}`, rationale: `${items.length} recorded failures indicate a reusable reliability issue.`, target, evidence: items.slice(0, 5).map((item) => item.error ?? 'Unspecified failure'), risk: 'medium' });
+  if (data.memories.length > 100) candidates.push({ title: 'Add memory consolidation review', rationale: 'The local memory collection is large enough to benefit from duplicate and contradiction review.', target: 'memory', evidence: [`${data.memories.length} local memories`], risk: 'medium' });
+  const created: ImprovementProposal[] = [];
+  for (const candidate of candidates) {
+    if (data.improvementProposals.some((proposal) => proposal.target === candidate.target && proposal.status === 'proposed')) continue;
+    const proposal: ImprovementProposal = { id: randomUUID(), createdAt: new Date().toISOString(), status: 'proposed', ...candidate };
+    await insertRow('improvementProposals', proposal);
+    created.push(proposal);
+  }
+  await record(null, { action: 'generate-improvement-proposals', entity: 'system', outcome: 'success', detail: `${created.length} proposal(s)` });
+  return created;
 }
 
 export async function decideProposal(id: string, status: 'approved'|'dismissed') {
-  return transaction((data) => { const proposal = data.improvementProposals.find((item) => item.id === id); if (!proposal || proposal.status !== 'proposed') throw new Error('Open proposal not found'); proposal.status = status; proposal.decidedAt = new Date().toISOString(); record(data, { action: `${status}-improvement-proposal`, entity: 'system', entityId: id, outcome: status === 'approved' ? 'success' : 'denied', detail: proposal.title }); return proposal; });
+  const data = await snapshot();
+  const proposal = data.improvementProposals.find((item) => item.id === id);
+  if (!proposal || proposal.status !== 'proposed') throw new Error('Open proposal not found');
+  const decidedAt = new Date().toISOString();
+  await updateRow('improvementProposals', id, { status, decidedAt });
+  await record(null, { action: `${status}-improvement-proposal`, entity: 'system', entityId: id, outcome: status === 'approved' ? 'success' : 'denied', detail: proposal.title });
+  return { ...proposal, status, decidedAt };
 }
