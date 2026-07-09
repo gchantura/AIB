@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import { CalendarDays, CheckSquare, FileText, FolderKanban, Plus, Trash2, Bell, ChevronLeft, ChevronRight, Clock } from 'lucide-svelte';
+  import { CalendarDays, CheckSquare, FileText, FolderKanban, Plus, Trash2, Bell, ChevronLeft, ChevronRight, Clock, Edit3, Save, X } from 'lucide-svelte';
 
   const tabs = [
     { id: 'calendar', label: 'Calendar', icon: CalendarDays },
@@ -23,6 +23,14 @@
   let reminderMinutes = $state(15);
   let emailReminder = $state('');
 
+  // Edit state
+  let editingItem = $state(null);
+  let editTitle = $state('');
+  let editDetail = $state('');
+  let editDate = $state('');
+  let editReminderMinutes = $state(15);
+  let editEmailReminder = $state('');
+
   // Calendar view state
   let viewDate = $state(new Date());
   let selectedDay = $state(null);
@@ -36,6 +44,14 @@
     { value: 120, label: '2 hours before' },
     { value: 1440, label: '1 day before' },
   ];
+
+  // Helper for timezone-safe local YYYY-MM-DD
+  function getLocalDateStr(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const dayStr = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${dayStr}`;
+  }
 
   // Derived calendar grid
   const calendarGrid = $derived.by(() => {
@@ -52,7 +68,7 @@
           row.push(null);
         } else {
           const d = new Date(year, month, day);
-          const dateStr = d.toISOString().split('T')[0];
+          const dateStr = getLocalDateStr(d);
           const dayEvents = events.filter(ev => ev.startsAt?.startsWith(dateStr));
           const dayTasks = tasks.filter(t => t.dueAt?.startsWith(dateStr));
           row.push({ day, date: d, dateStr, events: dayEvents, tasks: dayTasks });
@@ -65,7 +81,7 @@
   });
 
   const monthLabel = $derived(viewDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }));
-  const todayStr = new Date().toISOString().split('T')[0];
+  const todayStr = $derived(getLocalDateStr(new Date()));
 
   const selectedDayItems = $derived.by(() => {
     if (!selectedDay) return { events: [], tasks: [] };
@@ -105,11 +121,22 @@
     title = '';
     detail = '';
     date = '';
+    editingItem = null;
     if (id === 'calendar') {
       await loadAll();
     } else {
       await load();
     }
+  }
+
+  // Timezone-safe local ISO string formatting YYYY-MM-DDTHH:mm
+  function getLocalISOString(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const dayStr = String(d.getDate()).padStart(2, '0');
+    const hh = String(d.getHours()).padStart(2, '0');
+    const min = String(d.getMinutes()).padStart(2, '0');
+    return `${y}-${m}-${dayStr}T${hh}:${min}`;
   }
 
   async function create() {
@@ -119,7 +146,7 @@
       body = {
         title,
         description: detail,
-        startsAt: date || new Date().toISOString(),
+        startsAt: date || getLocalISOString(new Date()),
         reminderMinutes: Number(reminderMinutes),
         emailReminder: emailReminder.trim() || undefined
       };
@@ -149,6 +176,7 @@
   async function remove(id, kind) {
     const k = kind || (active === 'calendar' ? 'events' : active);
     await fetch(`/api/workspace?kind=${k}&id=${id}`, { method: 'DELETE' });
+    if (editingItem?.id === id) editingItem = null;
     await loadAll();
   }
 
@@ -161,19 +189,87 @@
     await loadAll();
   }
 
+  function startEdit(item, kind) {
+    editingItem = { ...item, _kind: kind };
+    editTitle = item.title ?? item.name ?? item.topic ?? '';
+    editDetail = item.description ?? item.content ?? item.notes ?? '';
+    
+    // Map datetime fields to datetime-local inputs
+    if (item.startsAt) {
+      const d = new Date(item.startsAt);
+      editDate = getLocalISOString(d);
+    } else if (item.dueAt) {
+      const d = new Date(item.dueAt);
+      editDate = getLocalISOString(d);
+    } else {
+      editDate = '';
+    }
+    
+    editReminderMinutes = item.reminderMinutes ?? 15;
+    editEmailReminder = item.emailReminder ?? '';
+  }
+
+  async function saveEdit() {
+    if (!editingItem) return;
+    const kind = editingItem._kind;
+    let body = {};
+    if (kind === 'events') {
+      body = {
+        title: editTitle,
+        description: editDetail,
+        startsAt: editDate || undefined,
+        reminderMinutes: Number(editReminderMinutes),
+        emailReminder: editEmailReminder.trim() || null
+      };
+    } else if (kind === 'tasks') {
+      body = {
+        title: editTitle,
+        description: editDetail,
+        dueAt: editDate || null
+      };
+    } else if (kind === 'notes') {
+      body = {
+        title: editTitle,
+        content: editDetail
+      };
+    } else if (kind === 'projects') {
+      body = {
+        name: editTitle,
+        description: editDetail
+      };
+    }
+
+    const res = await fetch(`/api/workspace?kind=${kind}&id=${editingItem.id}`, {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (res.ok) {
+      editingItem = null;
+      if (active === 'calendar') {
+        await loadAll();
+      } else {
+        await load();
+      }
+    }
+  }
+
   function prevMonth() {
     viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1);
     selectedDay = null;
+    editingItem = null;
   }
 
   function nextMonth() {
     viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1);
     selectedDay = null;
+    editingItem = null;
   }
 
   function selectDay(cell) {
     if (!cell) return;
     selectedDay = selectedDay === cell.dateStr ? null : cell.dateStr;
+    editingItem = null;
   }
 
   function formatTime(iso) {
@@ -257,27 +353,63 @@
             <p class="empty-day">Nothing scheduled. Add an event below.</p>
           {/if}
           {#each selectedDayItems.events as ev (ev.id)}
-            <article class="day-item event-item">
-              <Bell size={14} class="item-icon"/>
-              <div class="item-body">
-                <strong>{ev.title}</strong>
-                <small>{formatTime(ev.startsAt)}{ev.reminderMinutes ? ` · Reminder ${ev.reminderMinutes}min before` : ''}</small>
-                {#if ev.description}<p>{ev.description}</p>{/if}
+            {#if editingItem?.id === ev.id}
+              <div class="edit-box">
+                <input class="edit-input" bind:value={editTitle} placeholder="Event title" />
+                <textarea class="edit-textarea" bind:value={editDetail} placeholder="Description"></textarea>
+                <input class="edit-input" type="datetime-local" bind:value={editDate} />
+                <div class="edit-row">
+                  <select bind:value={editReminderMinutes}>
+                    {#each reminderOptions as opt}
+                      <option value={opt.value}>{opt.label}</option>
+                    {/each}
+                  </select>
+                </div>
+                <input class="edit-input" type="email" bind:value={editEmailReminder} placeholder="Email reminder" />
+                <div class="edit-actions">
+                  <button onclick={saveEdit}><Save size={13}/> Save</button>
+                  <button class="cancel" onclick={() => editingItem = null}><X size={13}/> Cancel</button>
+                </div>
               </div>
-              <button class="del-btn" onclick={() => remove(ev.id, 'events')} aria-label="Delete event"><Trash2 size={13}/></button>
-            </article>
+            {:else}
+              <article class="day-item event-item">
+                <Bell size={14} class="item-icon"/>
+                <div class="item-body">
+                  <strong>{ev.title}</strong>
+                  <small>{formatTime(ev.startsAt)}{ev.reminderMinutes !== undefined ? ` · Reminder ${ev.reminderMinutes}min before` : ''}</small>
+                  {#if ev.description}<p>{ev.description}</p>{/if}
+                  {#if ev.emailReminder}<p class="email-alert">📧 Alert: {ev.emailReminder}</p>{/if}
+                </div>
+                <button class="edit-btn" onclick={() => startEdit(ev, 'events')} aria-label="Edit event"><Edit3 size={13}/></button>
+                <button class="del-btn" onclick={() => remove(ev.id, 'events')} aria-label="Delete event"><Trash2 size={13}/></button>
+              </article>
+            {/if}
           {/each}
           {#each selectedDayItems.tasks as task (task.id)}
-            <article class="day-item task-item" class:done={task.status === 'done'}>
-              <button class="check-btn" onclick={() => toggleTask(task)} aria-label="Toggle task">
-                <CheckSquare size={14}/>
-              </button>
-              <div class="item-body">
-                <strong>{task.title}</strong>
-                {#if task.description}<p>{task.description}</p>{/if}
+            {#if editingItem?.id === task.id}
+              <div class="edit-box">
+                <input class="edit-input" bind:value={editTitle} placeholder="Task title" />
+                <textarea class="edit-textarea" bind:value={editDetail} placeholder="Description"></textarea>
+                <input class="edit-input" type="datetime-local" bind:value={editDate} />
+                <div class="edit-actions">
+                  <button onclick={saveEdit}><Save size={13}/> Save</button>
+                  <button class="cancel" onclick={() => editingItem = null}><X size={13}/> Cancel</button>
+                </div>
               </div>
-              <button class="del-btn" onclick={() => remove(task.id, 'tasks')} aria-label="Delete task"><Trash2 size={13}/></button>
-            </article>
+            {:else}
+              <article class="day-item task-item" class:done={task.status === 'done'}>
+                <button class="check-btn" onclick={() => toggleTask(task)} aria-label="Toggle task">
+                  <CheckSquare size={14}/>
+                </button>
+                <div class="item-body">
+                  <strong>{task.title}</strong>
+                  {#if task.description}<p>{task.description}</p>{/if}
+                  {#if task.dueAt}<small>Due: {formatTime(task.dueAt)}</small>{/if}
+                </div>
+                <button class="edit-btn" onclick={() => startEdit(task, 'tasks')} aria-label="Edit task"><Edit3 size={13}/></button>
+                <button class="del-btn" onclick={() => remove(task.id, 'tasks')} aria-label="Delete task"><Trash2 size={13}/></button>
+              </article>
+            {/if}
           {/each}
         {:else}
           <div class="no-selection">
@@ -355,19 +487,34 @@
         <p class="empty">Nothing here yet. Add the first item above.</p>
       {/if}
       {#each items as item (item.id)}
-        <article class:done={item.status === 'done'}>
-          {#if active === 'tasks'}
-            <button class="check" onclick={() => toggleTask(item)} aria-label="Toggle task">
-              {item.status === 'done' ? '✓' : ''}
-            </button>
-          {/if}
-          <div>
-            <h2>{item.title ?? item.name ?? item.topic}</h2>
-            <p>{item.description ?? item.content ?? item.notes ?? 'No details'}</p>
-            <small>{item.dueAt ? `Due: ${formatDate(item.dueAt)}` : item.status ?? ''}</small>
+        {#if editingItem?.id === item.id}
+          <div class="edit-box list-edit-box">
+            <input class="edit-input" bind:value={editTitle} placeholder="Title" />
+            <textarea class="edit-textarea" bind:value={editDetail} placeholder="Details"></textarea>
+            {#if active === 'tasks'}
+              <input class="edit-input" type="datetime-local" bind:value={editDate} />
+            {/if}
+            <div class="edit-actions">
+              <button onclick={saveEdit}><Save size={13}/> Save</button>
+              <button class="cancel" onclick={() => editingItem = null}><X size={13}/> Cancel</button>
+            </div>
           </div>
-          <button class="icon" onclick={() => remove(item.id, active)} aria-label="Delete item"><Trash2 size={15}/></button>
-        </article>
+        {:else}
+          <article class:done={item.status === 'done'}>
+            {#if active === 'tasks'}
+              <button class="check" onclick={() => toggleTask(item)} aria-label="Toggle task">
+                {item.status === 'done' ? '✓' : ''}
+              </button>
+            {/if}
+            <div>
+              <h2>{item.title ?? item.name ?? item.topic}</h2>
+              <p>{item.description ?? item.content ?? item.notes ?? 'No details'}</p>
+              <small>{item.dueAt ? `Due: ${formatDate(item.dueAt)}` : item.status ?? ''}</small>
+            </div>
+            <button class="edit-btn-circle" onclick={() => startEdit(item, active)} aria-label="Edit item"><Edit3 size={14}/></button>
+            <button class="icon" onclick={() => remove(item.id, active)} aria-label="Delete item"><Trash2 size={15}/></button>
+          </article>
+        {/if}
       {/each}
     </section>
   {/if}
@@ -423,6 +570,20 @@
   .check-btn,.del-btn { background: transparent; border: none; color: var(--text-tertiary); cursor: pointer; padding: 2px; border-radius: var(--radius-sm); display: flex; transition: color var(--transition-fast); }
   .check-btn:hover { color: var(--color-success-500); }
   .del-btn:hover { color: var(--color-error-500); }
+
+  /* Edit Box */
+  .edit-box { display: flex; flex-direction: column; gap: .5rem; padding: 1rem; border: 1px solid var(--surface-border); border-radius: var(--radius-md); background: var(--surface-bg); }
+  .list-edit-box { background: var(--surface-card); }
+  .edit-input, .edit-textarea { border: 1px solid var(--surface-border); background: var(--surface-card); color: var(--text-primary); border-radius: var(--radius-sm); padding: .45rem; font-size: var(--text-xs); }
+  .edit-textarea { min-height: 60px; resize: vertical; }
+  .edit-actions { display: flex; gap: .4rem; }
+  .edit-actions button { display: flex; align-items: center; gap: 3px; padding: .45rem .8rem; font-size: var(--text-xs); border: 1px solid transparent; background: var(--color-neutral-900); color: white; border-radius: var(--radius-sm); cursor: pointer; }
+  .edit-actions button.cancel { background: transparent; border-color: var(--surface-border); color: var(--text-secondary); }
+  .edit-btn { background: transparent; border: none; color: var(--text-tertiary); cursor: pointer; padding: 2px; border-radius: var(--radius-sm); display: flex; transition: color var(--transition-fast); margin-left: auto; }
+  .edit-btn:hover { color: var(--color-accent-500); }
+  .edit-btn-circle { width: 32px; height: 32px; display: grid; place-items: center; border: 1px solid var(--surface-border); background: var(--surface-card); border-radius: var(--radius-md); color: var(--text-secondary); cursor: pointer; transition: color var(--transition-fast); margin-left: auto; }
+  .edit-btn-circle:hover { color: var(--color-accent-500); }
+  .email-alert { font-size: 10px; color: var(--color-accent-500); font-weight: var(--font-semibold); margin-top: 3px; }
 
   /* Add Event Form */
   .add-form { border-top: 1px solid var(--surface-border-subtle); padding-top: var(--space-3); display: flex; flex-direction: column; gap: .5rem; }

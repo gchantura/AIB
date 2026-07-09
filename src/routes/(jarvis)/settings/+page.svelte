@@ -6,6 +6,7 @@
   import ChevronRight from 'lucide-svelte/icons/chevron-right';
   import X from 'lucide-svelte/icons/x';
   import CircleCheck from 'lucide-svelte/icons/circle-check';
+  import Mail from 'lucide-svelte/icons/mail';
 
   type ProviderStatus = 'unconfigured' | 'configured' | 'offline' | 'environment';
 
@@ -33,6 +34,7 @@
   const sections = [
     { id: 'providers', label: 'Model Providers', icon: Cpu },
     { id: 'privacy', label: 'Privacy', icon: Shield },
+    { id: 'smtp', label: 'Email Setup', icon: Mail },
     { id: 'appearance', label: 'Appearance', icon: Eye },
   ];
 
@@ -56,7 +58,53 @@
     if (savedPrivacy !== null) privacyMode = savedPrivacy === 'true';
     const savedCloud = localStorage.getItem('jarvis-allow-cloud');
     if (savedCloud !== null) allowCloud = savedCloud === 'true';
+
+    // Load SMTP settings
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data.settings) {
+          smtpConfig.smtpHost = data.settings.smtpHost || '';
+          smtpConfig.smtpPort = data.settings.smtpPort || 587;
+          smtpConfig.smtpUser = data.settings.smtpUser || '';
+          smtpConfig.smtpPass = data.settings.smtpPass || '';
+          smtpConfig.smtpFrom = data.settings.smtpFrom || '';
+          smtpConfig.smtpSecure = !!data.settings.smtpSecure;
+        }
+      }).catch(() => {});
   });
+
+  let smtpConfig = $state({
+    smtpHost: '',
+    smtpPort: 587,
+    smtpUser: '',
+    smtpPass: '',
+    smtpFrom: '',
+    smtpSecure: false,
+  });
+  let smtpLoading = $state(false);
+  let smtpMessage = $state('');
+  let smtpError = $state('');
+
+  async function saveSmtp() {
+    smtpLoading = true;
+    smtpMessage = '';
+    smtpError = '';
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(smtpConfig)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      smtpMessage = 'SMTP settings saved successfully.';
+    } catch (err) {
+      smtpError = err instanceof Error ? err.message : String(err);
+    } finally {
+      smtpLoading = false;
+    }
+  }
 
   function configureProvider(provider: ProviderInfo) {
     pendingProvider = provider;
@@ -217,6 +265,56 @@
                 <span class="toggle-knob"></span>
               </button>
             </div>
+          </div>
+        </div>
+
+      {:else if activeSection === 'smtp'}
+        <div class="section">
+          <h2 class="section-title">Email & SMTP Setup</h2>
+          <p class="section-desc">Configure outgoing email notifications for calendar reminders and alerts.</p>
+          
+          <div class="smtp-form">
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label" for="smtp-host">SMTP Host</label>
+                <input id="smtp-host" class="form-input" bind:value={smtpConfig.smtpHost} placeholder="smtp.gmail.com" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="smtp-port">SMTP Port</label>
+                <input id="smtp-port" class="form-input" type="number" bind:value={smtpConfig.smtpPort} placeholder="587" />
+              </div>
+            </div>
+            
+            <div class="form-row-2">
+              <div class="form-group">
+                <label class="form-label" for="smtp-user">SMTP Username / Email</label>
+                <input id="smtp-user" class="form-input" bind:value={smtpConfig.smtpUser} placeholder="your-email@gmail.com" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="smtp-pass">SMTP Password</label>
+                <input id="smtp-pass" class="form-input" type="password" bind:value={smtpConfig.smtpPass} placeholder="your-password" />
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="smtp-from">SMTP Sender Address (From)</label>
+              <input id="smtp-from" class="form-input" bind:value={smtpConfig.smtpFrom} placeholder="jarvis@yourdomain.com" />
+            </div>
+            
+            <div class="form-group checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" bind:checked={smtpConfig.smtpSecure} />
+                Use SSL/TLS (Secure Connection)
+              </label>
+            </div>
+          </div>
+          
+          <div class="settings-actions">
+            <button class="btn-save" onclick={saveSmtp} disabled={smtpLoading}>
+              {smtpLoading ? 'Saving...' : 'Save SMTP Settings'}
+            </button>
+            {#if smtpMessage}<span class="success-text">{smtpMessage}</span>{/if}
+            {#if smtpError}<span class="error-text">{smtpError}</span>{/if}
           </div>
         </div>
 
@@ -504,4 +602,13 @@
   }
   .btn-save:hover:not(:disabled) { opacity: 0.85; }
   .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* SMTP styles */
+  .smtp-form { display: flex; flex-direction: column; gap: var(--space-4); margin-bottom: var(--space-4); }
+  .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+  .checkbox-group { margin-top: var(--space-2); }
+  .checkbox-label { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm); color: var(--text-secondary); cursor: pointer; }
+  .settings-actions { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-4); flex-wrap: wrap; }
+  .success-text { font-size: var(--text-xs); color: var(--color-success-700); }
+  .error-text { font-size: var(--text-xs); color: var(--color-error-500); }
 </style>

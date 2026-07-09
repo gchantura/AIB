@@ -1,7 +1,9 @@
 import nodemailer from 'nodemailer';
+import { getSettings } from '../core/settings.js';
+import { env } from '$env/dynamic/private';
 
 /**
- * Send an email reminder. Configure via environment variables:
+ * Send an email reminder. Configure via Settings panel or environment variables:
  *   SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM
  * If SMTP_HOST is not set, the email is silently skipped (no error thrown).
  */
@@ -10,21 +12,26 @@ export async function sendEmailReminder(
   subject: string,
   body: string
 ): Promise<boolean> {
-  const host = process.env.SMTP_HOST || '';
-  if (!host) return false; // SMTP not configured — silently skip
-
   try {
+    const settings = await getSettings();
+    const host = settings.smtpHost || env.SMTP_HOST || '';
+    if (!host) return false; // SMTP not configured — silently skip
+
+    const port = Number(settings.smtpPort || env.SMTP_PORT || 587);
+    const secure = settings.smtpSecure !== undefined ? settings.smtpSecure : (env.SMTP_SECURE === 'true');
+    const user = settings.smtpUser || env.SMTP_USER || '';
+    const pass = settings.smtpPass || env.SMTP_PASS || '';
+    const from = settings.smtpFrom || env.SMTP_FROM || user || 'jarvis@localhost';
+
     const transporter = nodemailer.createTransport({
       host,
-      port: Number(process.env.SMTP_PORT || 587),
-      secure: process.env.SMTP_SECURE === 'true',
-      auth: process.env.SMTP_USER
-        ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS || '' }
-        : undefined,
+      port,
+      secure,
+      auth: user ? { user, pass } : undefined,
     });
 
     await transporter.sendMail({
-      from: process.env.SMTP_FROM || process.env.SMTP_USER || 'jarvis@localhost',
+      from,
       to,
       subject,
       text: body,
