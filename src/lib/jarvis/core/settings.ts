@@ -11,17 +11,15 @@ export interface JarvisSettings {
   smtpPass?: string;
   smtpFrom?: string;
   smtpSecure?: boolean;
+  lastDailyBriefingSentDate?: string;
+  dailyBriefingEnabled?: boolean;
 }
 
-let cachedSettings: JarvisSettings | null = null;
-
 export async function getSettings(): Promise<JarvisSettings> {
-  if (cachedSettings) return cachedSettings;
   await mkdir(dataDir, { recursive: true });
   try {
     const text = await readFile(settingsFile, 'utf8');
-    cachedSettings = JSON.parse(text);
-    return cachedSettings || {};
+    return JSON.parse(text) || {};
   } catch (err) {
     if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
       return {};
@@ -32,7 +30,6 @@ export async function getSettings(): Promise<JarvisSettings> {
 
 export async function saveSettings(settings: JarvisSettings): Promise<JarvisSettings> {
   await mkdir(dataDir, { recursive: true });
-  cachedSettings = settings;
   await writeFile(settingsFile, JSON.stringify(settings, null, 2), 'utf8');
   return settings;
 }

@@ -64,27 +64,57 @@
       .then(res => res.json())
       .then(data => {
         if (data.settings) {
-          smtpConfig.smtpHost = data.settings.smtpHost || '';
+          smtpConfig.smtpHost = data.settings.smtpHost || 'smtp.gmail.com';
           smtpConfig.smtpPort = data.settings.smtpPort || 587;
           smtpConfig.smtpUser = data.settings.smtpUser || '';
           smtpConfig.smtpPass = data.settings.smtpPass || '';
           smtpConfig.smtpFrom = data.settings.smtpFrom || '';
           smtpConfig.smtpSecure = !!data.settings.smtpSecure;
+          smtpConfig.dailyBriefingEnabled = !!data.settings.dailyBriefingEnabled;
+        } else {
+          smtpConfig.smtpHost = 'smtp.gmail.com';
         }
-      }).catch(() => {});
+      }).catch(() => {
+        smtpConfig.smtpHost = 'smtp.gmail.com';
+      });
   });
 
   let smtpConfig = $state({
-    smtpHost: '',
+    smtpHost: 'smtp.gmail.com',
     smtpPort: 587,
     smtpUser: '',
     smtpPass: '',
     smtpFrom: '',
     smtpSecure: false,
+    dailyBriefingEnabled: false,
   });
   let smtpLoading = $state(false);
   let smtpMessage = $state('');
   let smtpError = $state('');
+
+  let testingSmtp = $state(false);
+  let testMessage = $state('');
+  let testError = $state('');
+
+  async function testSmtp() {
+    testingSmtp = true;
+    testMessage = '';
+    testError = '';
+    try {
+      const res = await fetch('/api/settings/test', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(smtpConfig)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      testMessage = 'Test email sent successfully to ' + (smtpConfig.smtpFrom || smtpConfig.smtpUser);
+    } catch (err) {
+      testError = err instanceof Error ? err.message : String(err);
+    } finally {
+      testingSmtp = false;
+    }
+  }
 
   async function saveSmtp() {
     smtpLoading = true;
@@ -273,6 +303,13 @@
           <h2 class="section-title">Email & SMTP Setup</h2>
           <p class="section-desc">Configure outgoing email notifications for calendar reminders and alerts.</p>
           
+          {#if smtpConfig.smtpHost.includes('gmail.com')}
+            <div class="smtp-warning">
+              <strong>Gmail Users Required Action:</strong>
+              <p>Gmail blocks normal account passwords. You <strong>MUST</strong> use a 16-character <strong>App Password</strong> generated under your Google Account Security settings. Do not use your standard email login password.</p>
+            </div>
+          {/if}
+
           <div class="smtp-form">
             <div class="form-row-2">
               <div class="form-group">
@@ -307,14 +344,26 @@
                 Use SSL/TLS (Secure Connection)
               </label>
             </div>
+
+            <div class="form-group checkbox-group" style="margin-top: 4px;">
+              <label class="checkbox-label">
+                <input type="checkbox" bind:checked={smtpConfig.dailyBriefingEnabled} />
+                <strong>Enable Daily Digest Briefing</strong> (Sent every morning at 8:00 AM local time with today's events, tasks, and overdue items)
+              </label>
+            </div>
           </div>
           
           <div class="settings-actions">
             <button class="btn-save" onclick={saveSmtp} disabled={smtpLoading}>
               {smtpLoading ? 'Saving...' : 'Save SMTP Settings'}
             </button>
+            <button class="btn-cancel" onclick={testSmtp} disabled={testingSmtp || !smtpConfig.smtpUser || !smtpConfig.smtpPass}>
+              {testingSmtp ? 'Testing...' : 'Test SMTP Connection'}
+            </button>
             {#if smtpMessage}<span class="success-text">{smtpMessage}</span>{/if}
             {#if smtpError}<span class="error-text">{smtpError}</span>{/if}
+            {#if testMessage}<span class="success-text">{testMessage}</span>{/if}
+            {#if testError}<span class="error-text">{testError}</span>{/if}
           </div>
         </div>
 
@@ -611,4 +660,16 @@
   .settings-actions { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-4); flex-wrap: wrap; }
   .success-text { font-size: var(--text-xs); color: var(--color-success-700); }
   .error-text { font-size: var(--text-xs); color: var(--color-error-500); }
+
+  .smtp-warning {
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid var(--color-warning-500, #f59e0b);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    color: var(--color-warning-500, #f59e0b);
+    font-size: var(--text-xs);
+    margin-bottom: var(--space-3);
+  }
+  .smtp-warning strong { display: block; margin-bottom: 2px; }
+  .smtp-warning p { margin: 0; color: var(--text-secondary); }
 </style>

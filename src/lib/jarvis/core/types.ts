@@ -1,10 +1,11 @@
 export type EntityKind = 'tasks' | 'notes' | 'projects' | 'events' | 'research' | 'automations' | 'learning';
 
 export interface BaseEntity { id: string; createdAt: string; updatedAt: string }
-export interface Task extends BaseEntity { title: string; description: string; status: 'todo' | 'doing' | 'done'; priority: 'low' | 'medium' | 'high'; dueAt?: string; notified?: boolean }
+export type ReminderRepeat = 'none' | 'hourly' | 'every2h' | 'every4h' | 'every6h' | 'every12h' | 'daily' | 'weekly' | 'biweekly' | 'monthly';
+export interface Task extends BaseEntity { title: string; description: string; status: 'todo' | 'doing' | 'done'; priority: 'low' | 'medium' | 'high'; dueAt?: string; notified?: boolean; reminderMinutes?: number; reminderRepeat?: ReminderRepeat; nextNotifyAt?: string; emailReminder?: string; emailCc?: string; emailSubject?: string }
 export interface Note extends BaseEntity { title: string; content: string; tags: string[]; projectId?: string }
 export interface Project extends BaseEntity { name: string; description: string; status: 'active' | 'paused' | 'complete'; path?: string }
-export interface CalendarEvent extends BaseEntity { title: string; description: string; startsAt: string; endsAt?: string; reminderMinutes?: number; notified?: boolean; emailReminder?: string }
+export interface CalendarEvent extends BaseEntity { title: string; description: string; startsAt: string; endsAt?: string; reminderMinutes?: number; reminderRepeat?: ReminderRepeat; nextNotifyAt?: string; notified?: boolean; emailReminder?: string; emailCc?: string }
 export interface ResearchItem extends BaseEntity { title: string; query: string; summary: string; sources: { title: string; url: string }[]; status: 'draft' | 'complete' }
 export interface Automation extends BaseEntity { name: string; action: string; schedule: string; enabled: boolean; lastRunAt?: string; nextRunAt?: string }
 export interface LearningItem extends BaseEntity { topic: string; area: string; status: 'planned' | 'learning' | 'complete'; notes: string }
