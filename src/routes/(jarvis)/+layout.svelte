@@ -23,7 +23,8 @@
     BarChart3,
     BookOpenText,
     Menu,
-    X
+    X,
+    Mic
   } from 'lucide-svelte';
   import Toaster from '$lib/components/Toaster.svelte';
 
@@ -36,6 +37,7 @@
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/briefing', label: 'Briefing', icon: Bell },
     { href: '/chat', label: 'Chat', icon: MessageSquare },
+    { href: '/voice', label: 'Voice AI', icon: Mic },
     { href: '/tools', label: 'Tools', icon: Wrench },
     { href: '/skills', label: 'Skills', icon: BookOpen },
     { href: '/memory', label: 'Memory', icon: Database },

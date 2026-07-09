@@ -131,3 +131,8 @@
 - Added `Math.round()` on all reminder_minutes calculations to guarantee integer type for Supabase `int` column.
 
 → skipped: no new features, 6 critical bug fixes only. All confirmed by clean build.
+
+## 2026-07-09T16:39:29.711Z — Automated Post-Build
+
+- Build: ✅
+- Graphify: ⚠ skipped
