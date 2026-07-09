@@ -130,8 +130,8 @@
     "semantic_hash": "bca8d00a62ef49a1ede9209c267ea4c3"
   },
   "src/lib/jarvis/llm/config.ts": {
-    "mtime": 1783511695.9732885,
-    "ast_hash": "f6c577c3f5b5022fa03df6fd62b02efb",
+    "mtime": 1783511062.772091,
+    "ast_hash": "f2717a30bfdbc60a2e49d7748ade41b6",
     "semantic_hash": ""
   },
   "src/lib/jarvis/llm/errors.ts": {
@@ -150,18 +150,18 @@
     "semantic_hash": "5c36d7588f055a8489067309a1b9f4b9"
   },
   "src/lib/jarvis/llm/providers/openai-compatible.ts": {
-    "mtime": 1783514687.992725,
-    "ast_hash": "03bf4961b6c2cb16ec06f89f8036f4e0",
+    "mtime": 1783511062.7740934,
+    "ast_hash": "4c2e3a1cd53191786d088d45e35db246",
     "semantic_hash": ""
   },
   "src/lib/jarvis/llm/router.ts": {
-    "mtime": 1783518472.4247375,
-    "ast_hash": "0a5154dcfdba09b8971fc6a86513fdad",
+    "mtime": 1783511062.772091,
+    "ast_hash": "7ce121efcecf956904f99a61d6bdd40d",
     "semantic_hash": ""
   },
   "src/lib/jarvis/llm/types.ts": {
-    "mtime": 1783513522.893533,
-    "ast_hash": "eca4143dda208a8a3f2ef83e594fc42b",
+    "mtime": 1783511062.7700887,
+    "ast_hash": "5f0e7a27f2579deba5bce29d4af98517",
     "semantic_hash": ""
   },
   "src/lib/jarvis/memory/api.ts": {
@@ -225,9 +225,9 @@
     "semantic_hash": "23a991c8d881a3def05bb5e22e297c11"
   },
   "src/routes/(jarvis)/chat/+page.svelte": {
-    "mtime": 1783513029.005925,
-    "ast_hash": "2528dd7f9ed66f46a4c5e3a3083cf4bc",
-    "semantic_hash": ""
+    "mtime": 1783428964.6439383,
+    "ast_hash": "afcc2dcf1cc2263dfbaba8b12a4655b7",
+    "semantic_hash": "afcc2dcf1cc2263dfbaba8b12a4655b7"
   },
   "src/routes/(jarvis)/coding/+page.svelte": {
     "mtime": 1783427335.8801534,
@@ -235,9 +235,9 @@
     "semantic_hash": "aca1ffd186881c24c0c11825f72bb4d3"
   },
   "src/routes/(jarvis)/dashboard/+page.svelte": {
-    "mtime": 1783512962.3648977,
-    "ast_hash": "a4e0ff2f9ee0e766e87fa6478f63ac67",
-    "semantic_hash": ""
+    "mtime": 1783425841.686548,
+    "ast_hash": "c96b0920bae76df2ca1d2f0d65988d7e",
+    "semantic_hash": "c96b0920bae76df2ca1d2f0d65988d7e"
   },
   "src/routes/(jarvis)/docs/+page.svelte": {
     "mtime": 1783445149.492649,
@@ -275,8 +275,8 @@
     "semantic_hash": "97e85d69c7d7fe1017ebb814ef567f6f"
   },
   "src/routes/(jarvis)/settings/+page.svelte": {
-    "mtime": 1783579137.5666049,
-    "ast_hash": "e929ca3b4a60fe0ecbdfd5a315ad58dc",
+    "mtime": 1783511073.719942,
+    "ast_hash": "d901d4f125b4e63a7c2cbad2e1ced076",
     "semantic_hash": ""
   },
   "src/routes/(jarvis)/skills/+page.svelte": {
@@ -305,8 +305,8 @@
     "semantic_hash": "1183cb220aaa62986ca8afc7363cd428"
   },
   "src/routes/api/chat/+server.ts": {
-    "mtime": 1783512096.669894,
-    "ast_hash": "98ff7a006567f3c86e4e77dfc0c3aa96",
+    "mtime": 1783511062.7740934,
+    "ast_hash": "def9ad62a112b9788b2d4cf398d4439c",
     "semantic_hash": ""
   },
   "src/routes/api/conversations/+server.ts": {
@@ -345,9 +345,9 @@
     "semantic_hash": "b6e5664f5917194de7a1d7b0c33362dc"
   },
   "src/routes/api/models/+server.ts": {
-    "mtime": 1783512788.8261476,
-    "ast_hash": "bc05b221d1e08c78d2dae64754624a5c",
-    "semantic_hash": ""
+    "mtime": 1783425684.6064434,
+    "ast_hash": "8787b15024c389e61a056d73fdfd04d7",
+    "semantic_hash": "8787b15024c389e61a056d73fdfd04d7"
   },
   "src/routes/api/notifications/+server.ts": {
     "mtime": 1783427571.6146054,
@@ -607,26 +607,6 @@
   "tests/integration/nvidia-provider.test.ts": {
     "mtime": 1783511062.7756782,
     "ast_hash": "e95d736fcbb891dfcccdf88656b1e1bd",
-    "semantic_hash": ""
-  },
-  "src/lib/jarvis/llm/model-routing.test.ts": {
-    "mtime": 1783518462.202175,
-    "ast_hash": "638cb2ed31595dd1fb768e7a53c192f0",
-    "semantic_hash": ""
-  },
-  "src/lib/jarvis/llm/providers/__tests__/nvidia-provider.test.ts": {
-    "mtime": 1783579209.2262175,
-    "ast_hash": "452f3e94d8d4905494e2562de9207d59",
-    "semantic_hash": ""
-  },
-  "check-output.txt": {
-    "mtime": 1783578857.9965444,
-    "ast_hash": "4facf8992a14e1409825f2ccecbd7e8e",
-    "semantic_hash": ""
-  },
-  "check-utf8.txt": {
-    "mtime": 1783578866.1772742,
-    "ast_hash": "2370ce03d76fbf47044c25599ccd5f03",
     "semantic_hash": ""
   }
 }

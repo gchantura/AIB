@@ -156,4 +156,21 @@ This log records what was learned after every major task. It drives the continuo
 
 ---
 
+## 2026-07-09 — Type checking and graph intelligence enablement
+
+**Requested:** Fix type checking errors, update skills logs, and install Graphify.
+**Created/Changed:**
+- Fixed TypeScript parameter types and Vitest mock hoisting in `src/lib/jarvis/llm/providers/__tests__/nvidia-provider.test.ts`.
+- Fixed missing exports from `lucide-svelte` and resolved accessibility warnings in `src/routes/(jarvis)/settings/+page.svelte`.
+- Installed and ran `graphify` globally to generate the `graphify-out` code graph.
+**Skills Used:** validation-engineer (passive)
+**Graph Consulted:** Yes (generated graphify-out)
+**Validation Result:** pass (`npm run check`, `npm run test`, `npm run build`, `npm run ai:validate` all clean).
+**Repeated Pattern:** Svelte accessibility warnings require proper ARIA roles for custom click handlers.
+**New Skill Needed:** No.
+**Skill Improvement Needed:** `validation-engineer` could automatically run `npm run check` and `npm run test`.
+**New Tool Needed:** No.
+**Docs Updated:** SELF_IMPROVEMENT_LOG.md, VALIDATION_REPORT.md.
+**Next Best Step:** Continue feature development utilizing the newly available `graphify-out` semantic graph context.
+
 *Future entries will be appended here.*

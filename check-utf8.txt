@@ -1,0 +1,352 @@
+﻿
+> aib@0.0.1 check
+> svelte-kit sync && svelte-check --tsconfig ./jsconfig.json
+
+Loading svelte-check in workspace: c:\Users\GCJR\Documents\Code WorkSpace\AIB
+Getting Svelte diagnostics...
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\lib\jarvis\llm\providers\__tests__\nvidia-provider.test.ts[39m:32:15
+[31mError[39m: Parameter 'id' implicitly has an 'any' type. 
+[36mclass MockOpenAICompatibleProvider {
+  constructor([35mid[36m, name, privacyLevel, baseUrl, apiKey = '') {
+    this.id = id;[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\lib\jarvis\llm\providers\__tests__\nvidia-provider.test.ts[39m:32:19
+[31mError[39m: Parameter 'name' implicitly has an 'any' type. 
+[36mclass MockOpenAICompatibleProvider {
+  constructor(id, [35mname[36m, privacyLevel, baseUrl, apiKey = '') {
+    this.id = id;[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\lib\jarvis\llm\providers\__tests__\nvidia-provider.test.ts[39m:32:25
+[31mError[39m: Parameter 'privacyLevel' implicitly has an 'any' type. 
+[36mclass MockOpenAICompatibleProvider {
+  constructor(id, name, [35mprivacyLevel[36m, baseUrl, apiKey = '') {
+    this.id = id;[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\lib\jarvis\llm\providers\__tests__\nvidia-provider.test.ts[39m:32:39
+[31mError[39m: Parameter 'baseUrl' implicitly has an 'any' type. 
+[36mclass MockOpenAICompatibleProvider {
+  constructor(id, name, privacyLevel, [35mbaseUrl[36m, apiKey = '') {
+    this.id = id;[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\lib\jarvis\llm\providers\__tests__\nvidia-provider.test.ts[39m:33:10
+[31mError[39m: Property 'id' does not exist on type 'MockOpenAICompatibleProvider'. 
+[36m  constructor(id, name, privacyLevel, baseUrl, apiKey = '') {
+    this.[35mid[36m = id;
+    this.name = name;[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\lib\jarvis\llm\providers\__tests__\nvidia-provider.test.ts[39m:34:10
+[31mError[39m: Property 'name' does not exist on type 'MockOpenAICompatibleProvider'. 
+[36m    this.id = id;
+    this.[35mname[36m = name;
+    this.baseUrl = baseUrl;[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\lib\jarvis\llm\providers\__tests__\nvidia-provider.test.ts[39m:35:10
+[31mError[39m: Property 'baseUrl' does not exist on type 'MockOpenAICompatibleProvider'. 
+[36m    this.name = name;
+    this.[35mbaseUrl[36m = baseUrl;
+    this.apiKey = apiKey;[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\lib\jarvis\llm\providers\__tests__\nvidia-provider.test.ts[39m:36:10
+[31mError[39m: Property 'apiKey' does not exist on type 'MockOpenAICompatibleProvider'. 
+[36m    this.baseUrl = baseUrl;
+    this.[35mapiKey[36m = apiKey;
+    // Mock known models specific to this test context[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\lib\jarvis\llm\providers\__tests__\nvidia-provider.test.ts[39m:38:10
+[31mError[39m: Property 'knownModels' does not exist on type 'MockOpenAICompatibleProvider'. 
+[36m    // Mock known models specific to this test context
+    this.[35mknownModels[36m = ['z-ai/glm-5.2'];
+  }[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\lib\jarvis\llm\providers\__tests__\nvidia-provider.test.ts[39m:50:14
+[31mError[39m: Parameter 'request' implicitly has an 'any' type. 
+[36m  // Mock the chat method (non-streaming)
+  async chat([35mrequest[36m) {
+    const mockResponse = { content: "Test non-stream response.", model: request.model };[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\lib\jarvis\llm\providers\__tests__\nvidia-provider.test.ts[39m:56:21
+[31mError[39m: Parameter 'request' implicitly has an 'any' type. 
+[36m  // Mock the stream method (the core of this test)
+  async *chatStream([35mrequest[36m) {
+    if (request.model !== 'z-ai/glm-5.2') {[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\lib\jarvis\llm\providers\__tests__\nvidia-provider.test.ts[39m:72:15
+[31mError[39m: Parameter 'texts' implicitly has an 'any' type. 
+[36m
+  async embed([35mtexts[36m) {
+    return [[1, 2]]; // Mock embedding result[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\lib\jarvis\llm\providers\__tests__\nvidia-provider.test.ts[39m:80:42
+[31mError[39m: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean '../openai-compatible.js'? 
+[36m
+import { OpenAICompatibleProvider } from [35m'../openai-compatible'[36m; // Assuming path structure is correct[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\routes\(jarvis)\settings\+page.svelte[39m:227:3
+[33mWarn[39m: Visible, non-interactive element `<div>` with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+[36m{#if pendingProvider}
+  [35m<div class="modal-overlay" onclick={closeModal}>
+    <div class="modal" onclick={(e) => e.stopPropagation()}>
+      <div class="modal-header">
+        <h3 class="modal-title">Configure {pendingProvider.name}</h3>
+        <button class="modal-close" onclick={closeModal} aria-label="Close">
+          <X size={18} />
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">{pendingProvider.description}</p>
+
+        {#if pendingProvider.fields.includes('apiKey')}
+          <div class="form-group">
+            <label class="form-label" for="api-key">API Key</label>
+            <input
+              id="api-key"
+              class="form-input"
+              type="password"
+              placeholder="Enter your API key..."
+              bind:value={configForm.apiKey}
+              onkeydown={(e) => { if (e.key === 'Escape') closeModal(); }}
+            />
+          </div>
+        {/if}
+
+        {#if pendingProvider.fields.includes('baseUrl')}
+          <div class="form-group">
+            <label class="form-label" for="base-url">Base URL</label>
+            <input
+              id="base-url"
+              class="form-input"
+              type="url"
+              placeholder="http://localhost:..."
+              bind:value={configForm.baseUrl}
+              onkeydown={(e) => { if (e.key === 'Escape') closeModal(); }}
+            />
+          </div>
+        {/if}
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick={closeModal}>Cancel</button>
+        <button class="btn-save" onclick={() => saveConfig(pendingProvider.id)} disabled={isLoading}>
+          {#if isLoading}
+            Saving...
+          {:else}
+            Save
+          {/if}
+        </button>
+      </div>
+    </div>
+  </div>[36m
+{/if}[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\routes\(jarvis)\settings\+page.svelte[39m:227:3
+[33mWarn[39m: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+[36m{#if pendingProvider}
+  [35m<div class="modal-overlay" onclick={closeModal}>
+    <div class="modal" onclick={(e) => e.stopPropagation()}>
+      <div class="modal-header">
+        <h3 class="modal-title">Configure {pendingProvider.name}</h3>
+        <button class="modal-close" onclick={closeModal} aria-label="Close">
+          <X size={18} />
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">{pendingProvider.description}</p>
+
+        {#if pendingProvider.fields.includes('apiKey')}
+          <div class="form-group">
+            <label class="form-label" for="api-key">API Key</label>
+            <input
+              id="api-key"
+              class="form-input"
+              type="password"
+              placeholder="Enter your API key..."
+              bind:value={configForm.apiKey}
+              onkeydown={(e) => { if (e.key === 'Escape') closeModal(); }}
+            />
+          </div>
+        {/if}
+
+        {#if pendingProvider.fields.includes('baseUrl')}
+          <div class="form-group">
+            <label class="form-label" for="base-url">Base URL</label>
+            <input
+              id="base-url"
+              class="form-input"
+              type="url"
+              placeholder="http://localhost:..."
+              bind:value={configForm.baseUrl}
+              onkeydown={(e) => { if (e.key === 'Escape') closeModal(); }}
+            />
+          </div>
+        {/if}
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick={closeModal}>Cancel</button>
+        <button class="btn-save" onclick={() => saveConfig(pendingProvider.id)} disabled={isLoading}>
+          {#if isLoading}
+            Saving...
+          {:else}
+            Save
+          {/if}
+        </button>
+      </div>
+    </div>
+  </div>[36m
+{/if}[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\routes\(jarvis)\settings\+page.svelte[39m:228:5
+[33mWarn[39m: Visible, non-interactive element `<div>` with a click event must be accompanied by a keyboard event handler. Consider whether an interactive element such as `<button type="button">` or `<a>` might be more appropriate
+https://svelte.dev/e/a11y_click_events_have_key_events (svelte)
+[36m  <div class="modal-overlay" onclick={closeModal}>
+    [35m<div class="modal" onclick={(e) => e.stopPropagation()}>
+      <div class="modal-header">
+        <h3 class="modal-title">Configure {pendingProvider.name}</h3>
+        <button class="modal-close" onclick={closeModal} aria-label="Close">
+          <X size={18} />
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">{pendingProvider.description}</p>
+
+        {#if pendingProvider.fields.includes('apiKey')}
+          <div class="form-group">
+            <label class="form-label" for="api-key">API Key</label>
+            <input
+              id="api-key"
+              class="form-input"
+              type="password"
+              placeholder="Enter your API key..."
+              bind:value={configForm.apiKey}
+              onkeydown={(e) => { if (e.key === 'Escape') closeModal(); }}
+            />
+          </div>
+        {/if}
+
+        {#if pendingProvider.fields.includes('baseUrl')}
+          <div class="form-group">
+            <label class="form-label" for="base-url">Base URL</label>
+            <input
+              id="base-url"
+              class="form-input"
+              type="url"
+              placeholder="http://localhost:..."
+              bind:value={configForm.baseUrl}
+              onkeydown={(e) => { if (e.key === 'Escape') closeModal(); }}
+            />
+          </div>
+        {/if}
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick={closeModal}>Cancel</button>
+        <button class="btn-save" onclick={() => saveConfig(pendingProvider.id)} disabled={isLoading}>
+          {#if isLoading}
+            Saving...
+          {:else}
+            Save
+          {/if}
+        </button>
+      </div>
+    </div>[36m
+  </div>[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\routes\(jarvis)\settings\+page.svelte[39m:228:5
+[33mWarn[39m: `<div>` with a click handler must have an ARIA role
+https://svelte.dev/e/a11y_no_static_element_interactions (svelte)
+[36m  <div class="modal-overlay" onclick={closeModal}>
+    [35m<div class="modal" onclick={(e) => e.stopPropagation()}>
+      <div class="modal-header">
+        <h3 class="modal-title">Configure {pendingProvider.name}</h3>
+        <button class="modal-close" onclick={closeModal} aria-label="Close">
+          <X size={18} />
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">{pendingProvider.description}</p>
+
+        {#if pendingProvider.fields.includes('apiKey')}
+          <div class="form-group">
+            <label class="form-label" for="api-key">API Key</label>
+            <input
+              id="api-key"
+              class="form-input"
+              type="password"
+              placeholder="Enter your API key..."
+              bind:value={configForm.apiKey}
+              onkeydown={(e) => { if (e.key === 'Escape') closeModal(); }}
+            />
+          </div>
+        {/if}
+
+        {#if pendingProvider.fields.includes('baseUrl')}
+          <div class="form-group">
+            <label class="form-label" for="base-url">Base URL</label>
+            <input
+              id="base-url"
+              class="form-input"
+              type="url"
+              placeholder="http://localhost:..."
+              bind:value={configForm.baseUrl}
+              onkeydown={(e) => { if (e.key === 'Escape') closeModal(); }}
+            />
+          </div>
+        {/if}
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick={closeModal}>Cancel</button>
+        <button class="btn-save" onclick={() => saveConfig(pendingProvider.id)} disabled={isLoading}>
+          {#if isLoading}
+            Saving...
+          {:else}
+            Save
+          {/if}
+        </button>
+      </div>
+    </div>[36m
+  </div>[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\routes\(jarvis)\settings\+page.svelte[39m:2:12
+[31mError[39m: Module '"lucide-svelte"' has no exported member 'Settings'. (ts)
+[36m<script lang="ts">
+  import { [35mSettings[36m, Cpu, Shield, Eye, ChevronRight, X, CheckCircle2 } from 'lucide-svelte';[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\routes\(jarvis)\settings\+page.svelte[39m:2:22
+[31mError[39m: Module '"lucide-svelte"' has no exported member 'Cpu'. (ts)
+[36m<script lang="ts">
+  import { Settings, [35mCpu[36m, Shield, Eye, ChevronRight, X, CheckCircle2 } from 'lucide-svelte';[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\routes\(jarvis)\settings\+page.svelte[39m:2:27
+[31mError[39m: Module '"lucide-svelte"' has no exported member 'Shield'. (ts)
+[36m<script lang="ts">
+  import { Settings, Cpu, [35mShield[36m, Eye, ChevronRight, X, CheckCircle2 } from 'lucide-svelte';[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\routes\(jarvis)\settings\+page.svelte[39m:2:35
+[31mError[39m: Module '"lucide-svelte"' has no exported member 'Eye'. (ts)
+[36m<script lang="ts">
+  import { Settings, Cpu, Shield, [35mEye[36m, ChevronRight, X, CheckCircle2 } from 'lucide-svelte';[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\routes\(jarvis)\settings\+page.svelte[39m:2:40
+[31mError[39m: Module '"lucide-svelte"' has no exported member 'ChevronRight'. (ts)
+[36m<script lang="ts">
+  import { Settings, Cpu, Shield, Eye, [35mChevronRight[36m, X, CheckCircle2 } from 'lucide-svelte';[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\routes\(jarvis)\settings\+page.svelte[39m:2:54
+[31mError[39m: Module '"lucide-svelte"' has no exported member 'X'. (ts)
+[36m<script lang="ts">
+  import { Settings, Cpu, Shield, Eye, ChevronRight, [35mX[36m, CheckCircle2 } from 'lucide-svelte';[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\routes\(jarvis)\settings\+page.svelte[39m:2:57
+[31mError[39m: Module '"lucide-svelte"' has no exported member 'CheckCircle2'. (ts)
+[36m<script lang="ts">
+  import { Settings, Cpu, Shield, Eye, ChevronRight, X, [35mCheckCircle2[36m } from 'lucide-svelte';[39m
+
+c:\Users\GCJR\Documents\Code WorkSpace\AIB\[32msrc\routes\(jarvis)\settings\+page.svelte[39m:268:60
+[31mError[39m: 'pendingProvider' is possibly 'null'. (ts)
+[36m        <button class="btn-cancel" onclick={closeModal}>Cancel</button>
+        <button class="btn-save" onclick={() => saveConfig([35mpendingProvider[36m.id)} disabled={isLoading}>
+          {#if isLoading}[39m
+
+====================================
+[31msvelte-check found 21 errors and 4 warnings in 2 files
+[39m

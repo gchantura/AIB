@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { Settings, Cpu, Shield, Eye, ChevronRight, X, CheckCircle2 } from 'lucide-svelte';
+  import Settings from 'lucide-svelte/icons/settings';
+  import Cpu from 'lucide-svelte/icons/cpu';
+  import Shield from 'lucide-svelte/icons/shield';
+  import Eye from 'lucide-svelte/icons/eye';
+  import ChevronRight from 'lucide-svelte/icons/chevron-right';
+  import X from 'lucide-svelte/icons/x';
+  import CircleCheck from 'lucide-svelte/icons/circle-check';
 
   type ProviderStatus = 'unconfigured' | 'configured' | 'offline' | 'environment';
 
@@ -153,7 +159,7 @@
                 <div class="provider-actions">
                   <span class="provider-status" class:configured={isConfigured(provider.id)}>{statusText(provider)}</span>
                   {#if isConfigured(provider.id)}
-                    <CheckCircle2 size={14} class="config-check" />
+                    <CircleCheck size={14} class="config-check" />
                   {/if}
                   <button
                     class="configure-btn"
@@ -224,7 +230,11 @@
 </div>
 
 {#if pendingProvider}
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div class="modal-overlay" onclick={closeModal}>
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div class="modal" onclick={(e) => e.stopPropagation()}>
       <div class="modal-header">
         <h3 class="modal-title">Configure {pendingProvider.name}</h3>
@@ -235,7 +245,7 @@
       <div class="modal-body">
         <p class="modal-desc">{pendingProvider.description}</p>
 
-        {#if pendingProvider.fields.includes('apiKey')}
+        {#if pendingProvider!.fields.includes('apiKey')}
           <div class="form-group">
             <label class="form-label" for="api-key">API Key</label>
             <input
@@ -249,7 +259,7 @@
           </div>
         {/if}
 
-        {#if pendingProvider.fields.includes('baseUrl')}
+        {#if pendingProvider!.fields.includes('baseUrl')}
           <div class="form-group">
             <label class="form-label" for="base-url">Base URL</label>
             <input
@@ -265,7 +275,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn-cancel" onclick={closeModal}>Cancel</button>
-        <button class="btn-save" onclick={() => saveConfig(pendingProvider.id)} disabled={isLoading}>
+        <button class="btn-save" onclick={() => saveConfig(pendingProvider!.id)} disabled={isLoading}>
           {#if isLoading}
             Saving...
           {:else}
