@@ -1114,7 +1114,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_jarvis_automation_runtime_test",
-      "community": 27,
+      "community": 9,
       "norm_label": "runtime.test.ts"
     },
     {
@@ -1124,7 +1124,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_jarvis_automation_runtime",
-      "community": 27,
+      "community": 9,
       "norm_label": "runtime.ts"
     },
     {
@@ -1134,7 +1134,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_lib_jarvis_automation_runtime_nextrun",
-      "community": 27,
+      "community": 9,
       "norm_label": "nextrun()"
     },
     {
@@ -1144,7 +1144,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_lib_jarvis_automation_runtime_notify",
-      "community": 27,
+      "community": 9,
       "norm_label": "notify()"
     },
     {
@@ -1154,7 +1154,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_lib_jarvis_automation_runtime_runautomation",
-      "community": 27,
+      "community": 9,
       "norm_label": "runautomation()"
     },
     {
@@ -1164,7 +1164,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "src_lib_jarvis_automation_runtime_schedulertick",
-      "community": 27,
+      "community": 9,
       "norm_label": "schedulertick()"
     },
     {
@@ -1174,7 +1174,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "src_lib_jarvis_automation_runtime_startscheduler",
-      "community": 27,
+      "community": 9,
       "norm_label": "startscheduler()"
     },
     {
@@ -1184,7 +1184,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "src_lib_jarvis_automation_runtime_checkcalendarreminders",
-      "community": 27,
+      "community": 9,
       "norm_label": "checkcalendarreminders()"
     },
     {
@@ -1214,7 +1214,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_jarvis_core_store",
-      "community": 3,
+      "community": 9,
       "norm_label": "store.ts"
     },
     {
@@ -1224,7 +1224,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_lib_jarvis_core_store_datadir",
-      "community": 3,
+      "community": 9,
       "norm_label": "datadir"
     },
     {
@@ -1234,7 +1234,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_lib_jarvis_core_store_datafile",
-      "community": 3,
+      "community": 9,
       "norm_label": "datafile"
     },
     {
@@ -1244,7 +1244,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_lib_jarvis_core_store_tempfile",
-      "community": 3,
+      "community": 9,
       "norm_label": "tempfile"
     },
     {
@@ -1254,7 +1254,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_lib_jarvis_core_store_queue",
-      "community": 3,
+      "community": 9,
       "norm_label": "queue"
     },
     {
@@ -1264,7 +1264,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_lib_jarvis_core_store_emptydata",
-      "community": 3,
+      "community": 9,
       "norm_label": "emptydata()"
     },
     {
@@ -1274,7 +1274,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_lib_jarvis_core_store_load",
-      "community": 3,
+      "community": 9,
       "norm_label": "load()"
     },
     {
@@ -1284,7 +1284,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "src_lib_jarvis_core_store_save",
-      "community": 3,
+      "community": 9,
       "norm_label": "save()"
     },
     {
@@ -1294,7 +1294,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "src_lib_jarvis_core_store_transaction",
-      "community": 15,
+      "community": 9,
       "norm_label": "transaction()"
     },
     {
@@ -1314,7 +1314,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "src_lib_jarvis_core_store_record",
-      "community": 13,
+      "community": 9,
       "norm_label": "record()"
     },
     {
@@ -1334,7 +1334,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "src_lib_jarvis_core_store_createentity",
-      "community": 13,
+      "community": 9,
       "norm_label": "createentity()"
     },
     {
@@ -1344,7 +1344,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "src_lib_jarvis_core_store_updateentity",
-      "community": 27,
+      "community": 9,
       "norm_label": "updateentity()"
     },
     {
@@ -1354,7 +1354,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "src_lib_jarvis_core_store_deleteentity",
-      "community": 3,
+      "community": 9,
       "norm_label": "deleteentity()"
     },
     {
@@ -1374,7 +1374,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_jarvis_core_types_entitykind",
-      "community": 3,
+      "community": 9,
       "norm_label": "entitykind"
     },
     {
@@ -1464,7 +1464,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_lib_jarvis_core_types_auditevent",
-      "community": 3,
+      "community": 9,
       "norm_label": "auditevent"
     },
     {
@@ -1474,7 +1474,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_lib_jarvis_core_types_toolmanifest",
-      "community": 13,
+      "community": 0,
       "norm_label": "toolmanifest"
     },
     {
@@ -1584,7 +1584,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_lib_jarvis_core_types_upgradeplan",
-      "community": 31,
+      "community": 0,
       "norm_label": "upgradeplan"
     },
     {
@@ -1594,7 +1594,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "src_lib_jarvis_core_types_jarvisdata",
-      "community": 3,
+      "community": 9,
       "norm_label": "jarvisdata"
     },
     {
@@ -1604,7 +1604,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_jarvis_evaluation_runtime",
-      "community": 0,
+      "community": 9,
       "norm_label": "runtime.ts"
     },
     {
@@ -1614,7 +1614,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_lib_jarvis_evaluation_runtime_recordexecution",
-      "community": 15,
+      "community": 9,
       "norm_label": "recordexecution()"
     },
     {
@@ -1624,7 +1624,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_lib_jarvis_evaluation_runtime_summarize",
-      "community": 0,
+      "community": 9,
       "norm_label": "summarize()"
     },
     {
@@ -1634,7 +1634,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_lib_jarvis_evaluation_runtime_evaluationsnapshot",
-      "community": 0,
+      "community": 9,
       "norm_label": "evaluationsnapshot()"
     },
     {
@@ -1644,7 +1644,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "src_lib_jarvis_evaluation_runtime_generateproposals",
-      "community": 0,
+      "community": 9,
       "norm_label": "generateproposals()"
     },
     {
@@ -1654,7 +1654,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "src_lib_jarvis_evaluation_runtime_decideproposal",
-      "community": 13,
+      "community": 9,
       "norm_label": "decideproposal()"
     },
     {
@@ -1664,7 +1664,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_jarvis_evaluation_upgrades",
-      "community": 31,
+      "community": 9,
       "norm_label": "upgrades.ts"
     },
     {
@@ -1674,7 +1674,7 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "src_lib_jarvis_evaluation_upgrades_allowed",
-      "community": 31,
+      "community": 9,
       "norm_label": "allowed"
     },
     {
@@ -1684,7 +1684,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "src_lib_jarvis_evaluation_upgrades_run",
-      "community": 31,
+      "community": 9,
       "norm_label": "run()"
     },
     {
@@ -1694,7 +1694,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_lib_jarvis_evaluation_upgrades_listupgradeplans",
-      "community": 31,
+      "community": 9,
       "norm_label": "listupgradeplans()"
     },
     {
@@ -1704,7 +1704,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_lib_jarvis_evaluation_upgrades_prepareupgrade",
-      "community": 31,
+      "community": 9,
       "norm_label": "prepareupgrade()"
     },
     {
@@ -1714,7 +1714,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_lib_jarvis_evaluation_upgrades_verifyupgrade",
-      "community": 31,
+      "community": 9,
       "norm_label": "verifyupgrade()"
     },
     {
@@ -1724,7 +1724,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_jarvis_intelligence_runtime",
-      "community": 15,
+      "community": 9,
       "norm_label": "runtime.ts"
     },
     {
@@ -1744,7 +1744,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_lib_jarvis_intelligence_runtime_getconversation",
-      "community": 15,
+      "community": 9,
       "norm_label": "getconversation()"
     },
     {
@@ -1754,7 +1754,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_lib_jarvis_intelligence_runtime_ensureconversation",
-      "community": 15,
+      "community": 9,
       "norm_label": "ensureconversation()"
     },
     {
@@ -1764,7 +1764,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_lib_jarvis_intelligence_runtime_appendconversation",
-      "community": 15,
+      "community": 9,
       "norm_label": "appendconversation()"
     },
     {
@@ -1774,7 +1774,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_lib_jarvis_intelligence_runtime_deleteconversation",
-      "community": 15,
+      "community": 9,
       "norm_label": "deleteconversation()"
     },
     {
@@ -1784,7 +1784,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "src_lib_jarvis_intelligence_runtime_extractmemories",
-      "community": 15,
+      "community": 9,
       "norm_label": "extractmemories()"
     },
     {
@@ -1794,7 +1794,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_lib_jarvis_intelligence_runtime_recordmodelrun",
-      "community": 15,
+      "community": 9,
       "norm_label": "recordmodelrun()"
     },
     {
@@ -2304,7 +2304,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_jarvis_llm_types_chatmessage",
-      "community": 15,
+      "community": 9,
       "norm_label": "chatmessage"
     },
     {
@@ -2454,7 +2454,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_lib_jarvis_memory_api_creatememory",
-      "community": 15,
+      "community": 9,
       "norm_label": "creatememory()"
     },
     {
@@ -2624,7 +2624,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_jarvis_safety_runtime",
-      "community": 13,
+      "community": 9,
       "norm_label": "runtime.ts"
     },
     {
@@ -2634,7 +2634,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_lib_jarvis_safety_runtime_root",
-      "community": 13,
+      "community": 9,
       "norm_label": "root"
     },
     {
@@ -2654,7 +2654,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_lib_jarvis_safety_runtime_requestapproval",
-      "community": 13,
+      "community": 9,
       "norm_label": "requestapproval()"
     },
     {
@@ -2664,7 +2664,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_lib_jarvis_safety_runtime_decideapproval",
-      "community": 13,
+      "community": 9,
       "norm_label": "decideapproval()"
     },
     {
@@ -2674,7 +2674,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_lib_jarvis_safety_runtime_consumeapproval",
-      "community": 13,
+      "community": 9,
       "norm_label": "consumeapproval()"
     },
     {
@@ -2684,7 +2684,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_lib_jarvis_safety_runtime_createrollback",
-      "community": 13,
+      "community": 9,
       "norm_label": "createrollback()"
     },
     {
@@ -2694,7 +2694,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_lib_jarvis_safety_runtime_applychanges",
-      "community": 13,
+      "community": 9,
       "norm_label": "applychanges()"
     },
     {
@@ -2704,7 +2704,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "src_lib_jarvis_safety_runtime_rollbackchange",
-      "community": 13,
+      "community": 9,
       "norm_label": "rollbackchange()"
     },
     {
@@ -2714,7 +2714,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_jarvis_skills_runtime",
-      "community": 38,
+      "community": 9,
       "norm_label": "runtime.ts"
     },
     {
@@ -2724,7 +2724,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_lib_jarvis_skills_runtime_skillsdir",
-      "community": 38,
+      "community": 9,
       "norm_label": "skillsdir"
     },
     {
@@ -2734,7 +2734,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_lib_jarvis_skills_runtime_listskills",
-      "community": 38,
+      "community": 9,
       "norm_label": "listskills()"
     },
     {
@@ -2744,7 +2744,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "src_lib_jarvis_skills_runtime_createskill",
-      "community": 38,
+      "community": 9,
       "norm_label": "createskill()"
     },
     {
@@ -2754,7 +2754,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_jarvis_tools_runtime",
-      "community": 13,
+      "community": 9,
       "norm_label": "runtime.ts"
     },
     {
@@ -2764,7 +2764,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_lib_jarvis_tools_runtime_root",
-      "community": 13,
+      "community": 9,
       "norm_label": "root"
     },
     {
@@ -2774,7 +2774,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_lib_jarvis_tools_runtime_builtintools",
-      "community": 13,
+      "community": 9,
       "norm_label": "builtintools"
     },
     {
@@ -2784,7 +2784,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "src_lib_jarvis_tools_runtime_insiderepo",
-      "community": 13,
+      "community": 9,
       "norm_label": "insiderepo()"
     },
     {
@@ -2794,7 +2794,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "src_lib_jarvis_tools_runtime_listtools",
-      "community": 13,
+      "community": 9,
       "norm_label": "listtools()"
     },
     {
@@ -2804,7 +2804,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "src_lib_jarvis_tools_runtime_executetoolinternal",
-      "community": 13,
+      "community": 9,
       "norm_label": "executetoolinternal()"
     },
     {
@@ -2814,7 +2814,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "src_lib_jarvis_tools_runtime_executetool",
-      "community": 13,
+      "community": 9,
       "norm_label": "executetool()"
     },
     {
@@ -2824,7 +2824,7 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "src_lib_jarvis_tools_runtime_registertool",
-      "community": 13,
+      "community": 9,
       "norm_label": "registertool()"
     },
     {
@@ -8176,66 +8176,6 @@
       "id": "docs_validation_report_known_gaps_in_validation_coverage",
       "community": 36,
       "norm_label": "known gaps in validation coverage"
-    },
-    {
-      "label": "error-context.md",
-      "file_type": "document",
-      "source_file": "test-results/smoke-application-shell-and-core-navigation-render/error-context.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "test_results_smoke_application_shell_and_core_navigation_render_error_context",
-      "community": 30,
-      "norm_label": "error-context.md"
-    },
-    {
-      "label": "Instructions",
-      "file_type": "document",
-      "source_file": "test-results/smoke-application-shell-and-core-navigation-render/error-context.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "test_results_smoke_application_shell_and_core_navigation_render_error_context_instructions",
-      "community": 30,
-      "norm_label": "instructions"
-    },
-    {
-      "label": "Test info",
-      "file_type": "document",
-      "source_file": "test-results/smoke-application-shell-and-core-navigation-render/error-context.md",
-      "source_location": "L7",
-      "_origin": "ast",
-      "id": "test_results_smoke_application_shell_and_core_navigation_render_error_context_test_info",
-      "community": 30,
-      "norm_label": "test info"
-    },
-    {
-      "label": "Error details",
-      "file_type": "document",
-      "source_file": "test-results/smoke-application-shell-and-core-navigation-render/error-context.md",
-      "source_location": "L12",
-      "_origin": "ast",
-      "id": "test_results_smoke_application_shell_and_core_navigation_render_error_context_error_details",
-      "community": 30,
-      "norm_label": "error details"
-    },
-    {
-      "label": "Page snapshot",
-      "file_type": "document",
-      "source_file": "test-results/smoke-application-shell-and-core-navigation-render/error-context.md",
-      "source_location": "L29",
-      "_origin": "ast",
-      "id": "test_results_smoke_application_shell_and_core_navigation_render_error_context_page_snapshot",
-      "community": 30,
-      "norm_label": "page snapshot"
-    },
-    {
-      "label": "Test source",
-      "file_type": "document",
-      "source_file": "test-results/smoke-application-shell-and-core-navigation-render/error-context.md",
-      "source_location": "L268",
-      "_origin": "ast",
-      "id": "test_results_smoke_application_shell_and_core_navigation_render_error_context_test_source",
-      "community": 30,
-      "norm_label": "test source"
     }
   ],
   "links": [
@@ -18865,56 +18805,6 @@
       "weight": 1.0,
       "source": "docs_validation_report_run_2026_07_07_phase_0_phase_1_bootstrap_initial",
       "target": "docs_validation_report_command_npm_run_build_113",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "test-results/smoke-application-shell-and-core-navigation-render/error-context.md",
-      "source_location": "L12",
-      "weight": 1.0,
-      "source": "test_results_smoke_application_shell_and_core_navigation_render_error_context",
-      "target": "test_results_smoke_application_shell_and_core_navigation_render_error_context_error_details",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "test-results/smoke-application-shell-and-core-navigation-render/error-context.md",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "test_results_smoke_application_shell_and_core_navigation_render_error_context",
-      "target": "test_results_smoke_application_shell_and_core_navigation_render_error_context_instructions",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "test-results/smoke-application-shell-and-core-navigation-render/error-context.md",
-      "source_location": "L29",
-      "weight": 1.0,
-      "source": "test_results_smoke_application_shell_and_core_navigation_render_error_context",
-      "target": "test_results_smoke_application_shell_and_core_navigation_render_error_context_page_snapshot",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "test-results/smoke-application-shell-and-core-navigation-render/error-context.md",
-      "source_location": "L7",
-      "weight": 1.0,
-      "source": "test_results_smoke_application_shell_and_core_navigation_render_error_context",
-      "target": "test_results_smoke_application_shell_and_core_navigation_render_error_context_test_info",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "test-results/smoke-application-shell-and-core-navigation-render/error-context.md",
-      "source_location": "L268",
-      "weight": 1.0,
-      "source": "test_results_smoke_application_shell_and_core_navigation_render_error_context",
-      "target": "test_results_smoke_application_shell_and_core_navigation_render_error_context_test_source",
       "confidence_score": 1.0
     }
   ],

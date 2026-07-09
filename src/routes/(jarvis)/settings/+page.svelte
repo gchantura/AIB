@@ -1,13 +1,27 @@
-<script>
-  import { Settings, Cpu, Shield, Eye, ChevronRight } from 'lucide-svelte';
+<script lang="ts">
+  import { Settings, Cpu, Shield, Eye, ChevronRight, X, CheckCircle2 } from 'lucide-svelte';
 
-  const providers = [
-    { id: 'ollama', name: 'Ollama', description: 'Local models via Ollama', url: 'http://localhost:11434', status: 'unconfigured', privacy: 'local' },
-    { id: 'lm-studio', name: 'LM Studio', description: 'Local models via LM Studio', url: 'http://localhost:1234', status: 'unconfigured', privacy: 'local' },
-    { id: 'openai', name: 'OpenAI', description: 'GPT-4o, GPT-4-turbo, etc.', url: 'https://api.openai.com', status: 'unconfigured', privacy: 'cloud' },
-    { id: 'anthropic', name: 'Anthropic', description: 'Claude 3.5 Sonnet, Claude 3 Opus', url: 'https://api.anthropic.com', status: 'unconfigured', privacy: 'cloud' },
-    { id: 'gemini', name: 'Google Gemini', description: 'Gemini 1.5 Pro, Gemini Flash', url: 'https://generativelanguage.googleapis.com', status: 'unconfigured', privacy: 'cloud' },
-    { id: 'openrouter', name: 'OpenRouter', description: 'Multi-provider gateway', url: 'https://openrouter.ai', status: 'unconfigured', privacy: 'cloud' },
+  type ProviderStatus = 'unconfigured' | 'configured' | 'offline' | 'environment';
+
+  interface ProviderInfo {
+    id: string;
+    name: string;
+    description: string;
+    url: string;
+    status: ProviderStatus;
+    privacy: 'local' | 'cloud';
+    fields: ('apiKey' | 'baseUrl')[];
+    defaultBaseUrl?: string;
+  }
+
+  const providers: ProviderInfo[] = [
+    { id: 'ollama', name: 'Ollama', description: 'Local models via Ollama', url: 'http://localhost:11434', status: 'unconfigured', privacy: 'local', fields: ['baseUrl'] },
+    { id: 'lm-studio', name: 'LM Studio', description: 'Local models via LM Studio', url: 'http://localhost:1234', status: 'unconfigured', privacy: 'local', fields: ['baseUrl'] },
+    { id: 'nvidia', name: 'NVIDIA NIM', description: 'Hosted OpenAI-compatible models, including GLM 5.2', url: 'https://integrate.api.nvidia.com', status: 'environment', privacy: 'cloud', fields: ['apiKey', 'baseUrl'], defaultBaseUrl: 'https://integrate.api.nvidia.com/v1' },
+    { id: 'openai', name: 'OpenAI', description: 'GPT-4o, GPT-4-turbo, etc.', url: 'https://api.openai.com', status: 'unconfigured', privacy: 'cloud', fields: ['apiKey'], defaultBaseUrl: 'https://api.openai.com/v1' },
+    { id: 'anthropic', name: 'Anthropic', description: 'Claude 3.5 Sonnet, Claude 3 Opus', url: 'https://api.anthropic.com', status: 'unconfigured', privacy: 'cloud', fields: ['apiKey'], defaultBaseUrl: 'https://api.anthropic.com/v1' },
+    { id: 'gemini', name: 'Google Gemini', description: 'Gemini 1.5 Pro, Gemini Flash', url: 'https://generativelanguage.googleapis.com', status: 'unconfigured', privacy: 'cloud', fields: ['apiKey'], defaultBaseUrl: 'https://generativelanguage.googleapis.com/v1beta' },
+    { id: 'openrouter', name: 'OpenRouter', description: 'Multi-provider gateway', url: 'https://openrouter.ai', status: 'unconfigured', privacy: 'cloud', fields: ['apiKey'], defaultBaseUrl: 'https://openrouter.ai/api/v1' },
   ];
 
   const sections = [
@@ -19,6 +33,81 @@
   let activeSection = $state('providers');
   let privacyMode = $state(true);
   let allowCloud = $state(false);
+
+  // Reactive provider config state (loaded from localStorage)
+  let providerConfig = $state<Record<string, { apiKey?: string; baseUrl?: string }>>({});
+  let pendingProvider: ProviderInfo | null = $state(null);
+  let configForm = $state<{ apiKey?: string; baseUrl?: string }>({});
+  let isLoading = $state(false);
+
+  // Load persisted config from localStorage on mount
+  $effect(() => {
+    const stored = localStorage.getItem('jarvis-provider-config');
+    if (stored) {
+      try { providerConfig = JSON.parse(stored); } catch { /* ignore */ }
+    }
+  });
+
+  function configureProvider(provider: ProviderInfo) {
+    pendingProvider = provider;
+    configForm = {
+      apiKey: providerConfig[provider.id]?.apiKey || '',
+      baseUrl: providerConfig[provider.id]?.baseUrl || provider.defaultBaseUrl || provider.url,
+    };
+  }
+
+  function closeModal() {
+    pendingProvider = null;
+    configForm = {};
+  }
+
+  async function saveConfig(providerId: string) {
+    if (!configForm.apiKey?.trim()) {
+      // No API key — mark as unconfigured but keep baseUrl
+      const updated = { ...providerConfig };
+      delete updated[providerId];
+      providerConfig = updated;
+      localStorage.setItem('jarvis-provider-config', JSON.stringify(providerConfig));
+      closeModal();
+      return;
+    }
+
+    const updated = { ...providerConfig, [providerId]: configForm };
+    providerConfig = updated;
+    localStorage.setItem('jarvis-provider-config', JSON.stringify(updated));
+
+    // Check health if we have all required fields
+    const p = providers.find((pr) => pr.id === providerId);
+    if (p && configForm.apiKey?.trim() && (p.fields.includes('baseUrl') ? configForm.baseUrl?.trim() : true)) {
+      isLoading = true;
+      try {
+        const urlToCheck = configForm.baseUrl || p.defaultBaseUrl || p.url;
+        const res = await fetch(`${urlToCheck}/models`, {
+          headers: { 'Authorization': `Bearer ${configForm.apiKey}` },
+          signal: AbortSignal.timeout(5000),
+        });
+        // ok or 401 means the endpoint responds (key might be valid or needs validation at chat time)
+        if (res.ok || res.status === 401) {
+          isLoading = false;
+          closeModal();
+          return;
+        }
+      } catch { /* health check failed, still save config */ }
+    }
+
+    isLoading = false;
+    closeModal();
+  }
+
+  function isConfigured(providerId: string): boolean {
+    const cfg = providerConfig[providerId];
+    return !!(cfg && cfg.apiKey);
+  }
+
+  function statusText(provider: ProviderInfo): string {
+    if (isConfigured(provider.id)) return 'configured';
+    return provider.status;
+  }
 </script>
 
 <div class="page">
@@ -53,7 +142,7 @@
 
           <div class="providers-list">
             {#each providers as provider (provider.id)}
-              <div class="provider-row">
+              <div class="provider-row" class:configured-border={isConfigured(provider.id)}>
                 <div class="provider-info">
                   <div class="provider-name-row">
                     <span class="provider-name">{provider.name}</span>
@@ -62,9 +151,15 @@
                   <span class="provider-desc">{provider.description}</span>
                 </div>
                 <div class="provider-actions">
-                  <span class="provider-status">{provider.status}</span>
-                  <button class="configure-btn" disabled>
-                    Configure
+                  <span class="provider-status" class:configured={isConfigured(provider.id)}>{statusText(provider)}</span>
+                  {#if isConfigured(provider.id)}
+                    <CheckCircle2 size={14} class="config-check" />
+                  {/if}
+                  <button
+                    class="configure-btn"
+                    onclick={() => configureProvider(provider)}
+                  >
+                    {isConfigured(provider.id) ? 'Change' : 'Configure'}
                     <ChevronRight size={13} />
                   </button>
                 </div>
@@ -124,7 +219,63 @@
       {/if}
     </div>
   </div>
+
+  <!-- Configuration Modal — positioned outside .page for full-viewport overlay -->
 </div>
+
+{#if pendingProvider}
+  <div class="modal-overlay" onclick={closeModal}>
+    <div class="modal" onclick={(e) => e.stopPropagation()}>
+      <div class="modal-header">
+        <h3 class="modal-title">Configure {pendingProvider.name}</h3>
+        <button class="modal-close" onclick={closeModal} aria-label="Close">
+          <X size={18} />
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">{pendingProvider.description}</p>
+
+        {#if pendingProvider.fields.includes('apiKey')}
+          <div class="form-group">
+            <label class="form-label" for="api-key">API Key</label>
+            <input
+              id="api-key"
+              class="form-input"
+              type="password"
+              placeholder="Enter your API key..."
+              bind:value={configForm.apiKey}
+              onkeydown={(e) => { if (e.key === 'Escape') closeModal(); }}
+            />
+          </div>
+        {/if}
+
+        {#if pendingProvider.fields.includes('baseUrl')}
+          <div class="form-group">
+            <label class="form-label" for="base-url">Base URL</label>
+            <input
+              id="base-url"
+              class="form-input"
+              type="url"
+              placeholder="http://localhost:..."
+              bind:value={configForm.baseUrl}
+              onkeydown={(e) => { if (e.key === 'Escape') closeModal(); }}
+            />
+          </div>
+        {/if}
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick={closeModal}>Cancel</button>
+        <button class="btn-save" onclick={() => saveConfig(pendingProvider.id)} disabled={isLoading}>
+          {#if isLoading}
+            Saving...
+          {:else}
+            Save
+          {/if}
+        </button>
+      </div>
+    </div>
+  </div>
+{/if}
 
 <style>
   .page { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-6); }
@@ -206,17 +357,22 @@
   .provider-desc { font-size: var(--text-xs); color: var(--text-secondary); }
 
   .provider-actions { display: flex; align-items: center; gap: var(--space-3); }
-  .provider-status { font-size: var(--text-xs); color: var(--text-tertiary); }
+  .provider-status {
+    font-size: var(--text-xs); color: var(--text-tertiary);
+    text-transform: capitalize;
+  }
+  .provider-status.configured { color: var(--color-success-700); font-weight: var(--font-medium); }
+
+  .config-check { color: var(--color-success-700); flex-shrink: 0; }
 
   .configure-btn {
     display: inline-flex; align-items: center; gap: var(--space-1);
     padding: var(--space-1) var(--space-3); border: 1px solid var(--surface-border);
     border-radius: var(--radius-md); background: transparent;
-    font-size: var(--text-xs); color: var(--text-secondary); cursor: pointer;
-    transition: background var(--transition-fast);
+    font-size: var(--text-xs); color: var(--text-primary); cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
   }
-  .configure-btn:hover:not(:disabled) { background: var(--surface-border-subtle); }
-  .configure-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .configure-btn:hover { background: var(--surface-border-subtle); }
 
   /* Toggles */
   .toggle-rows { display: flex; flex-direction: column; gap: var(--space-4); }
@@ -257,4 +413,81 @@
     padding: var(--space-4); border: 1px dashed var(--surface-border);
     border-radius: var(--radius-md); text-align: center;
   }
+
+  /* Modal — viewport-level overlay */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.15s ease;
+  }
+
+  .modal {
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-lg);
+    width: min(420px, 90vw);
+    max-height: 80vh;
+    box-shadow: var(--shadow-lg);
+    animation: slideUp 0.2s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: var(--space-4) var(--space-4) 0;
+  }
+
+  .modal-title { font-size: var(--text-base); font-weight: var(--font-semibold); color: var(--text-primary); margin: 0; }
+
+  .modal-close {
+    background: transparent; border: none; color: var(--text-secondary);
+    cursor: pointer; padding: 4px; border-radius: var(--radius-sm);
+    transition: color var(--transition-fast), background var(--transition-fast);
+  }
+  .modal-close:hover { color: var(--text-primary); background: var(--surface-border-subtle); }
+
+  .modal-body { padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-3); overflow-y: auto; }
+  .modal-desc { font-size: var(--text-sm); color: var(--text-secondary); margin: 0; }
+
+  .form-group { display: flex; flex-direction: column; gap: 4px; }
+  .form-label { font-size: var(--text-xs); font-weight: var(--font-medium); color: var(--text-secondary); }
+  .form-input {
+    padding: var(--space-2) var(--space-3); border: 1px solid var(--surface-border);
+    border-radius: var(--radius-md); background: transparent;
+    font-size: var(--text-sm); color: var(--text-primary);
+    transition: border-color var(--transition-fast);
+  }
+  .form-input:focus { outline: none; border-color: var(--color-neutral-500); }
+
+  .modal-footer {
+    display: flex; justify-content: flex-end; gap: var(--space-2);
+    padding: var(--space-3) var(--space-4); border-top: 1px solid var(--surface-border);
+  }
+
+  .btn-cancel, .btn-save {
+    padding: var(--space-1) var(--space-4); border-radius: var(--radius-md);
+    font-size: var(--text-sm); cursor: pointer; transition: background var(--transition-fast);
+  }
+
+  .btn-cancel {
+    background: transparent; border: 1px solid var(--surface-border);
+    color: var(--text-secondary);
+  }
+  .btn-cancel:hover { background: var(--surface-border-subtle); }
+
+  .btn-save {
+    background: var(--color-neutral-700); border: 1px solid var(--color-neutral-700);
+    color: var(--color-neutral-0);
+  }
+  .btn-save:hover:not(:disabled) { opacity: 0.85; }
+  .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
 </style>

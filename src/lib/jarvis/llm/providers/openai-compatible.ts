@@ -41,7 +41,16 @@ export class OpenAICompatibleProvider implements LLMProvider {
     }
   }
 
+  /** Pre-discovered models (e.g. for providers whose /v1/models endpoint is incomplete). */
+  knownModels: string[] = [];
+
   async listModels(): Promise<ModelInfo[]> {
+    // If the provider declared known models, use them first — faster and avoids
+    // broken /v1/models endpoints (NVIDIA's GLM-5.2 lives at /chat/completions, not /v1/models).
+    if (this.knownModels.length > 0) {
+      return this.knownModels.map(id => ({ id, name: id, capabilities: {} }));
+    }
+
     try {
       const res = await fetch(`${this.baseUrl}/models`, {
         headers: this.headers(),
@@ -49,7 +58,9 @@ export class OpenAICompatibleProvider implements LLMProvider {
       });
       if (!res.ok) return [];
       const data = await res.json() as { data?: Array<{ id: string }> };
-      return (data.data ?? []).map(m => ({
+      const rawModels = data.data ?? [];
+
+      return rawModels.map(m => ({
         id: m.id,
         name: m.id,
         capabilities: {},
@@ -71,7 +82,9 @@ export class OpenAICompatibleProvider implements LLMProvider {
         model: request.model,
         messages,
         temperature: request.temperature ?? 0.7,
+        top_p: request.top_p,
         max_tokens: request.max_tokens,
+        seed: request.seed,
         stream: false,
       }),
     });
@@ -106,7 +119,9 @@ export class OpenAICompatibleProvider implements LLMProvider {
         model: request.model,
         messages,
         temperature: request.temperature ?? 0.7,
+        top_p: request.top_p,
         max_tokens: request.max_tokens,
+        seed: request.seed,
         stream: true,
       }),
     });

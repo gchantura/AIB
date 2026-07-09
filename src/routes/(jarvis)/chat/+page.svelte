@@ -42,9 +42,28 @@
 
   function newConversation() { conversationId = ''; messages = [{ role: 'assistant', content: 'New conversation started. Durable preferences and goals you explicitly ask me to remember will be saved locally.', ts: new Date(), error: false }]; }
 
+  function encodeB64url(json) {
+    return btoa(JSON.stringify(json)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+
   async function loadProviders() {
     try {
-      const res = await fetch('/api/models');
+      let url = '/api/models';
+
+      // Forward configured provider keys so server can discover their models
+      let overrides = undefined;
+      try {
+        const stored = localStorage.getItem('jarvis-provider-config');
+        if (stored) {
+          const config = JSON.parse(stored);
+          const entries = Object.entries(config).map(([id, cfg]) => [id, { apiKey: cfg.apiKey || '', baseUrl: cfg.baseUrl }]);
+          if (entries.length > 0) overrides = Object.fromEntries(entries);
+        }
+      } catch {/* no overrides */}
+
+      if (overrides) url += `?overrides=${encodeB64url(overrides)}`;
+
+      const res = await fetch(url);
       if (!res.ok) return;
       const data = await res.json();
       providers = data.providers ?? [];
@@ -76,6 +95,19 @@
     const placeholderIdx = messages.length;
     messages = [...messages, { role: 'assistant', content: '', ts: new Date(), error: false }];
     setTimeout(scrollToBottom, 10);
+
+    // Forward configured provider keys from localStorage
+    let keyOverrides = undefined;
+    try {
+      const stored = localStorage.getItem('jarvis-provider-config');
+      if (stored) {
+        const config = JSON.parse(stored);
+        keyOverrides = Object.fromEntries(
+          Object.entries(config).map(([id, cfg]) => [id, { apiKey: cfg.apiKey || '', baseUrl: cfg.baseUrl }])
+        );
+      }
+    } catch { /* no overrides */ }
+
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
@@ -85,6 +117,7 @@
           model: selectedModel || undefined,
           stream: true,
           conversationId: conversationId || undefined,
+          providerKeyOverrides: keyOverrides,
         }),
       });
       if (!res.ok || !res.body) {

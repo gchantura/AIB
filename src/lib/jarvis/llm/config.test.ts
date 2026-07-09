@@ -8,6 +8,8 @@ describe('getLLMConfig', () => {
     expect(config.allowCloudModels).toBe(false);
     expect(config.privacyMode).toBe(true);
     expect(config.preferredProviderOrder.slice(0, 2)).toEqual(['ollama', 'lm-studio']);
+    expect(config.nvidiaBaseUrl).toBe('https://integrate.api.nvidia.com/v1');
+    expect(config.defaultNvidiaModel).toBe('z-ai/glm-5.2');
   });
 
   it('accepts explicit cloud and provider configuration', () => {

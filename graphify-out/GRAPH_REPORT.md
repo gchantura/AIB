@@ -1,16 +1,16 @@
 # Graph Report - AIB  (2026-07-08)
 
 ## Corpus Check
-- 119 files · ~37,561 words
+- 120 files · ~37,798 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 815 nodes · 1037 edges · 79 communities (72 shown, 7 thin omitted)
+- 816 nodes · 1039 edges · 79 communities (72 shown, 7 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `877d2b7a`
+- Built from commit: `5e338c02`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -103,7 +103,7 @@ Cohesion: 0.13
 Nodes (20): Approval, Automation, BaseEntity, Briefing, CalendarEvent, Conversation, ExecutionMetric, ImprovementProposal (+12 more)
 
 ### Community 1 - "router.ts"
-Cohesion: 0.09
+Cohesion: 0.08
 Nodes (17): getLLMConfig(), authFailed(), LLMError, offline(), rateLimited(), AnthropicProvider, OllamaProvider, OpenAICompatibleProvider (+9 more)
 
 ### Community 2 - "Safety Policy"
@@ -295,7 +295,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `types.ts` be split into smaller, more focused modules?**
   _Cohesion score 0.12857142857142856 - nodes in this community are weakly interconnected._
 - **Should `router.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.08581349206349206 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08413461538461539 - nodes in this community are weakly interconnected._
 - **Should `Safety Policy` be split into smaller, more focused modules?**
   _Cohesion score 0.0425531914893617 - nodes in this community are weakly interconnected._
 - **Should `Super J.A.R.V.I.S. — Claude Code Operating Manual` be split into smaller, more focused modules?**

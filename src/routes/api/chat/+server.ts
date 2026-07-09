@@ -1,7 +1,7 @@
 import type { RequestHandler } from './$types.js';
 import { json } from '@sveltejs/kit';
 import { getLLMConfig } from '$lib/jarvis/llm/config.js';
-import { getRouter } from '$lib/jarvis/llm/router.js';
+import { getRouter, resetRouter } from '$lib/jarvis/llm/router.js';
 import { LLMError } from '$lib/jarvis/llm/errors.js';
 import type { ChatMessage, TaskType } from '$lib/jarvis/llm/types.js';
 import { env } from '$env/dynamic/private';
@@ -43,36 +43,39 @@ Answer concretely about this repository. Distinguish implemented capabilities fr
 }
 
 export const POST: RequestHandler = async ({ request }) => {
-  let body: { messages?: ChatMessage[]; model?: string; task?: TaskType; stream?: boolean; conversationId?: string };
+  let body: { messages?: ChatMessage[]; model?: string; task?: TaskType; stream?: boolean; conversationId?: string; temperature?: number; top_p?: number; max_tokens?: number; seed?: number; providerKeyOverrides?: Record<string, { apiKey?: string; baseUrl?: string }> };
   try {
     body = await request.json();
   } catch {
     return json({ error: 'Invalid JSON body' }, { status: 400 });
   }
 
-  const { messages, model, task = 'chat', stream = true } = body;
+  const { messages, model, task = 'chat', stream = true, conversationId, temperature, top_p, max_tokens, seed, providerKeyOverrides } = body;
 
   if (!messages || !Array.isArray(messages) || messages.length === 0) {
     return json({ error: 'messages array is required' }, { status: 400 });
   }
 
+  const overrides = providerKeyOverrides as Partial<import('$lib/jarvis/llm/types.js').LLMConfig> | undefined;
   const config = buildConfig();
-  const router = getRouter(config);
+  const mergedConfig = getLLMConfig(env as Record<string, string | undefined>, overrides);
+  resetRouter();
+  const router = getRouter(mergedConfig);
   const lastUser = [...messages].reverse().find((message) => message.role === 'user');
   const augmentedMessages: ChatMessage[] = [{ role: 'system', content: await buildProjectContext(lastUser?.content ?? '') }, ...messages.filter((message) => message.role !== 'system')];
-  const conversationId = await ensureConversation(body.conversationId, messages);
-  if (lastUser) { await appendConversation(conversationId, [lastUser]); await extractMemories(lastUser.content, conversationId); }
+  const savedConversationId = await ensureConversation(conversationId, messages);
+  if (lastUser) { await appendConversation(savedConversationId, [lastUser]); await extractMemories(lastUser.content, savedConversationId); }
 
   if (!stream) {
     try {
-      const response = await router.chat({ model: model || config.defaultLocalChatModel, messages: augmentedMessages }, task);
-      await appendConversation(conversationId, [{ role: 'assistant', content: response.content, model: response.model }]);
+      const response = await router.chat({ model: model || '', messages: augmentedMessages, temperature: body.temperature, top_p: body.top_p, max_tokens: body.max_tokens, seed: body.seed }, task);
+      await appendConversation(savedConversationId, [{ role: 'assistant', content: response.content, model: response.model }]);
       await recordModelRun('chat', lastUser?.content ?? '', { output: response.content, model: response.model });
-      return json({ content: response.content, model: response.model, conversationId });
+      return json({ content: response.content, model: response.model, conversationId: savedConversationId });
     } catch (e) {
       const msg = e instanceof LLMError ? e.message : 'No provider available';
       await recordModelRun('chat', lastUser?.content ?? '', { error: msg });
-      return json({ error: msg, conversationId }, { status: 503 });
+      return json({ error: msg, conversationId: savedConversationId }, { status: 503 });
     }
   }
 
@@ -80,17 +83,17 @@ export const POST: RequestHandler = async ({ request }) => {
     async start(controller) {
       const encode = (data: string) => new TextEncoder().encode(data);
       try {
-        controller.enqueue(encode(`data: ${JSON.stringify({ conversationId })}\n\n`));
+        controller.enqueue(encode(`data: ${JSON.stringify({ conversationId: savedConversationId })}\n\n`));
         let accumulated = '';
         const gen = router.chatStream(
-          { model: model || config.defaultLocalChatModel, messages: augmentedMessages },
+          { model: model || '', messages: augmentedMessages, temperature: body.temperature, top_p: body.top_p, max_tokens: body.max_tokens, seed: body.seed },
           task,
         );
         for await (const chunk of gen) {
           accumulated += chunk;
           controller.enqueue(encode(`data: ${JSON.stringify({ content: chunk })}\n\n`));
         }
-        await appendConversation(conversationId, [{ role: 'assistant', content: accumulated, model: model || config.defaultLocalChatModel }]);
+        await appendConversation(savedConversationId, [{ role: 'assistant', content: accumulated, model: model || config.defaultLocalChatModel }]);
         await recordModelRun('chat', lastUser?.content ?? '', { output: accumulated, model: model || config.defaultLocalChatModel });
         controller.enqueue(encode('data: [DONE]\n\n'));
       } catch (e) {

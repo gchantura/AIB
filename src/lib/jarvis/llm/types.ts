@@ -7,7 +7,9 @@ export interface ChatRequest {
   model: string;
   messages: ChatMessage[];
   temperature?: number;
+  top_p?: number;
   max_tokens?: number;
+  seed?: number;
   stream?: boolean;
   system?: string;
 }
@@ -47,6 +49,8 @@ export interface LLMProvider {
   embed?(texts: string[]): Promise<number[][]>;
   listModels?(): Promise<ModelInfo[]>;
   healthCheck(): Promise<boolean>;
+  /** Pre-discovered models for providers whose API doesn't expose them via /models. */
+  knownModels?: string[];
 }
 
 export interface ProviderHealth {
@@ -63,6 +67,9 @@ export interface LLMConfig {
   lmStudioBaseUrl: string;
   openaiApiKey: string;
   anthropicApiKey: string;
+  nvidiaApiKey: string;
+  nvidiaBaseUrl: string;
+  defaultNvidiaModel: string;
   defaultLocalChatModel: string;
   defaultCodingModel: string;
   defaultResearchModel: string;

@@ -130,9 +130,9 @@
     "semantic_hash": "bca8d00a62ef49a1ede9209c267ea4c3"
   },
   "src/lib/jarvis/llm/config.ts": {
-    "mtime": 1783425684.597263,
-    "ast_hash": "8a0648c4f2add1d76eadba3ec9583bc8",
-    "semantic_hash": "8a0648c4f2add1d76eadba3ec9583bc8"
+    "mtime": 1783511062.772091,
+    "ast_hash": "f2717a30bfdbc60a2e49d7748ade41b6",
+    "semantic_hash": ""
   },
   "src/lib/jarvis/llm/errors.ts": {
     "mtime": 1783425684.597263,
@@ -150,19 +150,19 @@
     "semantic_hash": "5c36d7588f055a8489067309a1b9f4b9"
   },
   "src/lib/jarvis/llm/providers/openai-compatible.ts": {
-    "mtime": 1783425684.59804,
-    "ast_hash": "17fc859e3220ac5ae0528cab9ade294a",
-    "semantic_hash": "17fc859e3220ac5ae0528cab9ade294a"
+    "mtime": 1783511062.7740934,
+    "ast_hash": "4c2e3a1cd53191786d088d45e35db246",
+    "semantic_hash": ""
   },
   "src/lib/jarvis/llm/router.ts": {
-    "mtime": 1783425684.59804,
-    "ast_hash": "8675ca537a6f55feed1d01fe5b212ac2",
-    "semantic_hash": "8675ca537a6f55feed1d01fe5b212ac2"
+    "mtime": 1783511062.772091,
+    "ast_hash": "7ce121efcecf956904f99a61d6bdd40d",
+    "semantic_hash": ""
   },
   "src/lib/jarvis/llm/types.ts": {
-    "mtime": 1783425684.59804,
-    "ast_hash": "8826de64da653edb8780537202f18a88",
-    "semantic_hash": "8826de64da653edb8780537202f18a88"
+    "mtime": 1783511062.7700887,
+    "ast_hash": "5f0e7a27f2579deba5bce29d4af98517",
+    "semantic_hash": ""
   },
   "src/lib/jarvis/memory/api.ts": {
     "mtime": 1783426216.8957744,
@@ -275,9 +275,9 @@
     "semantic_hash": "97e85d69c7d7fe1017ebb814ef567f6f"
   },
   "src/routes/(jarvis)/settings/+page.svelte": {
-    "mtime": 1783439104.3030138,
-    "ast_hash": "c5c50b0b143855d77e4f96ac6c31cf8c",
-    "semantic_hash": "c5c50b0b143855d77e4f96ac6c31cf8c"
+    "mtime": 1783511073.719942,
+    "ast_hash": "d901d4f125b4e63a7c2cbad2e1ced076",
+    "semantic_hash": ""
   },
   "src/routes/(jarvis)/skills/+page.svelte": {
     "mtime": 1783426321.4824815,
@@ -305,9 +305,9 @@
     "semantic_hash": "1183cb220aaa62986ca8afc7363cd428"
   },
   "src/routes/api/chat/+server.ts": {
-    "mtime": 1783428964.6439383,
-    "ast_hash": "a6560937c0347cb9941a4e48eee21da4",
-    "semantic_hash": "a6560937c0347cb9941a4e48eee21da4"
+    "mtime": 1783511062.7740934,
+    "ast_hash": "def9ad62a112b9788b2d4cf398d4439c",
+    "semantic_hash": ""
   },
   "src/routes/api/conversations/+server.ts": {
     "mtime": 1783427248.9375062,
@@ -585,12 +585,12 @@
     "semantic_hash": ""
   },
   "src/lib/jarvis/llm/config.test.ts": {
-    "mtime": 1783510473.9355998,
-    "ast_hash": "e2b04facb783caf9c0e96e8ac6c8848b",
+    "mtime": 1783511062.7756782,
+    "ast_hash": "fc887f4f89b749264414fa1ec6f0573f",
     "semantic_hash": ""
   },
   "test-results/.last-run.json": {
-    "mtime": 1783510618.3538105,
+    "mtime": 1783511112.1762004,
     "ast_hash": "f196824657d8858bc7fa44eecbba38b1",
     "semantic_hash": ""
   },
@@ -602,6 +602,11 @@
   "tests/integration/llm-router.test.ts": {
     "mtime": 1783510515.8778021,
     "ast_hash": "3ca358cdab050531d05fa44ebce6cc56",
+    "semantic_hash": ""
+  },
+  "tests/integration/nvidia-provider.test.ts": {
+    "mtime": 1783511062.7756782,
+    "ast_hash": "e95d736fcbb891dfcccdf88656b1e1bd",
     "semantic_hash": ""
   }
 }

@@ -1,11 +1,11 @@
 # Graph Report - AIB  (2026-07-08)
 
 ## Corpus Check
-- 120 files · ~38,695 words
+- 119 files · ~37,561 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 821 nodes · 1042 edges · 86 communities (79 shown, 7 thin omitted)
+- 815 nodes · 1037 edges · 79 communities (72 shown, 7 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
@@ -18,7 +18,6 @@
 - types.ts
 - router.ts
 - Safety Policy
-- store.ts
 - Super J.A.R.V.I.S. — Claude Code Operating Manual
 - Skill: Senior AI Engineer Coach
 - lucide-svelte
@@ -28,9 +27,7 @@
 - Skill: Svelte UI Engineer
 - Skill: Model Provider Engineer
 - Skill: Safety Guardian
-- record
 - Skill: Tool Factory Engineer
-- transaction
 - Skill: Validation Engineer
 - Skill: AI Researcher
 - Skill: Documentation Engineer
@@ -42,18 +39,14 @@
 - validate.js
 - Skill: App Factory Engineer
 - Skill: Automation Engineer
-- devDependencies
 - J.A.R.V.I.S. Subagent Definitions
 - Self-Improvement Log
-- +page.svelte
-- upgrades.ts
 - Model Providers
 - compilerOptions
 - Memory System
 - Repository Map
 - Validation Report
 - Repository Intelligence
-- scripts
 - Available Svelte MCP Tools:
 - Roadmap
 - Skill Registry
@@ -89,25 +82,25 @@
 10. `Skill: Model Provider Engineer` - 14 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `deleteConversation()` --calls--> `transaction()`  [EXTRACTED]
+  src/lib/jarvis/intelligence/runtime.ts → src/lib/jarvis/core/store.ts
 - `updateMemory()` --calls--> `transaction()`  [EXTRACTED]
   src/lib/jarvis/memory/api.ts → src/lib/jarvis/core/store.ts
 - `listUpgradePlans()` --calls--> `snapshot()`  [EXTRACTED]
   src/lib/jarvis/evaluation/upgrades.ts → src/lib/jarvis/core/store.ts
-- `notify()` --calls--> `transaction()`  [EXTRACTED]
-  src/lib/jarvis/automation/runtime.ts → src/lib/jarvis/core/store.ts
-- `runAutomation()` --calls--> `createEntity()`  [EXTRACTED]
-  src/lib/jarvis/automation/runtime.ts → src/lib/jarvis/core/store.ts
-- `runAutomation()` --calls--> `record()`  [EXTRACTED]
-  src/lib/jarvis/automation/runtime.ts → src/lib/jarvis/core/store.ts
+- `listConversations()` --calls--> `snapshot()`  [EXTRACTED]
+  src/lib/jarvis/intelligence/runtime.ts → src/lib/jarvis/core/store.ts
+- `countMemory()` --calls--> `snapshot()`  [EXTRACTED]
+  src/lib/jarvis/memory/api.ts → src/lib/jarvis/core/store.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (86 total, 7 thin omitted)
+## Communities (79 total, 7 thin omitted)
 
 ### Community 0 - "types.ts"
 Cohesion: 0.13
-Nodes (21): Approval, Automation, BaseEntity, Briefing, CalendarEvent, Conversation, ExecutionMetric, ImprovementProposal (+13 more)
+Nodes (20): Approval, Automation, BaseEntity, Briefing, CalendarEvent, Conversation, ExecutionMetric, ImprovementProposal (+12 more)
 
 ### Community 1 - "router.ts"
 Cohesion: 0.09
@@ -116,10 +109,6 @@ Nodes (17): getLLMConfig(), authFailed(), LLMError, offline(), rateLimited(), An
 ### Community 2 - "Safety Policy"
 Cohesion: 0.04
 Nodes (43): Architecture, Current State, Decision 1: SvelteKit as the sole UI framework, Decision 2: Atomic local JSON as the default persistence layer, Decision 3: Provider abstraction before first model call, Decision 4: Skills stored as SKILL.md files in .claude/skills/, Decision 5: Lucide icons, no colorful buttons, Directory Structure (+35 more)
-
-### Community 3 - "store.ts"
-Cohesion: 0.20
-Nodes (11): dataDir, dataFile, deleteEntity(), emptyData(), load(), queue, save(), tempFile (+3 more)
 
 ### Community 4 - "Super J.A.R.V.I.S. — Claude Code Operating Manual"
 Cohesion: 0.04
@@ -142,8 +131,8 @@ Cohesion: 0.12
 Nodes (15): Activation Triggers, Examples, Failure Handling, If DEGRADED_GRAPH_MODE (current):, If Graphify is available:, Output Format, Purpose, Registry Update Requirements (+7 more)
 
 ### Community 9 - "snapshot"
-Cohesion: 0.13
-Nodes (19): generateBriefing(), listEntities(), snapshot(), listConversations(), countMemory(), deleteMemory(), exportMemory(), getMemory() (+11 more)
+Cohesion: 0.06
+Nodes (75): checkCalendarReminders(), nextRun(), notify(), runAutomation(), schedulerTick(), startScheduler(), generateBriefing(), createEntity() (+67 more)
 
 ### Community 10 - "Skill: Svelte UI Engineer"
 Cohesion: 0.12
@@ -157,17 +146,9 @@ Nodes (14): Activation Triggers, Examples, Failure Handling, Local-First Rule, O
 Cohesion: 0.13
 Nodes (14): Activation Triggers, Approval Level Enforcement, Destructive Command Detection, Failure Handling, Output Format, Protected Paths Checklist, Purpose, Registry Update Requirements (+6 more)
 
-### Community 13 - "record"
-Cohesion: 0.19
-Nodes (18): createEntity(), record(), ToolManifest, decideProposal(), applyChanges(), consumeApproval(), createRollback(), decideApproval() (+10 more)
-
 ### Community 14 - "Skill: Tool Factory Engineer"
 Cohesion: 0.13
 Nodes (14): Activation Triggers, Dangerous Tool Rule, Examples, Failure Handling, Output Format, Purpose, Registry Update Requirements, Required Inputs (+6 more)
-
-### Community 15 - "transaction"
-Cohesion: 0.35
-Nodes (10): transaction(), recordExecution(), appendConversation(), deleteConversation(), ensureConversation(), extractMemories(), getConversation(), recordModelRun() (+2 more)
 
 ### Community 16 - "Skill: Validation Engineer"
 Cohesion: 0.13
@@ -213,10 +194,6 @@ Nodes (12): Activation Triggers, App Template Checklist, Output Format, Planned 
 Cohesion: 0.15
 Nodes (12): Activation Triggers, Automation Safety Rules (Non-Negotiable), Output Format, Planned Automations, Purpose, Registry Update Requirements, Required Inputs, Skill: Automation Engineer (+4 more)
 
-### Community 27 - "devDependencies"
-Cohesion: 0.50
-Nodes (7): checkCalendarReminders(), nextRun(), notify(), runAutomation(), schedulerTick(), startScheduler(), updateEntity()
-
 ### Community 28 - "J.A.R.V.I.S. Subagent Definitions"
 Cohesion: 0.18
 Nodes (10): Architect, J.A.R.V.I.S. Subagent Definitions, Memory Engineer, Model Engineer, Product Designer, Researcher, Safety Reviewer, Svelte Engineer (+2 more)
@@ -224,14 +201,6 @@ Nodes (10): Architect, J.A.R.V.I.S. Subagent Definitions, Memory Engineer, Model
 ### Community 29 - "Self-Improvement Log"
 Cohesion: 0.18
 Nodes (10): 2026-07-07 — Evaluation and capability governance, 2026-07-07 — Functional local-first runtime, 2026-07-07 — Persistent intelligence, 2026-07-07 — Phase 0/1 Compliance Review, 2026-07-07 — Phase 0 + Phase 1 Bootstrap, 2026-07-07 — Proactive operations, 2026-07-07 — Safe autonomy and app factory, Entry Format (+2 more)
-
-### Community 30 - "+page.svelte"
-Cohesion: 0.33
-Nodes (5): Error details, Instructions, Page snapshot, Test info, Test source
-
-### Community 31 - "upgrades.ts"
-Cohesion: 0.38
-Nodes (6): UpgradePlan, allowed, listUpgradePlans(), prepareUpgrade(), run(), verifyUpgrade()
 
 ### Community 32 - "Model Providers"
 Cohesion: 0.20
@@ -256,10 +225,6 @@ Nodes (8): Command: `npm run ai:validate`, Command: `npm run ai:validate`, Comma
 ### Community 37 - "Repository Intelligence"
 Cohesion: 0.25
 Nodes (7): Graph-First Workflow (Manual Fallback), Graphify (Not Installed), Recommended Graph-First Triggers, Repository Intelligence, Repository Map Location, Status: DEGRADED_GRAPH_MODE, To Enable Full Graph Intelligence
-
-### Community 38 - "scripts"
-Cohesion: 0.67
-Nodes (3): createSkill(), listSkills(), skillsDir
 
 ### Community 39 - "Available Svelte MCP Tools:"
 Cohesion: 0.29
@@ -318,24 +283,24 @@ Cohesion: 0.67
 Nodes (3): GET(), ignored, walk()
 
 ## Knowledge Gaps
-- **447 isolated node(s):** `checks`, `command`, `DESTRUCTIVE_PATTERNS`, `INSTALL_PATTERNS`, `isDestructive` (+442 more)
+- **442 isolated node(s):** `checks`, `command`, `DESTRUCTIVE_PATTERNS`, `INSTALL_PATTERNS`, `isDestructive` (+437 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **7 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `transaction()` connect `transaction` to `types.ts`, `store.ts`, `scripts`, `snapshot`, `record`, `devDependencies`, `upgrades.ts`?**
-  _High betweenness centrality (0.006) - this node is a cross-community bridge._
-- **Why does `snapshot()` connect `snapshot` to `types.ts`, `store.ts`, `scripts`, `record`, `transaction`, `devDependencies`, `upgrades.ts`?**
-  _High betweenness centrality (0.006) - this node is a cross-community bridge._
 - **What connects `checks`, `command`, `DESTRUCTIVE_PATTERNS` to the rest of the system?**
-  _447 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _442 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `types.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.12648221343873517 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.12857142857142856 - nodes in this community are weakly interconnected._
 - **Should `router.ts` be split into smaller, more focused modules?**
   _Cohesion score 0.08581349206349206 - nodes in this community are weakly interconnected._
 - **Should `Safety Policy` be split into smaller, more focused modules?**
   _Cohesion score 0.0425531914893617 - nodes in this community are weakly interconnected._
 - **Should `Super J.A.R.V.I.S. — Claude Code Operating Manual` be split into smaller, more focused modules?**
   _Cohesion score 0.044444444444444446 - nodes in this community are weakly interconnected._
+- **Should `Skill: Senior AI Engineer Coach` be split into smaller, more focused modules?**
+  _Cohesion score 0.09523809523809523 - nodes in this community are weakly interconnected._
+- **Should `lucide-svelte` be split into smaller, more focused modules?**
+  _Cohesion score 0.06090808416389812 - nodes in this community are weakly interconnected._

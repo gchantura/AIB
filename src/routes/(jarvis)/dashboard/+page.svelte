@@ -31,9 +31,26 @@
     };
   })());
 
+  function encodeB64url(json) {
+    return btoa(JSON.stringify(json)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+
   onMount(async () => {
+    // Build overrides from client-stored provider config
+    let overrideParam = '';
+    try {
+      const stored = localStorage.getItem('jarvis-provider-config');
+      if (stored) {
+        const config = JSON.parse(stored);
+        if (Object.keys(config).length > 0) {
+          const entries = Object.entries(config).map(([id, cfg]) => [id, { apiKey: cfg.apiKey || '', baseUrl: cfg.baseUrl }]);
+          overrideParam = `?overrides=${encodeB64url(Object.fromEntries(entries))}`;
+        }
+      }
+    } catch {/* no overrides */}
+
     const [healthRes, memRes] = await Promise.allSettled([
-      fetch('/api/models'),
+      fetch(`/api/models${overrideParam}`),
       fetch('/api/memory?limit=1'),
     ]);
     if (healthRes.status === 'fulfilled' && healthRes.value.ok) {
