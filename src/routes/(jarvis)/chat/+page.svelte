@@ -2,6 +2,12 @@
   import { onMount } from 'svelte';
   import { resolve } from '$app/paths';
   import { MessageSquare, Send, Bot, User, ChevronDown, Settings, AlertCircle, Plus } from 'lucide-svelte';
+  import { marked } from 'marked';
+
+  marked.setOptions({ breaks: true, gfm: true });
+  function renderMarkdown(text) {
+    try { return marked.parse(text); } catch { return text; }
+  }
 
   let messages = $state([
     {
@@ -228,6 +234,8 @@
           <div class="message-content">
             {#if msg.content === '' && msg.role === 'assistant'}
               <div class="typing-indicator"><span></span><span></span><span></span></div>
+            {:else if msg.role === 'assistant'}
+              <div class="md-content">{@html renderMarkdown(msg.content)}</div>
             {:else}
               {msg.content}
             {/if}
@@ -306,4 +314,23 @@
   .send-btn:hover:not(:disabled) { background: var(--color-neutral-700); }
   .send-btn:disabled { background: var(--surface-border); color: var(--text-disabled); cursor: not-allowed; }
   .input-hint { font-size: var(--text-xs); color: var(--text-tertiary); margin: var(--space-1) 0 0; text-align: center; }
+  /* Markdown rendered content */
+  .md-content { font-size: var(--text-sm); color: var(--text-primary); line-height: var(--leading-relaxed); }
+  .md-content :global(p) { margin: 0 0 0.5rem; }
+  .md-content :global(p:last-child) { margin-bottom: 0; }
+  .md-content :global(h1),.md-content :global(h2),.md-content :global(h3) { color: var(--text-primary); font-weight: var(--font-semibold); margin: 1rem 0 0.4rem; }
+  .md-content :global(h1) { font-size: var(--text-lg); }
+  .md-content :global(h2) { font-size: var(--text-base); }
+  .md-content :global(h3) { font-size: var(--text-sm); }
+  .md-content :global(code) { background: var(--surface-border-subtle); border: 1px solid var(--surface-border); border-radius: 4px; padding: 1px 5px; font-family: var(--font-mono); font-size: 0.85em; color: var(--color-accent-400); }
+  .md-content :global(pre) { background: var(--surface-bg); border: 1px solid var(--surface-border); border-radius: var(--radius-md); padding: 0.8rem 1rem; overflow-x: auto; margin: 0.5rem 0; }
+  .md-content :global(pre code) { background: none; border: none; padding: 0; color: var(--text-primary); font-size: var(--text-xs); }
+  .md-content :global(ul),.md-content :global(ol) { padding-left: 1.4rem; margin: 0.4rem 0; }
+  .md-content :global(li) { margin: 0.2rem 0; }
+  .md-content :global(blockquote) { border-left: 3px solid var(--surface-border); padding-left: 0.8rem; margin: 0.5rem 0; color: var(--text-secondary); }
+  .md-content :global(a) { color: var(--color-accent-400); text-decoration: underline; }
+  .md-content :global(strong) { color: var(--text-primary); font-weight: var(--font-semibold); }
+  .md-content :global(table) { border-collapse: collapse; width: 100%; font-size: var(--text-xs); margin: 0.5rem 0; }
+  .md-content :global(th),.md-content :global(td) { border: 1px solid var(--surface-border); padding: 0.4rem 0.6rem; text-align: left; }
+  .md-content :global(th) { background: var(--surface-border-subtle); font-weight: var(--font-semibold); }
 </style>

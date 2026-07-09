@@ -52,6 +52,10 @@
     if (stored) {
       try { providerConfig = JSON.parse(stored); } catch { /* ignore */ }
     }
+    const savedPrivacy = localStorage.getItem('jarvis-privacy-mode');
+    if (savedPrivacy !== null) privacyMode = savedPrivacy === 'true';
+    const savedCloud = localStorage.getItem('jarvis-allow-cloud');
+    if (savedCloud !== null) allowCloud = savedCloud === 'true';
   });
 
   function configureProvider(provider: ProviderInfo) {
@@ -188,7 +192,7 @@
               <button
                 class="toggle-btn"
                 class:on={privacyMode}
-                onclick={() => privacyMode = !privacyMode}
+                onclick={() => { privacyMode = !privacyMode; localStorage.setItem('jarvis-privacy-mode', String(privacyMode)); }}
                 role="switch"
                 aria-checked={privacyMode}
                 aria-label="Toggle privacy mode"
@@ -204,7 +208,7 @@
               <button
                 class="toggle-btn"
                 class:on={allowCloud}
-                onclick={() => allowCloud = !allowCloud}
+                onclick={() => { allowCloud = !allowCloud; localStorage.setItem('jarvis-allow-cloud', String(allowCloud)); }}
                 role="switch"
                 aria-checked={allowCloud}
                 disabled={privacyMode}

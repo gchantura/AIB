@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { createEntity, record, snapshot, transaction, updateEntity } from '../core/store.js';
+import { sendEmailReminder } from './email.js';
 
 export function nextRun(schedule: string, from = new Date()) {
   const normalized = schedule.trim().toLowerCase(); const next = new Date(from);
@@ -51,6 +52,14 @@ export async function checkCalendarReminders(now = new Date()) {
     
     await updateEntity('events', ev.id, { notified: true });
     void notify(ev.title, `Starts at ${new Date(ev.startsAt).toLocaleString()}`, 'calendar:reminder');
+    // Send email if configured on this event
+    if (ev.emailReminder) {
+      void sendEmailReminder(
+        ev.emailReminder,
+        `⏰ Reminder: ${ev.title}`,
+        `Your event "${ev.title}" starts at ${new Date(ev.startsAt).toLocaleString()}.`
+      );
+    }
     results.push({ id: ev.id, title: ev.title, fired: true });
   }
 

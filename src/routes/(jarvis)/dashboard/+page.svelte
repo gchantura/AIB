@@ -79,9 +79,9 @@
       if (data.recentAudit && data.recentAudit.length > 0) {
         recentActivity = data.recentAudit.map((a) => ({
           text: String(a.detail || a.action),
-          time: new Date(a.timestamp).toLocaleString(),
+          time: a.at ? new Date(a.at).toLocaleString() : 'Just now',
           type: a.entity === 'tool' ? 'skill' : (a.outcome === 'failure' ? 'system' : 'info')
-        })).slice(0, 4);
+        })).slice(0, 8);
       }
     }
     if (toolsRes.status === 'fulfilled' && toolsRes.value.ok) {

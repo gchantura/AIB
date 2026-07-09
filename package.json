@@ -4,6 +4,7 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run prepack",
+		"postbuild": "node scripts/post-build.js",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"prepack": "svelte-kit sync && svelte-package && publint",
@@ -15,7 +16,8 @@
 		"test:all": "npm run check && npm run test && npm run test:e2e",
 		"graph": "graphify update . --force",
 		"graph:check": "graphify diagnose multigraph --graph graphify-out/graph.json",
-		"ai:validate": "node scripts/ai/validate.js"
+		"ai:validate": "node scripts/ai/validate.js",
+		"docs:update": "node scripts/post-build.js"
 	},
 	"files": [
 		"dist",
@@ -56,7 +58,10 @@
 		"vitest": "^4.1.10"
 	},
 	"dependencies": {
-		"@supabase/supabase-js": "^2.50.0"
+		"@supabase/supabase-js": "^2.50.0",
+		"@types/nodemailer": "^8.0.1",
+		"marked": "^18.0.5",
+		"nodemailer": "^9.0.3"
 	},
 	"keywords": [
 		"svelte"
