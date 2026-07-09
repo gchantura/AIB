@@ -264,6 +264,7 @@
 	</section>
 
 	<VoiceRecorder
+		mode='ollama'
 		language={state.config.language}
 		onchunk={handleChunk}
 		onstatus={(s) => (listeningStatus = s)}
