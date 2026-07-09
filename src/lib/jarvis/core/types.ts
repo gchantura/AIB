@@ -1,7 +1,7 @@
 export type EntityKind = 'tasks' | 'notes' | 'projects' | 'events' | 'research' | 'automations' | 'learning';
 
 export interface BaseEntity { id: string; createdAt: string; updatedAt: string }
-export interface Task extends BaseEntity { title: string; description: string; status: 'todo' | 'doing' | 'done'; priority: 'low' | 'medium' | 'high'; dueAt?: string }
+export interface Task extends BaseEntity { title: string; description: string; status: 'todo' | 'doing' | 'done'; priority: 'low' | 'medium' | 'high'; dueAt?: string; notified?: boolean }
 export interface Note extends BaseEntity { title: string; content: string; tags: string[]; projectId?: string }
 export interface Project extends BaseEntity { name: string; description: string; status: 'active' | 'paused' | 'complete'; path?: string }
 export interface CalendarEvent extends BaseEntity { title: string; description: string; startsAt: string; endsAt?: string; reminderMinutes?: number; notified?: boolean }

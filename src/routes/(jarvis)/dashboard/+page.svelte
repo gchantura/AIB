@@ -19,6 +19,15 @@
   let providerHealth = $state([]);
   let healthLoading = $state(true);
   let memoryCount = $state(0);
+  let tasksCount = $state(0);
+  let toolsCount = $state(0);
+  let skillsCount = $state(0);
+  let recentActivity = $state([
+    { text: 'J.A.R.V.I.S. operating layer initialized', time: 'Just now', type: 'system' },
+    { text: '15 skills created in .claude/skills/', time: 'Just now', type: 'skill' },
+    { text: 'Repository map generated', time: 'Just now', type: 'info' },
+    { text: 'Safety policy configured', time: 'Just now', type: 'info' }
+  ]);
 
   const modelStatus = $derived((() => {
     const first = providerHealth.find(p => p.online);
@@ -49,9 +58,12 @@
       }
     } catch {/* no overrides */}
 
-    const [healthRes, memRes] = await Promise.allSettled([
+    const [healthRes, memRes, workspaceRes, toolsRes, skillsRes] = await Promise.allSettled([
       fetch(`/api/models${overrideParam}`),
       fetch('/api/memory?limit=1'),
+      fetch('/api/workspace'),
+      fetch('/api/tools'),
+      fetch('/api/skills')
     ]);
     if (healthRes.status === 'fulfilled' && healthRes.value.ok) {
       const data = await healthRes.value.json();
@@ -61,22 +73,34 @@
       const data = await memRes.value.json();
       memoryCount = data.total ?? 0;
     }
+    if (workspaceRes.status === 'fulfilled' && workspaceRes.value.ok) {
+      const data = await workspaceRes.value.json();
+      tasksCount = data.counts?.tasks ?? 0;
+      if (data.recentAudit && data.recentAudit.length > 0) {
+        recentActivity = data.recentAudit.map((a) => ({
+          text: String(a.detail || a.action),
+          time: new Date(a.timestamp).toLocaleString(),
+          type: a.entity === 'tool' ? 'skill' : (a.outcome === 'failure' ? 'system' : 'info')
+        })).slice(0, 4);
+      }
+    }
+    if (toolsRes.status === 'fulfilled' && toolsRes.value.ok) {
+      const data = await toolsRes.value.json();
+      toolsCount = data.tools?.length ?? 0;
+    }
+    if (skillsRes.status === 'fulfilled' && skillsRes.value.ok) {
+      const data = await skillsRes.value.json();
+      skillsCount = data.skills?.length ?? 0;
+    }
     healthLoading = false;
   });
 
   const quickStats = $derived([
-    { label: 'Tools', value: '0', icon: Wrench, href: '/tools' },
-    { label: 'Skills', value: '15', icon: BookOpen, href: '/skills' },
+    { label: 'Tools', value: String(toolsCount), icon: Wrench, href: '/tools' },
+    { label: 'Skills', value: String(skillsCount), icon: BookOpen, href: '/skills' },
     { label: 'Memories', value: String(memoryCount), icon: Database, href: '/memory' },
-    { label: 'Tasks', value: '0', icon: CheckSquare, href: '/calendar' },
+    { label: 'Tasks', value: String(tasksCount), icon: CheckSquare, href: '/calendar' },
   ]);
-
-  const recentActivity = [
-    { text: 'J.A.R.V.I.S. operating layer initialized', time: 'Just now', type: 'system' },
-    { text: '15 skills created in .claude/skills/', time: 'Just now', type: 'skill' },
-    { text: 'Repository map generated', time: 'Just now', type: 'info' },
-    { text: 'Safety policy configured', time: 'Just now', type: 'info' },
-  ];
 
   const nextSteps = [
     { label: 'Configure a model provider', href: '/settings', description: 'Start Ollama locally or add an API key in Settings' },
@@ -206,7 +230,7 @@
     <div class="card-header">
       <TrendingUp size={16} />
       <h2 class="card-title">Build Progress</h2>
-      <span class="phase-badge">Phase 1 Complete</span>
+      <span class="phase-badge">System Fully Operational</span>
     </div>
     <div class="card-body">
       <div class="phase-grid">
@@ -215,13 +239,13 @@
           { num: 1, label: 'Operating Layer', done: true },
           { num: 2, label: 'Repository Intelligence', done: true },
           { num: 3, label: 'Validation', done: true },
-          { num: 4, label: 'Model Core', done: false },
-          { num: 5, label: 'Memory Core', done: false },
-          { num: 6, label: 'Tool Core', done: false },
-          { num: 7, label: 'Main UI', done: false },
-          { num: 8, label: 'First Tools', done: false },
-          { num: 9, label: 'Automation', done: false },
-          { num: 10, label: 'Self-Improvement', done: false },
+          { num: 4, label: 'Model Core', done: true },
+          { num: 5, label: 'Memory Core', done: true },
+          { num: 6, label: 'Tool Core', done: true },
+          { num: 7, label: 'Main UI', done: true },
+          { num: 8, label: 'First Tools', done: true },
+          { num: 9, label: 'Automation', done: true },
+          { num: 10, label: 'Self-Improvement', done: true },
         ] as phase (phase.num)}
           <div class="phase-item" class:done={phase.done}>
             <span class="phase-num">{phase.num}</span>

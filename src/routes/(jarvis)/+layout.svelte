@@ -25,6 +25,7 @@
     Menu,
     X
   } from 'lucide-svelte';
+  import Toaster from '$lib/components/Toaster.svelte';
 
   let { children } = $props();
 
@@ -171,6 +172,8 @@
     </main>
   </div>
 </div>
+
+<Toaster />
 
 <style>
   .jarvis-shell {

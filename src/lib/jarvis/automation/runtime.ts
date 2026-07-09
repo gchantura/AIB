@@ -39,18 +39,30 @@ export function startScheduler() {
   void schedulerTick(); global.__jarvisScheduler = setInterval(() => void schedulerTick(), 30_000); global.__jarvisScheduler.unref?.();
 }
 
-/** Find calendar events within their reminder window and fire notifications. */
+/** Find calendar events and tasks within their reminder window and fire notifications. */
 export async function checkCalendarReminders(now = new Date()) {
   const data = await snapshot();
   const results: { id: string; title: string; fired: boolean }[] = [];
+  
   for (const ev of data.events) {
     if (ev.notified) continue;
     const reminderTime = new Date(ev.startsAt).getTime() - (ev.reminderMinutes ?? 15) * 60_000;
-    if (now.getTime() < reminderTime) continue;                       // not yet due
-    if (now.getTime() < reminderTime + 60_000) continue;            // within first minute — debounce
+    if (now.getTime() < reminderTime) continue;
+    
     await updateEntity('events', ev.id, { notified: true });
     void notify(ev.title, `Starts at ${new Date(ev.startsAt).toLocaleString()}`, 'calendar:reminder');
     results.push({ id: ev.id, title: ev.title, fired: true });
   }
+
+  for (const task of data.tasks) {
+    if (task.notified || task.status === 'done' || !task.dueAt) continue;
+    const dueTime = new Date(task.dueAt).getTime();
+    if (now.getTime() < dueTime) continue;
+
+    await updateEntity('tasks', task.id, { notified: true });
+    void notify(task.title, `Task is now due`, 'calendar:task-reminder');
+    results.push({ id: task.id, title: task.title, fired: true });
+  }
+  
   return results;
 }
