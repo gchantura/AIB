@@ -1,4 +1,18 @@
-# Validation Report
+# V
+## Auto-run: 2026-07-09T10:25:15.177Z
+
+- `npm run build`: ✅ Success
+- Graphify: ⚠ Skipped (not installed)
+
+---
+
+## Auto-run: 2026-07-09T10:30:20.776Z
+
+- `npm run build`: ✅ Success
+- Graphify: ⚠ Skipped (not installed)
+
+---
+alidation Report
 
 > Historical runs below describe the bootstrap state at the time they were recorded. They are not current capability or approval status. Current authoritative status is in `docs/ROADMAP.md`; the Phase 7 UI is approved, integrated, and validation is clean.
 

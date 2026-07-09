@@ -214,13 +214,18 @@
   onMount(loadAll);
 
   async function loadAll() {
-    loading = true;
-    const [evRes, taskRes] = await Promise.all([
-      fetch('/api/workspace?kind=events'),
-      fetch('/api/workspace?kind=tasks')
-    ]);
-    events = (await evRes.json()).items ?? [];
-    tasks  = (await taskRes.json()).items ?? [];
+    loading = true; evError = '';
+    try {
+      const [evRes, taskRes] = await Promise.all([
+        fetch('/api/workspace?kind=events'),
+        fetch('/api/workspace?kind=tasks')
+      ]);
+      events = (await evRes.json()).items ?? [];
+      tasks  = (await taskRes.json()).items ?? [];
+    } catch (e) {
+      evError = e instanceof Error ? e.message : 'Failed to load calendar data';
+      events = []; tasks = [];
+    }
     loading = false;
   }
 
@@ -257,13 +262,20 @@
     }
   }
 
+  let evError = $state('');
+
   function closeCreateModal() {
     creatingKind = null;
   }
 
   async function submitCreateEvent() {
-    await createEvent();
-    creatingKind = null;
+    try {
+      await createEvent();
+      evError = '';
+      creatingKind = null;
+    } catch (e) {
+      evError = e instanceof Error ? e.message : String(e);
+    }
   }
 
   async function createEvent() {
@@ -281,7 +293,7 @@
     const nowMs = Date.now();
     const isPast = triggerTime <= nowMs;
 
-    await fetch('/api/workspace?kind=events', {
+    const res = await fetch('/api/workspace?kind=events', {
       method: 'POST', headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         title: evTitle, description: evDetail,
@@ -294,6 +306,12 @@
         nextNotifyAt: null
       })
     });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+      throw new Error(err.error ?? `Failed to create event (HTTP ${res.status})`);
+    }
+
     evTitle = ''; evDetail = ''; evDate = ''; evEmailTo = ''; evEmailCc = '';
     evReminderMin = 15; evRepeat = 'none';
     await loadAll();
@@ -904,7 +922,8 @@
         </div>
         {@render customReminderFields(evReminderMin, evCustomReminderValue, evCustomReminderUnit, (v) => evCustomReminderValue = v, (v) => evCustomReminderUnit = v)}
         {@render customRepeatFields(evRepeat, evCustomRepeatValue, evCustomRepeatUnit, (v) => evCustomRepeatValue = v, (v) => evCustomRepeatUnit = v)}
-        
+        {#if evError}<p class="error-text" style="margin-top:var(--space-2);">{evError}</p>{/if}
+
         <div class="form-group">
           <label class="form-label" for="ev-email">Email To <span class="form-hint">(comma-separated)</span></label>
           <input id="ev-email" class="form-input" bind:value={evEmailTo} placeholder="to@example.com, other@example.com" />
@@ -998,12 +1017,12 @@
       <span class="custom-box-label">Custom Reminder Interval</span>
       <div class="form-row-custom">
         <div class="form-group">
-          <label class="form-label">Value</label>
-          <input type="number" class="form-input" value={numVal} oninput={(e) => setNum(Number(e.target.value))} min="1" placeholder="10" />
+          <label class="form-label" for="custom-rem-value">Value</label>
+          <input id="custom-rem-value" type="number" class="form-input" value={numVal} oninput={(e) => setNum(Number(e.target.value))} min="1" placeholder="10" />
         </div>
         <div class="form-group">
-          <label class="form-label">Unit</label>
-          <select class="form-input" value={unitVal} onchange={(e) => setUnit(Number(e.target.value))}>
+          <label class="form-label" for="custom-rem-unit">Unit</label>
+          <select id="custom-rem-unit" class="form-input" value={unitVal} onchange={(e) => setUnit(Number(e.target.value))}>
             <option value={1}>Minutes</option>
             <option value={60}>Hours</option>
             <option value={1440}>Days</option>
@@ -1021,12 +1040,12 @@
       <span class="custom-box-label">Custom Repeat Interval</span>
       <div class="form-row-custom">
         <div class="form-group">
-          <label class="form-label">Every</label>
-          <input type="number" class="form-input" value={numVal} oninput={(e) => setNum(Number(e.target.value))} min="1" placeholder="1" />
+          <label class="form-label" for="custom-rpt-interval">Every</label>
+          <input id="custom-rpt-interval" type="number" class="form-input" value={numVal} oninput={(e) => setNum(Number(e.target.value))} min="1" placeholder="1" />
         </div>
         <div class="form-group">
-          <label class="form-label">Unit</label>
-          <select class="form-input" value={unitVal} onchange={(e) => setUnit(e.target.value)}>
+          <label class="form-label" for="custom-rpt-unit">Unit</label>
+          <select id="custom-rpt-unit" class="form-input" value={unitVal} onchange={(e) => setUnit(e.target.value)}>
             <option value="minutes">Minutes</option>
             <option value="hours">Hours</option>
             <option value="days">Days</option>
