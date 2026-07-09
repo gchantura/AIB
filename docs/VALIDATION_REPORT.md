@@ -6,6 +6,27 @@ This file is updated after every validation run. See `docs/SELF_IMPROVEMENT_LOG.
 
 ---
 
+## Auto-run: 2026-07-09T09:39:41.649Z
+
+- `npm run build`: ✅ Success
+- Graphify: ⚠ Skipped (not installed)
+
+---
+
+## Run: 2026-07-09 — Supabase Workspace Migration
+
+### Commands: `npm run build`, `npm run ai:validate`
+
+- `npm run build`: ✅ Success (exit 0, 0 errors, 0 warnings)
+- `npm run ai:validate`: ✅ 41 passed, 0 failed
+- Graphify: ✅ Updated
+
+**Changes:** Workspace data (events, tasks, notes, projects) migrated from local JSON to Supabase tables with RLS. `store.ts` now uses a hybrid model — Supabase for workspace CRUD, local JSON for all other entities. `snapshot()` merges both sources.
+
+**Result: PASS**
+
+---
+
 ## Auto-run: 2026-07-09T09:36:23.481Z
 
 - `npm run build`: ✅ Success

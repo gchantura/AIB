@@ -11,7 +11,7 @@ Super J.A.R.V.I.S. is an operational local-first MVP, not a UI scaffold. The ear
 | Local memory | Complete | Atomic local persistence, CRUD, search, provenance and relevance ranking |
 | Tool core | Complete | Registry, safe tools, approvals, audit and rollback |
 | Main UI | Complete | Responsive workspace routes and navigation |
-| Productivity | Complete | Tasks, notes, projects, calendar and learning records |
+| Productivity | Complete | Tasks, notes, projects, calendar and learning records — persisted in Supabase (`workspace_events`, `workspace_tasks`, `workspace_notes`, `workspace_projects`) |
 | Research and coding | Complete MVP | Evidence-bound research and selected-file repository analysis |
 | Automation | Complete MVP | Restart-safe scheduler, notifications and briefings |
 | App/skill generation | Complete MVP | Approval-gated Svelte app factory and on-disk skill creation |

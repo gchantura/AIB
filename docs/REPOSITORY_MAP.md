@@ -1,17 +1,18 @@
 # Repository Map
 
 **Status:** Live manual map (Graphify remains optional)
-**Last updated:** 2026-07-07 after proactive-operations milestone
+**Last updated:** 2026-07-09 after Supabase workspace migration
 
 ## Runtime
 
-SvelteKit 2 + Svelte 5 runs as a local Node application through `@sveltejs/adapter-node`. User state is persisted atomically in ignored `.jarvis/workspace.json`. Supabase files remain an optional adapter scaffold and are not required for local operation.
+SvelteKit 2 + Svelte 5 runs as a local Node application through `@sveltejs/adapter-node`. Workspace data (events, tasks, notes, projects) is persisted in Supabase tables (`workspace_events`, `workspace_tasks`, `workspace_notes`, `workspace_projects`) with RLS enabled. All other entity kinds (research, automations, learning, audit, conversations, notifications, etc.) remain in the local atomic JSON store at `.jarvis/workspace.json`. The `snapshot()` function in `src/lib/jarvis/core/store.ts` merges both sources.
 
 ## Core modules
 
 | Path | Responsibility |
 |---|---|
-| `src/lib/jarvis/core/` | Data types, atomic storage, CRUD and audit |
+| `src/lib/jarvis/core/` | Data types, Supabase+local hybrid storage, CRUD and audit |
+| `src/lib/supabase.server.ts` | Server-side Supabase client singleton (reads `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY`) |
 | `src/lib/jarvis/llm/` | Provider interfaces, Ollama/OpenAI-compatible/Anthropic adapters and router |
 | `src/lib/jarvis/memory/` | Memory CRUD and relevance retrieval |
 | `src/lib/jarvis/tools/` | Tool registry and controlled execution |
@@ -40,7 +41,8 @@ SvelteKit 2 + Svelte 5 runs as a local Node application through `@sveltejs/adapt
 
 ## Generated and private state
 
-- `.jarvis/` contains local user data and is ignored by Git.
+- `.jarvis/` contains local user data (non-workspace entities, audit log) and is ignored by Git.
+- Supabase tables `workspace_events`, `workspace_tasks`, `workspace_notes`, `workspace_projects` store workspace data with RLS (anon + authenticated, no-auth app).
 - `generated-apps/` is created only through an approved app-factory action.
 - `.claude/skills/` contains readable skill definitions; generated skills are registered locally.
 
@@ -52,7 +54,7 @@ SvelteKit 2 + Svelte 5 runs as a local Node application through `@sveltejs/adapt
 
 ## Known limitations
 
-- Graphify is not installed; `/repository` provides live inventory rather than a full dependency graph.
+- Graphify is installed; `graphify-out/` contains the generated code graph. Run `npm run graph` to refresh.
 - Gemini does not yet have a native adapter.
 - Critical connectors such as email and publishing are not bundled yet; when added, they must use exact-input approval and audit.
 - OS-native notifications and external calendar synchronization are future connectors.

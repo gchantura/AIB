@@ -106,8 +106,8 @@ scripts/ai/              # Validation + utility scripts
 ### Decision 1: SvelteKit as the sole UI framework
 Rationale: Already in place. SvelteKit provides SSR, form actions, and API routes in one coherent system. No need to introduce a separate backend framework.
 
-### Decision 2: Atomic local JSON as the default persistence layer
-Rationale: Local-first must work without accounts, network access, or environment variables. The server serializes mutations and atomically replaces `.jarvis/workspace.json`. Supabase remains an optional future synchronization adapter, not a runtime requirement.
+### Decision 2: Hybrid persistence — Supabase for workspace, local JSON for the rest
+Rationale: Workspace data (events, tasks, notes, projects) is persisted in Supabase tables with RLS, enabling durability across restarts and future multi-device sync. All other entity kinds (research, automations, learning, audit log, conversations, notifications, etc.) remain in the local atomic JSON store at `.jarvis/workspace.json`. The `snapshot()` function merges both sources so callers see a unified `JarvisData` object.
 
 ### Decision 3: Provider abstraction before first model call
 Rationale: Hardcoding Anthropic, OpenAI, or Ollama creates lock-in. The router pattern allows switching providers per task without changing application code.
@@ -128,8 +128,8 @@ Rationale: Minimalistic design requirement. Neutral tones, clean whitespace, no 
 | Styling | Tailwind CSS v4 |
 | Icons | lucide-svelte |
 | Package Manager | npm |
-| Database | Atomic local JSON (`.jarvis/workspace.json`) |
-| Optional sync | Supabase adapter scaffold |
+| Database | Supabase (workspace tables) + atomic local JSON (`.jarvis/workspace.json` for non-workspace entities) |
+| RLS | Enabled on all workspace tables (anon + authenticated, no-auth app) |
 | Adapter | @sveltejs/adapter-node |
 | Validation | Zod |
 | Build | Vite 8 |

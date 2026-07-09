@@ -173,6 +173,27 @@ This log records what was learned after every major task. It drives the continuo
 **Docs Updated:** SELF_IMPROVEMENT_LOG.md, VALIDATION_REPORT.md.
 **Next Best Step:** Continue feature development utilizing the newly available `graphify-out` semantic graph context.
 
+## 2026-07-09 — Supabase workspace migration
+
+**Requested:** Migrate workspace data (calendar events, tasks, notes, projects) from local JSON to Supabase database.
+**Created/Changed:**
+- Created 4 Supabase tables (`workspace_events`, `workspace_tasks`, `workspace_notes`, `workspace_projects`) with full RLS (anon + authenticated, no-auth app).
+- Rewrote `src/lib/jarvis/core/store.ts` — `listEntities`, `createEntity`, `updateEntity`, `deleteEntity` now use Supabase for the 4 workspace kinds; all other kinds remain on local JSON. `snapshot()` merges both sources.
+- Fixed `src/lib/supabase.server.ts` to read `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` via `$env/dynamic/private`.
+- Updated docs: REPOSITORY_MAP, ARCHITECTURE, ROADMAP, VALIDATION_REPORT, SELF_IMPROVEMENT_LOG.
+- Refreshed Graphify code graph.
+**Skills Used:** bolt-database
+**Graph Consulted:** Yes (graphify-out)
+**Validation Result:** pass (`npm run build` exit 0, `npm run ai:validate` 41/41).
+**Repeated Pattern:** Hybrid persistence — some entity kinds on Supabase, others on local JSON. If more kinds migrate later, the same `SUPA_KINDS` / `TABLE_MAP` / `FIELD_MAP` pattern in `store.ts` extends cleanly.
+**New Skill Needed:** No.
+**Skill Improvement Needed:** No.
+**New Tool Needed:** No.
+**Docs Updated:** REPOSITORY_MAP, ARCHITECTURE, ROADMAP, VALIDATION_REPORT, SELF_IMPROVEMENT_LOG.
+**Next Best Step:** Migrate remaining entity kinds (research, automations, learning, conversations, notifications) to Supabase when multi-device sync is needed.
+
+---
+
 *Future entries will be appended here.*
 
 ## 2026-07-09T07:13:21.300Z — Automated Post-Build
@@ -206,6 +227,11 @@ This log records what was learned after every major task. It drives the continuo
 - Graphify: ⚠ skipped
 
 ## 2026-07-09T09:36:23.481Z — Automated Post-Build
+
+- Build: ✅
+- Graphify: ⚠ skipped
+
+## 2026-07-09T09:39:41.649Z — Automated Post-Build
 
 - Build: ✅
 - Graphify: ⚠ skipped
