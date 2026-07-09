@@ -128,7 +128,36 @@
     return `${y}-${m}-${day}`;
   }
 
+  // Return bare local-time string — NO timezone offset.
+  // Supabase stores timestamptz as UTC but keeps the original value as text;
+  // our app treats all stored strings as naive local time consistently.
   function getLocalISOString(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hh = String(d.getHours()).padStart(2, '0');
+    const min = String(d.getMinutes()).padStart(2, '0');
+    return `${y}-${m}-${day}T${hh}:${min}`;
+  }
+
+  // Parse ANY stored string as local time (ignores offsets).
+  // This is critical: Supabase returns timestamps in UTC but the app
+  // never needs timezone-awareness — all times are "naive local".
+  function parseLocalISO(str) {
+    if (!str) return null;
+    const parts = str.replace(/[+-]\d{2}:\d{2}$/, '').split(/T/);
+    const dateParts = parts[0].split('-');
+    const timeParts = parts[1] ? parts[1].split(':') : ['0', '0'];
+    const y   = parseInt(dateParts[0], 10);
+    const mon = parseInt(dateParts[1], 10) - 1;
+    const day = parseInt(dateParts[2], 10);
+    const hh  = parseInt(timeParts[0] ?? '0', 10);
+    const mm  = parseInt(timeParts[1] ?? '0', 10);
+    return new Date(y, mon, day, hh, mm);
+  }
+
+  // Format a local Date back to a bare ISO string matching the datetime-local format
+  function dateToInputStr(d) {
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, '0');
     const day = String(d.getDate()).padStart(2, '0');
@@ -139,12 +168,19 @@
 
   function formatTime(iso) {
     if (!iso) return '';
-    try { return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); } catch { return ''; }
+    try {
+      // Always parse as local time — never UTC. The app treats all stored strings as naive.
+      const d = parseLocalISO(iso);
+      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } catch { return ''; }
   }
 
   function formatDate(iso) {
     if (!iso) return '';
-    try { return new Date(iso).toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' }); } catch { return ''; }
+    try {
+      const d = parseLocalISO(iso);
+      return d.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
+    } catch { return ''; }
   }
 
   function repeatLabel(v) {
@@ -184,8 +220,8 @@
           const dateStr = getLocalDateStr(d);
           row.push({
             day, dateStr,
-            events: events.filter(ev => ev.startsAt?.startsWith(dateStr)),
-            tasks: tasks.filter(t => t.dueAt?.startsWith(dateStr))
+            events: events.filter(ev => (ev.startsAt || '').startsWith(dateStr)),
+            tasks: tasks.filter(t => (t.dueAt || '').startsWith(dateStr))
           });
         }
       }
@@ -201,14 +237,14 @@
   const selectedDayItems = $derived.by(() => {
     if (!selectedDay) return { events: [], tasks: [] };
     return {
-      events: events.filter(ev => ev.startsAt?.startsWith(selectedDay)).sort((a,b) => new Date(a.startsAt) - new Date(b.startsAt)),
-      tasks: tasks.filter(t => t.dueAt?.startsWith(selectedDay))
+      events: events.filter(ev => (ev.startsAt || '').startsWith(selectedDay)).sort((a,b) => parseLocalISO(a.startsAt)?.getTime() ?? 0 - parseLocalISO(b.startsAt)?.getTime() ?? 0),
+      tasks: tasks.filter(t => (t.dueAt || '').startsWith(selectedDay))
     };
   });
 
   const upcomingEvents = $derived(
-    events.filter(ev => new Date(ev.startsAt) >= new Date())
-          .sort((a,b) => new Date(a.startsAt) - new Date(b.startsAt))
+    events.filter(ev => parseLocalISO(ev.startsAt) >= new Date())
+          .sort((a,b) => parseLocalISO(a.startsAt)?.getTime() ?? 0 - parseLocalISO(b.startsAt)?.getTime() ?? 0)
   );
 
   onMount(loadAll);
@@ -281,14 +317,16 @@
   async function createEvent() {
     if (!evTitle.trim()) return;
     let reminderMinutesVal = evReminderMin === 'custom'
-      ? Number(evCustomReminderValue) * Number(evCustomReminderUnit)
-      : Number(evReminderMin);
+      ? Math.round(Number(evCustomReminderValue) * Number(evCustomReminderUnit))
+      : Math.round(evReminderMin);
     let repeatVal = evRepeat === 'custom'
       ? `custom_${evCustomRepeatValue}_${evCustomRepeatUnit}`
       : evRepeat;
 
+    // evDate from datetime-local input is exactly the bare ISO string we want.
+    // Use it directly — no transformation, no offset mangling.
     const startsAtVal = evDate || getLocalISOString(new Date());
-    const startMs = new Date(startsAtVal).getTime();
+    const startMs = (parseLocalISO(startsAtVal) || new Date()).getTime();
     const triggerTime = startMs - reminderMinutesVal * 60_000;
     const nowMs = Date.now();
     const isPast = triggerTime <= nowMs;
@@ -320,8 +358,8 @@
   async function createTask() {
     if (!taskTitle.trim()) return;
     let reminderMinutesVal = taskReminderMin === 'custom'
-      ? Number(taskCustomReminderValue) * Number(taskCustomReminderUnit)
-      : Number(taskReminderMin);
+      ? Math.round(Number(taskCustomReminderValue) * Number(taskCustomReminderUnit))
+      : Math.round(taskReminderMin);
     let repeatVal = taskRepeat === 'custom'
       ? `custom_${taskCustomRepeatValue}_${taskCustomRepeatUnit}`
       : taskRepeat;
@@ -329,7 +367,7 @@
     const dueAtVal = taskDueAt || undefined;
     let isPast = false;
     if (dueAtVal) {
-      const dueMs = new Date(dueAtVal).getTime();
+      const dueMs = (parseLocalISO(dueAtVal) || new Date()).getTime();
       const triggerTime = dueMs - reminderMinutesVal * 60_000;
       isPast = triggerTime <= Date.now();
     }
@@ -392,8 +430,8 @@
     editingItem = { ...item, _kind: kind };
     editTitle = item.title ?? item.name ?? '';
     editDetail = item.description ?? item.content ?? '';
-    editDate = item.startsAt ? getLocalISOString(new Date(item.startsAt)) :
-               item.dueAt    ? getLocalISOString(new Date(item.dueAt))   : '';
+    editDate = item.startsAt ? dateToInputStr(parseLocalISO(item.startsAt)) :
+               item.dueAt    ? dateToInputStr(parseLocalISO(item.dueAt))   : '';
 
     const rMin = item.reminderMinutes ?? 15;
     const isPresetReminder = reminderOptions.some(o => o.value === rMin);
@@ -433,15 +471,15 @@
     let body = {};
 
     let reminderMinutesVal = editReminderMin === 'custom'
-      ? Number(editCustomReminderValue) * Number(editCustomReminderUnit)
-      : Number(editReminderMin);
+      ? Math.round(Number(editCustomReminderValue) * Number(editCustomReminderUnit))
+      : Math.round(editReminderMin);
     let repeatVal = editRepeat === 'custom'
       ? `custom_${editCustomRepeatValue}_${editCustomRepeatUnit}`
       : editRepeat;
 
     if (kind === 'events') {
-      const origStartsAt = editingItem.startsAt ? getLocalISOString(new Date(editingItem.startsAt)) : '';
-      const newStartsAt = editDate || getLocalISOString(new Date());
+      const origStartsAt = editingItem.startsAt ? dateToInputStr(parseLocalISO(editingItem.startsAt)) : '';
+      const newStartsAt = editDate || dateToInputStr(new Date());
       const origRemind = editingItem.reminderMinutes;
       const origRepeat = editingItem.reminderRepeat ?? 'none';
       const origEmail = editingItem.emailReminder ?? '';
@@ -456,7 +494,7 @@
       body = {
         title: editTitle,
         description: editDetail,
-        startsAt: editDate || undefined,
+        startsAt: editDate || null,
         reminderMinutes: reminderMinutesVal,
         reminderRepeat: repeatVal,
         emailReminder: editEmailTo.trim() || null,
@@ -464,7 +502,7 @@
       };
 
       if (schedChanged) {
-        const startMs = new Date(editDate || new Date()).getTime();
+        const startMs = (parseLocalISO(editDate || '')?.getTime() ?? Date.now());
         const triggerTime = startMs - reminderMinutesVal * 60_000;
         const nowMs = Date.now();
         if (repeatVal !== 'none') {
@@ -474,7 +512,7 @@
         }
       }
     } else if (kind === 'tasks') {
-      const origDueAt = editingItem.dueAt ? getLocalISOString(new Date(editingItem.dueAt)) : '';
+      const origDueAt = editingItem.dueAt ? dateToInputStr(parseLocalISO(editingItem.dueAt)) : '';
       const newDueAt = editDate || '';
       const origRemind = editingItem.reminderMinutes;
       const origRepeat = editingItem.reminderRepeat ?? 'none';
@@ -492,7 +530,7 @@
       body = {
         title: editTitle,
         description: editDetail,
-        dueAt: editDate || null,
+        dueAt: editDate ? editDate : null,
         reminderMinutes: reminderMinutesVal,
         reminderRepeat: repeatVal,
         emailReminder: editEmailTo.trim() || null,
@@ -502,7 +540,7 @@
 
       if (schedChanged) {
         if (editDate) {
-          const dueMs = new Date(editDate).getTime();
+          const dueMs = (parseLocalISO(editDate)?.getTime() ?? Date.now());
           const triggerTime = dueMs - reminderMinutesVal * 60_000;
           const nowMs = Date.now();
           if (repeatVal !== 'none') {

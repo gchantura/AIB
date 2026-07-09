@@ -107,3 +107,27 @@
 
 - Build: ✅
 - Graphify: ⚠ skipped
+
+## 2026-07-09T12:02:10.621Z — Automated Post-Build
+
+- Build: ✅
+- Graphify: ⚠ skipped
+
+## 2026-07-09T12:14:06.990Z — Automated Post-Build
+
+- Build: ✅
+- Graphify: ⚠ skipped
+
+## 2026-07-09T13:06:00.497Z — Automated Post-Build
+
+- Build: ✅
+- Graphify: ⚠ skipped
+
+## 2026-07-09 — Calendar full-audit bug fix
+
+- Fixed `parseLocal` → `parseLocalISO`: the function was named `parseLocalISO` but called as `parseLocal` on 5 lines (startEdit x1, saveEdit events x2, saveEdit tasks x1, date comparison x1), causing ReferenceError crash when editing any event or task.
+- Fixed `new Date()` UTC parsing on 3 lines (createTask dueAt, saveEdit event triggerTime, saveEdit task dueTime): `new Date("YYYY-MM-DDTHH:MM")` parses as UTC, shifting times by timezone offset — replaced with `parseLocalISO()`.
+- Fixed empty-string dates being stored in DB: `dueAt`/`startsAt` now explicitly use `null` when blank (was storing empty string).
+- Added `Math.round()` on all reminder_minutes calculations to guarantee integer type for Supabase `int` column.
+
+→ skipped: no new features, 6 critical bug fixes only. All confirmed by clean build.

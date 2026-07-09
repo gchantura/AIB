@@ -3,6 +3,19 @@ import { createEntity, record, snapshot, updateEntity, insertRow } from '../core
 import { sendEmailReminder } from './email.js';
 import { getSettings, saveSettings } from '../core/settings.js';
 
+// Parse stored ISO strings as LOCAL time (never UTC).
+// Node.js + browsers parse bare ISO strings like "2026-07-09T14:07" as UTC.
+// Our app treats all event/task times as naive local — this corrects that mismatch.
+function parseLocal(str: string | null | undefined): Date {
+  if (!str) return new Date(NaN);
+  const clean = str.replace(/[+-]\d{2}:\d{2}$/, '');
+  const [datePart, timePart] = clean.split('T');
+  if (!datePart) return new Date(NaN);
+  const [y, m, d] = datePart.split('-').map(Number);
+  const parts = timePart ? timePart.split(':').map(Number) : [0, 0];
+  return new Date(y, (m || 1) - 1, d || 1, parts[0] ?? 0, parts[1] ?? 0);
+}
+
 export function nextRun(schedule: string, from = new Date()) {
   const normalized = schedule.trim().toLowerCase(); const next = new Date(from);
   const minuteMatch = normalized.match(/^every\s+(\d+)\s+minutes?$/);
@@ -50,14 +63,14 @@ export async function checkCalendarReminders(now = new Date()) {
   for (const ev of data.events) {
     const repeat = ev.reminderRepeat ?? 'none';
     const isRecurring = repeat !== 'none';
-    const startMs = new Date(ev.startsAt).getTime();
+    const startMs = parseLocal(ev.startsAt).getTime();
     const reminderMs = (ev.reminderMinutes ?? 15) * 60_000;
 
     if (isRecurring) {
       if (!ev.nextNotifyAt) {
         let firstNotify = startMs - reminderMs;
         if (firstNotify <= now.getTime()) {
-          const nextBase = new Date(ev.startsAt);
+          const nextBase = parseLocal(ev.startsAt);
           let nextTime = calculateNextRun(nextBase, repeat);
           let safety = 0;
           while (nextTime.getTime() - reminderMs <= now.getTime() && safety < 1000) {
@@ -72,23 +85,23 @@ export async function checkCalendarReminders(now = new Date()) {
         continue;
       }
 
-      const nextNotifyMs = new Date(ev.nextNotifyAt).getTime();
+      const nextNotifyMs = parseLocal(ev.nextNotifyAt).getTime();
       const triggerTime = nextNotifyMs - reminderMs;
       if (now.getTime() < triggerTime) continue;
 
-      void notify(ev.title, `Starts at ${new Date(ev.startsAt).toLocaleString()}`, 'calendar:reminder');
+      void notify(ev.title, `Starts at ${parseLocal(ev.startsAt).toLocaleString()}`, 'calendar:reminder');
       if (ev.emailReminder) {
         sendEmailReminder(
           ev.emailReminder,
           `Reminder: ${ev.title}`,
-          `Your event "${ev.title}" starts at ${new Date(ev.startsAt).toLocaleString()}.`,
+          `Your event "${ev.title}" starts at ${parseLocal(ev.startsAt).toLocaleString()}.`,
           ev.emailCc || undefined
         ).then((success) => {
           if (!success) void notify('Email Alert Failed', `Failed to send reminder email for "${ev.title}". Check SMTP Settings.`, 'calendar:email-error', 'error');
         });
       }
 
-      const next = calculateNextRun(new Date(ev.nextNotifyAt), repeat);
+      const next = calculateNextRun(parseLocal(ev.nextNotifyAt), repeat);
       await updateEntity('events', ev.id, { nextNotifyAt: next.toISOString() });
       results.push({ id: ev.id, title: ev.title, fired: true });
 
@@ -101,12 +114,12 @@ export async function checkCalendarReminders(now = new Date()) {
         continue;
       }
 
-      void notify(ev.title, `Starts at ${new Date(ev.startsAt).toLocaleString()}`, 'calendar:reminder');
+      void notify(ev.title, `Starts at ${parseLocal(ev.startsAt).toLocaleString()}`, 'calendar:reminder');
       if (ev.emailReminder) {
         sendEmailReminder(
           ev.emailReminder,
           `Reminder: ${ev.title}`,
-          `Your event "${ev.title}" starts at ${new Date(ev.startsAt).toLocaleString()}.`,
+          `Your event "${ev.title}" starts at ${parseLocal(ev.startsAt).toLocaleString()}.`,
           ev.emailCc || undefined
         ).then((success) => {
           if (!success) void notify('Email Alert Failed', `Failed to send reminder email for "${ev.title}". Check SMTP Settings.`, 'calendar:email-error', 'error');
@@ -123,14 +136,14 @@ export async function checkCalendarReminders(now = new Date()) {
 
     const repeat = task.reminderRepeat ?? 'none';
     const isRecurring = repeat !== 'none';
-    const dueMs = new Date(task.dueAt).getTime();
+    const dueMs = parseLocal(task.dueAt).getTime();
     const reminderMs = (task.reminderMinutes ?? 0) * 60_000;
 
     if (isRecurring) {
       if (!task.nextNotifyAt) {
         let firstNotify = dueMs - reminderMs;
         if (firstNotify <= now.getTime()) {
-          const nextBase = new Date(task.dueAt);
+          const nextBase = parseLocal(task.dueAt);
           let nextTime = calculateNextRun(nextBase, repeat);
           let safety = 0;
           while (nextTime.getTime() - reminderMs <= now.getTime() && safety < 1000) {
@@ -144,20 +157,20 @@ export async function checkCalendarReminders(now = new Date()) {
         continue;
       }
 
-      const nextNotifyMs = new Date(task.nextNotifyAt).getTime();
+      const nextNotifyMs = parseLocal(task.nextNotifyAt).getTime();
       const triggerTime = nextNotifyMs - reminderMs;
       if (now.getTime() < triggerTime) continue;
 
-      void notify(task.title, `Task due: ${new Date(task.dueAt).toLocaleString()}`, 'calendar:task-reminder');
+      void notify(task.title, `Task due: ${parseLocal(task.dueAt).toLocaleString()}`, 'calendar:task-reminder');
       if (task.emailReminder) {
         const subj = task.emailSubject?.trim() || `Task Reminder: ${task.title}`;
-        const body = `Your task "${task.title}" is due at ${new Date(task.dueAt).toLocaleString()}.\n\n${task.description ?? ''}`;
+        const body = `Your task "${task.title}" is due at ${parseLocal(task.dueAt).toLocaleString()}.\n\n${task.description ?? ''}`;
         sendEmailReminder(task.emailReminder, subj, body, task.emailCc || undefined).then((success) => {
           if (!success) void notify('Task Email Failed', `Failed to send task email for "${task.title}". Check SMTP Settings.`, 'calendar:email-error', 'error');
         });
       }
 
-      const next = calculateNextRun(new Date(task.nextNotifyAt), repeat);
+      const next = calculateNextRun(parseLocal(task.nextNotifyAt), repeat);
       await updateEntity('tasks', task.id, { nextNotifyAt: next.toISOString() });
       results.push({ id: task.id, title: task.title, fired: true });
 
@@ -170,10 +183,10 @@ export async function checkCalendarReminders(now = new Date()) {
         continue;
       }
 
-      void notify(task.title, `Task due: ${new Date(task.dueAt).toLocaleString()}`, 'calendar:task-reminder');
+      void notify(task.title, `Task due: ${parseLocal(task.dueAt).toLocaleString()}`, 'calendar:task-reminder');
       if (task.emailReminder) {
         const subj = task.emailSubject?.trim() || `Task Reminder: ${task.title}`;
-        const body = `Your task "${task.title}" is due at ${new Date(task.dueAt).toLocaleString()}.\n\n${task.description ?? ''}`;
+        const body = `Your task "${task.title}" is due at ${parseLocal(task.dueAt).toLocaleString()}.\n\n${task.description ?? ''}`;
         sendEmailReminder(task.emailReminder, subj, body, task.emailCc || undefined).then((success) => {
           if (!success) void notify('Task Email Failed', `Failed to send task email for "${task.title}". Check SMTP Settings.`, 'calendar:email-error', 'error');
         });
@@ -245,7 +258,7 @@ export async function sendDailyBriefing(now = new Date()) {
     if (todayEvents.length > 0) {
       emailContent += `🗓️ EVENTS TODAY:\n`;
       todayEvents.forEach(e => {
-        const time = new Date(e.startsAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const time = parseLocal(e.startsAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         emailContent += `- [${time}] ${e.title}${e.description ? `: ${e.description}` : ''}\n`;
       });
       emailContent += `\n`;
@@ -262,7 +275,7 @@ export async function sendDailyBriefing(now = new Date()) {
     if (overdueTasks.length > 0) {
       emailContent += `⚠️ OVERDUE TASKS:\n`;
       overdueTasks.forEach(t => {
-        const dateStr = new Date(t.dueAt!).toLocaleDateString([], { month: 'short', day: 'numeric' });
+        const dateStr = parseLocal(t.dueAt).toLocaleDateString([], { month: 'short', day: 'numeric' });
         emailContent += `- [Due ${dateStr}] ${t.title}${t.description ? `: ${t.description}` : ''}\n`;
       });
       emailContent += `\n`;

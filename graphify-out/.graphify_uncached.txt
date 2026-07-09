@@ -1,0 +1,5 @@
+C://Users//GCJR//Documents//Code WorkSpace//AIB//docs//ARCHITECTURE.md
+C://Users//GCJR//Documents//Code WorkSpace//AIB//docs//REPOSITORY_MAP.md
+C://Users//GCJR//Documents//Code WorkSpace//AIB//docs//ROADMAP.md
+C://Users//GCJR//Documents//Code WorkSpace//AIB//docs//SELF_IMPROVEMENT_LOG.md
+C://Users//GCJR//Documents//Code WorkSpace//AIB//docs//VALIDATION_REPORT.md
