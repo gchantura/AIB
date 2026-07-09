@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { resolve, join, relative } from 'node:path';
 import { readdir, readFile } from 'node:fs/promises';
-import { snapshot, record, createEntity, insertRow } from '../core/store.js';
+import { snapshot, record, createEntity, insertRow, insertGeneratedApp } from '../core/store.js';
 import type { ToolManifest } from '../core/types.js';
 import { applyChanges, consumeApproval, createRollback } from '../safety/runtime.js';
 import { recordExecution } from '../evaluation/runtime.js';
@@ -55,7 +55,10 @@ async function executeToolInternal(id: string, input: Record<string, unknown>, a
       { path: `${base}/vite.config.js`, content: "import { defineConfig } from 'vite';\nimport { svelte } from '@sveltejs/vite-plugin-svelte';\nexport default defineConfig({ plugins: [svelte()] });\n" },
       { path: `${base}/README.md`, content: `# ${title}\n\n${description}\n\nRun with \`npm install && npm run dev\`.\n` }
     ];
-    changes.forEach((change) => insideRepo(change.path)); const rollback = await createRollback(approvalId!, id, changes); await applyChanges(changes); output = { directory: base, files: changes.map((change) => change.path), rollbackId: rollback.id };
+    changes.forEach((change) => insideRepo(change.path)); const rollback = await createRollback(approvalId!, id, changes); await applyChanges(changes);
+    // Track provenance in database
+    try { await insertGeneratedApp(slug, title, description, changes.length); } catch {/* non-fatal: app created even if provenance fails */}
+    output = { directory: base, files: changes.map((change) => change.path), rollbackId: rollback.id };
   } else output = { accepted: true, input, message: 'Generated declarative tool invoked' };
   await record(null, { action: `tool:${id}`, entity: 'tool', outcome: 'success', detail: JSON.stringify(input).slice(0, 300) });
   return output;

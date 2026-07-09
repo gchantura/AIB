@@ -8,6 +8,7 @@
     Wrench,
     BookOpen,
     CheckSquare,
+    FolderKanban,
     Clock,
     Zap,
     ArrowRight,
@@ -22,6 +23,7 @@
   let tasksCount = $state(0);
   let toolsCount = $state(0);
   let skillsCount = $state(0);
+  let generatedAppsCount = $state(0);
   let recentActivity = $state([
     { text: 'J.A.R.V.I.S. operating layer initialized', time: 'Just now', type: 'system' },
     { text: '15 skills created in .claude/skills/', time: 'Just now', type: 'skill' },
@@ -45,12 +47,13 @@
   }
 
   onMount(async () => {
-    // Build overrides from client-stored provider config
+    // Build overrides from API-stored provider config
     let overrideParam = '';
     try {
-      const stored = localStorage.getItem('jarvis-provider-config');
-      if (stored) {
-        const config = JSON.parse(stored);
+      const res = await fetch('/api/provider-config');
+      if (res.ok) {
+        const data = await res.json();
+        const config = data.config ?? {};
         if (Object.keys(config).length > 0) {
           const entries = Object.entries(config).map(([id, cfg]) => [id, { apiKey: cfg.apiKey || '', baseUrl: cfg.baseUrl }]);
           overrideParam = `?overrides=${encodeB64url(Object.fromEntries(entries))}`;
@@ -58,12 +61,13 @@
       }
     } catch {/* no overrides */}
 
-    const [healthRes, memRes, workspaceRes, toolsRes, skillsRes] = await Promise.allSettled([
+    const [healthRes, memRes, workspaceRes, toolsRes, skillsRes, appsRes] = await Promise.allSettled([
       fetch(`/api/models${overrideParam}`),
       fetch('/api/memory?limit=1'),
       fetch('/api/workspace'),
       fetch('/api/tools'),
       fetch('/api/skills')
+      ,fetch('/api/generated-apps')
     ]);
     if (healthRes.status === 'fulfilled' && healthRes.value.ok) {
       const data = await healthRes.value.json();
@@ -92,6 +96,10 @@
       const data = await skillsRes.value.json();
       skillsCount = data.skills?.length ?? 0;
     }
+    if (appsRes.status === 'fulfilled' && appsRes.value.ok) {
+      const data = await appsRes.value.json();
+      generatedAppsCount = Array.isArray(data.apps) ? data.apps.length : 0;
+    }
     healthLoading = false;
   });
 
@@ -100,6 +108,7 @@
     { label: 'Skills', value: String(skillsCount), icon: BookOpen, href: '/skills' },
     { label: 'Memories', value: String(memoryCount), icon: Database, href: '/memory' },
     { label: 'Tasks', value: String(tasksCount), icon: CheckSquare, href: '/calendar' },
+    { label: 'Generated Apps', value: String(generatedAppsCount), icon: FolderKanban, href: '/tools' },
   ]);
 
   const nextSteps = [

@@ -20,6 +20,8 @@ const COLLECTION_TABLES: Record<string, string> = {
   audit: 'workspace_audit',
   generatedTools: 'workspace_generated_tools',
   generatedSkills: 'workspace_generated_skills',
+  appSettings: 'workspace_app_settings',
+  generatedApps: 'workspace_generated_apps',
   memories: 'workspace_memories',
   approvals: 'workspace_approvals',
   rollbacks: 'workspace_rollbacks',
@@ -55,6 +57,71 @@ const FIELD_MAPS: Record<string, Record<string, string>> = {
   workspace_improvement_proposals: { createdAt: 'created_at', decidedAt: 'decided_at' },
   workspace_upgrade_plans: { proposalId: 'proposal_id', createdAt: 'created_at', updatedAt: 'updated_at' },
 };
+
+// ── Key-value app settings helpers ──
+// Stored in workspace_app_settings table as key=value pairs.
+export async function getAppSetting(key: string): Promise<Record<string, unknown> | null> {
+  const s = supa();
+  const table = 'workspace_app_settings';
+  const { data, error } = await s.from(table).select('value').eq('key', key).maybeSingle();
+  if (error) throw error;
+  return data?.value ?? null;
+}
+
+export async function setAppSetting(key: string, value: Record<string, unknown>): Promise<void> {
+  const s = supa();
+  const table = 'workspace_app_settings';
+  const { data, error } = await s.from(table).upsert({ key, value }, { onConflict: 'key' }).select('value').single();
+  if (error) throw error;
+}
+
+export async function deleteAppSetting(key: string): Promise<void> {
+  const s = supa();
+  const table = 'workspace_app_settings';
+  const { error } = await s.from(table).delete().eq('key', key);
+  if (error) throw error;
+}
+
+// Returns all settings whose keys start with `prefix`.
+export async function getAppSettingsByPrefix(prefix: string): Promise<Record<string, unknown>> {
+  const s = supa();
+  const table = 'workspace_app_settings';
+  const { data, error } = await s.from(table).select('key,value').like('key', `${prefix} %`);
+  if (error) throw error;
+  const result: Record<string, unknown> = {};
+  for (const row of data ?? []) {
+    result[row.key] = row.value;
+  }
+  // Also match the prefix itself (exact match)
+  const prefixRow = await getAppSetting(prefix);
+  if (prefixRow) Object.assign(result, prefixRow);
+  return result;
+}
+
+// ── Generated apps helpers ──
+export async function insertGeneratedApp(slug: string, title: string, description?: string, fileCount?: number): Promise<Record<string, unknown>> {
+  const s = supa();
+  const table = 'workspace_generated_apps';
+  const now = new Date().toISOString();
+  const { data, error } = await s.from(table).insert({ id: randomUUID(), slug, title, description, file_count: fileCount ?? 0, created_at: now, updated_at: now }).select('*').single();
+  if (error) throw error;
+  return toCamel(table, data);
+}
+
+export async function getGeneratedApps(): Promise<Record<string, unknown>[]> {
+  const s = supa();
+  const table = 'workspace_generated_apps';
+  const { data, error } = await s.from(table).select('*').order('created_at', { ascending: false });
+  if (error) throw error;
+  return (data ?? []).map(r => toCamel(table, r));
+}
+
+export async function deleteGeneratedApp(slug: string): Promise<void> {
+  const s = supa();
+  const table = 'workspace_generated_apps';
+  const { error } = await s.from(table).delete().eq('slug', slug);
+  if (error) throw error;
+}
 
 function toSnake(table: string, obj: Record<string, unknown>): Record<string, unknown> {
   const map = FIELD_MAPS[table] ?? {};

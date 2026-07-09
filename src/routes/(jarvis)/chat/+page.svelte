@@ -59,11 +59,11 @@
       // Forward configured provider keys so server can discover their models
       let overrides = undefined;
       try {
-        const stored = localStorage.getItem('jarvis-provider-config');
-        if (stored) {
-          const config = JSON.parse(stored);
-          const entries = Object.entries(config).map(([id, cfg]) => [id, { apiKey: cfg.apiKey || '', baseUrl: cfg.baseUrl }]);
-          if (entries.length > 0) overrides = Object.fromEntries(entries);
+        const pRes = await fetch('/api/provider-config');
+        if (pRes.ok) {
+          const pdata = await pRes.json();
+          const config = pdata.config ?? {};
+          if (Object.keys(config).length > 0) overrides = Object.fromEntries(Object.entries(config).map(([id, cfg]) => [id, { apiKey: cfg.apiKey || '', baseUrl: cfg.baseUrl }]));
         }
       } catch {/* no overrides */}
 
@@ -102,15 +102,18 @@
     messages = [...messages, { role: 'assistant', content: '', ts: new Date(), error: false }];
     setTimeout(scrollToBottom, 10);
 
-    // Forward configured provider keys from localStorage
+    // Forward configured provider keys from API
     let keyOverrides = undefined;
     try {
-      const stored = localStorage.getItem('jarvis-provider-config');
-      if (stored) {
-        const config = JSON.parse(stored);
-        keyOverrides = Object.fromEntries(
-          Object.entries(config).map(([id, cfg]) => [id, { apiKey: cfg.apiKey || '', baseUrl: cfg.baseUrl }])
-        );
+      const res2 = await fetch('/api/provider-config');
+      if (res2.ok) {
+        const data2 = await res2.json();
+        const config = data2.config ?? {};
+        if (Object.keys(config).length > 0) {
+          keyOverrides = Object.fromEntries(
+            Object.entries(config).map(([id, cfg]) => [id, { apiKey: cfg.apiKey || '', baseUrl: cfg.baseUrl }])
+          );
+        }
       }
     } catch { /* no overrides */ }
 

@@ -42,22 +42,35 @@
   let privacyMode = $state(true);
   let allowCloud = $state(false);
 
-  // Reactive provider config state (loaded from localStorage)
+  // Reactive provider config state (loaded from API on mount)
   let providerConfig = $state<Record<string, { apiKey?: string; baseUrl?: string }>>({});
   let pendingProvider: ProviderInfo | null = $state(null);
   let configForm = $state<{ apiKey?: string; baseUrl?: string }>({});
   let isLoading = $state(false);
 
-  // Load persisted config from localStorage on mount
+  // Load persisted config + settings from API on mount
   $effect(() => {
-    const stored = localStorage.getItem('jarvis-provider-config');
-    if (stored) {
-      try { providerConfig = JSON.parse(stored); } catch { /* ignore */ }
-    }
-    const savedPrivacy = localStorage.getItem('jarvis-privacy-mode');
-    if (savedPrivacy !== null) privacyMode = savedPrivacy === 'true';
-    const savedCloud = localStorage.getItem('jarvis-allow-cloud');
-    if (savedCloud !== null) allowCloud = savedCloud === 'true';
+    (async () => {
+      try {
+        const res = await fetch('/api/app-settings?key=app.settings');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.value && typeof data.value === 'object' && data.value !== null) {
+            const s = data.value as Record<string, unknown>;
+            privacyMode = (s.privacyMode !== undefined ? !!s.privacyMode : true);
+            allowCloud = (s.allowCloud !== undefined ? !!s.allowCloud : false);
+          }
+        }
+      } catch {/* ignore */}
+
+      try {
+        const res2 = await fetch('/api/provider-config');
+        if (res2.ok) {
+          const data2 = await res2.json();
+          providerConfig = data2.config ?? {};
+        }
+      } catch {/* ignore */}
+    })();
 
     // Load SMTP settings
     fetch('/api/settings')
@@ -124,7 +137,7 @@
       const res = await fetch('/api/settings', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(smtpConfig)
+        body: JSON.stringify({ ...smtpConfig, privacyMode, allowCloud })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -151,18 +164,17 @@
 
   async function saveConfig(providerId: string) {
     if (!configForm.apiKey?.trim()) {
-      // No API key — mark as unconfigured but keep baseUrl
       const updated = { ...providerConfig };
       delete updated[providerId];
       providerConfig = updated;
-      localStorage.setItem('jarvis-provider-config', JSON.stringify(providerConfig));
+      try { await fetch('/api/provider-config', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(updated) }); } catch {/* ignore */}
       closeModal();
       return;
     }
 
     const updated = { ...providerConfig, [providerId]: configForm };
     providerConfig = updated;
-    localStorage.setItem('jarvis-provider-config', JSON.stringify(updated));
+    try { await fetch('/api/provider-config', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(updated) }); } catch {/* ignore */}
 
     // Check health if we have all required fields
     const p = providers.find((pr) => pr.id === providerId);
@@ -270,7 +282,10 @@
               <button
                 class="toggle-btn"
                 class:on={privacyMode}
-                onclick={() => { privacyMode = !privacyMode; localStorage.setItem('jarvis-privacy-mode', String(privacyMode)); }}
+                onclick={() => {
+                privacyMode = !privacyMode;
+                fetch('/api/app-settings', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ key: 'app.settings', value: { privacyMode, allowCloud } }) }).catch(() => {});
+              }}
                 role="switch"
                 aria-checked={privacyMode}
                 aria-label="Toggle privacy mode"
@@ -286,7 +301,10 @@
               <button
                 class="toggle-btn"
                 class:on={allowCloud}
-                onclick={() => { allowCloud = !allowCloud; localStorage.setItem('jarvis-allow-cloud', String(allowCloud)); }}
+                onclick={() => {
+                allowCloud = !allowCloud;
+                fetch('/api/app-settings', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ key: 'app.settings', value: { privacyMode, allowCloud } }) }).catch(() => {});
+              }}
                 role="switch"
                 aria-checked={allowCloud}
                 disabled={privacyMode}
